@@ -1,11 +1,14 @@
 {
   "name": "screwdriver-config-parser",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node module for parsing screwdriver.yaml configurations",
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
     "test": "jenkins-mocha --recursive"
+  },
+  "bin": {
+    "config-parse": "./bin/config-parse.js"
   },
   "repository": {
     "type": "git",
@@ -37,5 +40,11 @@
     "eslint-plugin-react": "^5.1.1",
     "jenkins-mocha": "^2.6.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "hoek": "^4.0.1",
+    "joi": "^8.4.2",
+    "js-yaml": "^3.6.1",
+    "winston": "^2.2.0"
+  }
 }

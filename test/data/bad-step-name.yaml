@@ -1,0 +1,4 @@
+jobs:
+    main:
+        steps:
+            "foo bar": baz
