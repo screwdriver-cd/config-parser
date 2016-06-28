@@ -9,6 +9,28 @@
 npm install screwdriver-config-parser
 ```
 
+Parse in Node.js
+
+```javascript
+const parser = require('screwdriver-config-parser');
+
+parser({
+    // Configuration (in YAML form)
+    yaml: fs.readFileSync('sample.yaml', 'utf-8'),
+    // Name of current job
+    jobName: 'main'
+}, (err, data) => {
+    // data.execute contains the commands to execute
+    fs.writeFileSync('execute.json', JSON.stringify(data.execute));
+});
+```
+
+Or via the command line
+
+```bash
+config-parse path/to/screwdriver.yaml job-name path-to-artifacts-dir
+```
+
 ## Testing
 
 ```bash

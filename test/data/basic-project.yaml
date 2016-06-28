@@ -1,0 +1,10 @@
+jobs:
+    main:
+        steps:
+            install: npm install
+            test: npm test
+            publish: npm publish
+    foobar:
+        steps:
+            install: npm install
+            test: npm test
