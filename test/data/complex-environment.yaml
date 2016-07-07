@@ -1,0 +1,17 @@
+jobs:
+    main:
+        environment:
+            ARRAY:
+                - a
+                - b
+            BOOL: true
+            OBJECT:
+                a: cat
+                b: dog
+            NUMBER: 3
+            DECIMAL: 3.1415927
+            STRING: test
+
+        image: node:4
+        steps:
+            install: npm install

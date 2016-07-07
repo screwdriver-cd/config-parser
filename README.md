@@ -1,7 +1,44 @@
 # Screwdriver.yaml Configuration Parser
 [![Version][npm-image]][npm-url] ![Downloads][downloads-image] [![Build Status][wercker-image]][wercker-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
 
-> Node module for parsing screwdriver.yaml configurations
+> Node module for validating and parsing `screwdriver.yaml` configurations
+
+ - Validates a `screwdriver.yaml` for structural and functional specification
+ - Outputs the pipeline's workflow
+ - Generates a list of jobs to execute, including:
+     - build permutations
+     - environment variables to set
+     - steps to execute
+     - container image to use
+
+## YAML
+
+```yaml
+workflow:
+    - publish
+
+shared:
+    environment:
+        NODE_ENV: test
+
+jobs:
+    main:
+        image: node:{{NODE_VERSION}}
+        matrix:
+            NODE_VERSION: [4,5,6]
+        steps:
+            init: npm install
+            test: npm test
+
+    publish:
+        environment:
+            NODE_TAG: latest
+        image: node:4
+        steps:
+            bump: npm run bump
+            publish: npm publish --tag $NODE_TAG
+            tag: git push origin --tags
+```
 
 ## Usage
 
@@ -9,27 +46,29 @@
 npm install screwdriver-config-parser
 ```
 
-Parse in Node.js
+Parse in Node.js:
 
 ```javascript
 const parser = require('screwdriver-config-parser');
 
-parser({
-    // Configuration (in YAML form)
-    yaml: fs.readFileSync('sample.yaml', 'utf-8'),
-    // Name of current job
-    jobName: 'main'
-}, (err, data) => {
-    // data.execute contains the commands to execute
-    fs.writeFileSync('execute.json', JSON.stringify(data.execute));
+// Configuration (in YAML form)
+parser(fs.readFileSync('screwdriver.yaml'), (err, pipeline) => {
+    // Workflow for the pipeline
+    // pipeline.workflow
+
+    // All the main jobs with the steps to execute and environment variables to set
+    // pipeline.jobs.main[].steps
+    // pipeline.jobs.main[].environment
+    // pipeline.jobs.main[].image
+
+    // All the publish jobs with the steps to execute and environment variables to set
+    // pipeline.jobs.publish[].steps
+    // pipeline.jobs.publish[].environment
+    // pipeline.jobs.publish[].image
 });
 ```
 
-Or via the command line
-
-```bash
-config-parse path/to/screwdriver.yaml job-name path-to-artifacts-dir
-```
+Or for usage on the command line see [USAGE.md](./USAGE.md).
 
 ## Testing
 

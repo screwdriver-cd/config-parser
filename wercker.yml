@@ -1,9 +1,12 @@
-box: node:4
+box: node:6
 
 build:
   steps:
     - npm-install
     - npm-test
+    - script:
+      name: Build the manual
+      code: npm run-script build
 
 deploy:
   steps:

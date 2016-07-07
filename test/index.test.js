@@ -15,33 +15,20 @@ function loadData(name) {
 }
 
 describe('config parser', () => {
-    describe('input validation', () => {
+    describe('yaml parser', () => {
         it('returns an error if unparsable yaml', (done) => {
-            parser({
-                yaml: 'foo: :',
-                jobName: 'main'
-            }, (err) => {
+            parser('foo: :', (err) => {
                 assert.isNotNull(err);
                 assert.match(err.toString(), /YAMLException:/);
                 done();
             });
         });
-
-        it('returns an error if missing fields', (done) => {
-            parser({}, (err) => {
-                assert.isNotNull(err);
-                assert.match(err.toString(), /ValidationError/);
-                done();
-            });
-        });
     });
 
-    describe('config validation', () => {
+    describe('structure validation', () => {
         describe('overall config', () => {
             it('returns an error if missing jobs', (done) => {
-                parser({
-                    yaml: 'foo: bar'
-                }, (err) => {
+                parser('foo: bar', (err) => {
                     assert.isNotNull(err);
                     assert.match(err.toString(), /"jobs" is required/);
                     done();
@@ -51,42 +38,17 @@ describe('config parser', () => {
 
         describe('jobs', () => {
             it('returns an error if missing main job', (done) => {
-                parser({
-                    yaml: loadData('missing-main-job.yaml')
-                }, (err) => {
+                parser(loadData('missing-main-job.yaml'), (err) => {
                     assert.isNotNull(err);
                     assert.match(err.toString(), /"main" is required/);
-                    done();
-                });
-            });
-
-            it('returns an error if missing desired job', (done) => {
-                parser({
-                    yaml: loadData('basic-project.yaml'),
-                    jobName: 'barfoo'
-                }, (err) => {
-                    assert.isNotNull(err);
-                    assert.match(err.toString(), /"barfoo" is required/);
                     done();
                 });
             });
         });
 
         describe('steps', () => {
-            it('returns an error if not enough steps', (done) => {
-                parser({
-                    yaml: loadData('not-enough-commands.yaml')
-                }, (err) => {
-                    assert.isNotNull(err);
-                    assert.match(err.toString(), /"steps" requires at least one step/);
-                    done();
-                });
-            });
-
             it('returns an error if not bad named steps', (done) => {
-                parser({
-                    yaml: loadData('bad-step-name.yaml')
-                }, (err) => {
+                parser(loadData('bad-step-name.yaml'), (err) => {
                     assert.isNotNull(err);
                     assert.match(err.toString(),
                         /"foo bar" only supports the following characters A-Z,a-z,0-9,-,_/);
@@ -94,33 +56,101 @@ describe('config parser', () => {
                 });
             });
         });
+
+        describe('environment', () => {
+            it('returns an error if bad environment name', (done) => {
+                parser(loadData('bad-environment-name.yaml'), (err) => {
+                    assert.isNotNull(err);
+                    assert.match(err.toString(), /"foo bar" only supports uppercase letters,/);
+                    done();
+                });
+            });
+        });
+
+        describe('matrix', () => {
+            it('returns an error if bad matrix name', (done) => {
+                parser(loadData('bad-matrix-name.yaml'), (err) => {
+                    assert.isNotNull(err);
+                    assert.match(err.toString(), /"foo bar" only supports uppercase letters,/);
+                    done();
+                });
+            });
+        });
     });
 
-    describe('execute', () => {
-        it('returns execution plans for basic project', (done) => {
-            parser({
-                yaml: loadData('basic-project.yaml')
-            }, (err, data) => {
+    describe('flatten', () => {
+        it('replaces steps, matrix, image, but merges environment', (done) => {
+            parser(loadData('basic-shared-project.yaml'), (err, data) => {
                 assert.isNull(err);
-                assert.deepEqual(data.execute, {
-                    install: 'npm install',
-                    test: 'npm test',
-                    publish: 'npm publish'
-                });
+                assert.deepEqual(data, JSON.parse(loadData('basic-shared-project.json')));
                 done();
             });
         });
 
-        it('returns execution plans for basic non-main job', (done) => {
-            parser({
-                yaml: loadData('basic-project.yaml'),
-                jobName: 'foobar'
-            }, (err, data) => {
+        it('flattens complex environments', (done) => {
+            parser(loadData('complex-environment.yaml'), (err, data) => {
                 assert.isNull(err);
-                assert.deepEqual(data.execute, {
-                    install: 'npm install',
-                    test: 'npm test'
-                });
+                assert.deepEqual(data, JSON.parse(loadData('complex-environment.json')));
+                done();
+            });
+        });
+    });
+
+    describe('functional', () => {
+        it('returns an error if not enough steps', (done) => {
+            parser(loadData('not-enough-commands.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(), /"steps" requires at least one step/);
+                done();
+            });
+        });
+
+        it('returns an error if too many environment variables', (done) => {
+            parser(loadData('too-many-environment.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(), /"environment" can only have 25 environment/);
+                done();
+            });
+        });
+
+        it('returns an error if too many environment + matrix variables', (done) => {
+            parser(loadData('too-many-matrix.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(), /"environment" and "matrix" can only have a combined/);
+                done();
+            });
+        });
+
+        it('returns an error if workflow is missing main', (done) => {
+            parser(loadData('workflow-main-not-first.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(), /Workflow: "main" is implied as the first job/);
+                done();
+            });
+        });
+
+        it('returns an error if workflow contains different jobs', (done) => {
+            parser(loadData('workflow-wrong-jobs.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(), /Workflow: must contain all the jobs listed/);
+                done();
+            });
+        });
+
+        it('returns an error if matrix is too big', (done) => {
+            parser(loadData('too-big-matrix.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(), /Job main: Matrix cannot contain >25 permutations/);
+                done();
+            });
+        });
+    });
+
+    describe('permutation', () => {
+        it('generates complex permutations and expands image', (done) => {
+            parser(loadData('node-module.yaml'), (err, data) => {
+                assert.isNull(err);
+                assert.deepEqual(data, JSON.parse(loadData('node-module.json')));
                 done();
             });
         });

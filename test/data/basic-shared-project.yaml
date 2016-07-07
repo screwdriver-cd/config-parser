@@ -1,0 +1,26 @@
+shared:
+    image: node:4
+    steps:
+        hostname: hostname
+    environment:
+        FOO: bar
+    matrix:
+        VERSION: [1,2]
+        DIRECTORY: [a,b]
+
+jobs:
+    main:
+        image: node:4
+        steps:
+            install: npm install
+            test: npm test
+            publish: npm publish
+        environment:
+            BAR: foo
+        matrix:
+            DIRECTORY: [c,d]
+
+    foobar:
+        environment:
+            BAZ: foo
+            FOO: ban

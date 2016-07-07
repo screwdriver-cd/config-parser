@@ -1,0 +1,4 @@
+jobs:
+    main:
+        matrix:
+            "foo bar": baz

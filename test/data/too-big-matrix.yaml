@@ -5,9 +5,6 @@ jobs:
             install: npm install
             test: npm test
             publish: npm publish
-
-    foobar:
-        image: node:4
-        steps:
-            install: npm install
-            test: npm test
+        matrix:
+            FOO: [a,b,c,d,e,f,g]
+            BAR: [a,b,c,d,e,f,g]
