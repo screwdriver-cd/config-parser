@@ -1,14 +1,18 @@
 {
   "name": "screwdriver-config-parser",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Node module for parsing screwdriver.yaml configurations",
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "jenkins-mocha --recursive"
+    "test": "jenkins-mocha --recursive",
+    "build": "mkdir -p man && marked-man --manual 'Screwdriver Build System' USAGE.md > man/config-parse.1"
   },
   "bin": {
     "config-parse": "./bin/config-parse.js"
+  },
+  "directories": {
+    "man": "./man"
   },
   "repository": {
     "type": "git",
@@ -31,20 +35,30 @@
     "St. John Johnson <st.john.johnson@gmail.com",
     "Tiffany Kyi <tiffanykyi@gmail.com>"
   ],
+  "engines": {
+    "node": "~6.0.0"
+  },
+  "engine-strict": true,
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.10.2",
+    "eslint": "^3.0.0",
     "eslint-config-screwdriver": "^1.0.0",
     "eslint-plugin-import": "^1.8.0",
     "eslint-plugin-jsx-a11y": "^1.2.2",
     "eslint-plugin-react": "^5.1.1",
-    "jenkins-mocha": "^2.6.0"
+    "jenkins-mocha": "^2.6.0",
+    "marked-man": "^0.1.5"
   },
   "dependencies": {
     "async": "^2.0.0-rc.6",
+    "clone": "^1.0.2",
+    "commander": "^2.9.0",
     "hoek": "^4.0.1",
     "joi": "^8.4.2",
     "js-yaml": "^3.6.1",
+    "keymbinatorial": "^1.0.0",
+    "promisify-callback": "^1.0.0",
+    "tinytim": "^0.1.1",
     "winston": "^2.2.0"
   }
 }

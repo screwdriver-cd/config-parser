@@ -1,0 +1,56 @@
+{
+    "jobs": {
+        "main": [
+            {
+                "image": "node:4",
+                "steps": {
+                    "init": "npm install",
+                    "test": "npm test"
+                },
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_VERSION": 4
+                }
+            },
+            {
+                "image": "node:5",
+                "steps": {
+                    "init": "npm install",
+                    "test": "npm test"
+                },
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_VERSION": 5
+                }
+            },
+            {
+                "image": "node:6",
+                "steps": {
+                    "init": "npm install",
+                    "test": "npm test"
+                },
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_VERSION": 6
+                }
+            }
+        ],
+        "publish": [
+            {
+                "image": "node:4",
+                "steps": {
+                    "bump": "npm run bump",
+                    "publish": "npm publish --tag $NODE_TAG",
+                    "tag": "git push origin --tags"
+                },
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_TAG": "latest"
+                }
+            }
+        ]
+    },
+    "workflow": [
+        "publish"
+    ]
+}

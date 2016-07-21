@@ -1,3 +1,7 @@
+workflow:
+    - baz
+    - foobar
+
 jobs:
     main:
         image: node:4

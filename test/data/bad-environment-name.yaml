@@ -1,0 +1,4 @@
+jobs:
+    main:
+        environment:
+            "foo bar": baz

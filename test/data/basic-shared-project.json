@@ -1,0 +1,85 @@
+{
+    "jobs": {
+        "main": [
+            {
+                "image": "node:4",
+                "steps": {
+                    "install": "npm install",
+                    "test": "npm test",
+                    "publish": "npm publish"
+                },
+                "environment": {
+                    "FOO": "bar",
+                    "BAR": "foo",
+                    "DIRECTORY": "c"
+                }
+            },
+            {
+                "image": "node:4",
+                "steps": {
+                    "install": "npm install",
+                    "test": "npm test",
+                    "publish": "npm publish"
+                },
+                "environment": {
+                    "FOO": "bar",
+                    "BAR": "foo",
+                    "DIRECTORY": "d"
+                }
+            }
+        ],
+        "foobar": [
+            {
+                "image": "node:4",
+                "steps": {
+                    "hostname": "hostname"
+                },
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": 1,
+                    "DIRECTORY": "a"
+                }
+            },
+            {
+                "image": "node:4",
+                "steps": {
+                    "hostname": "hostname"
+                },
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": 1,
+                    "DIRECTORY": "b"
+                }
+            },
+            {
+                "image": "node:4",
+                "steps": {
+                    "hostname": "hostname"
+                },
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": 2,
+                    "DIRECTORY": "a"
+                }
+            },
+            {
+                "image": "node:4",
+                "steps": {
+                    "hostname": "hostname"
+                },
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": 2,
+                    "DIRECTORY": "b"
+                }
+            }
+        ]
+    },
+    "workflow": [
+        "foobar"
+    ]
+}
