@@ -41,11 +41,9 @@
   "engine-strict": true,
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.0.0",
-    "eslint-config-screwdriver": "^1.0.0",
-    "eslint-plugin-import": "^1.8.0",
-    "eslint-plugin-jsx-a11y": "^1.2.2",
-    "eslint-plugin-react": "^5.1.1",
+    "eslint": "^3.2.2",
+    "eslint-config-screwdriver": "^2.0.0",
+    "eslint-plugin-import": "^1.12.0",
     "jenkins-mocha": "^2.6.0",
     "marked-man": "^0.1.5"
   },
