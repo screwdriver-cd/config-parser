@@ -37,7 +37,7 @@
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
-                    "VERSION": 1,
+                    "VERSION": "1",
                     "DIRECTORY": "a"
                 }
             },
@@ -49,7 +49,7 @@
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
-                    "VERSION": 1,
+                    "VERSION": "1",
                     "DIRECTORY": "b"
                 }
             },
@@ -61,7 +61,7 @@
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
-                    "VERSION": 2,
+                    "VERSION": "2",
                     "DIRECTORY": "a"
                 }
             },
@@ -73,7 +73,7 @@
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
-                    "VERSION": 2,
+                    "VERSION": "2",
                     "DIRECTORY": "b"
                 }
             }

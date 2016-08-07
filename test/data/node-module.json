@@ -9,7 +9,7 @@
                 },
                 "environment": {
                     "NODE_ENV": "test",
-                    "NODE_VERSION": 4
+                    "NODE_VERSION": "4"
                 }
             },
             {
@@ -20,7 +20,7 @@
                 },
                 "environment": {
                     "NODE_ENV": "test",
-                    "NODE_VERSION": 5
+                    "NODE_VERSION": "5"
                 }
             },
             {
@@ -31,7 +31,7 @@
                 },
                 "environment": {
                     "NODE_ENV": "test",
-                    "NODE_VERSION": 6
+                    "NODE_VERSION": "6"
                 }
             }
         ],
