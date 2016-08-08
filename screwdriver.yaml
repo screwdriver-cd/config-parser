@@ -4,11 +4,11 @@ jobs:
         matrix:
             NODE_VERSION: [4,5,6]
         steps:
-            install: npm install
-            test: npm test
-            build: npm run build
+            - npm install
+            - test: npm test
+            - build: npm run build
 
     publish:
         image: node:4
         steps:
-            install: npm publish
+            - install: npm publish

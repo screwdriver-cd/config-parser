@@ -3,11 +3,20 @@
         "main": [
             {
                 "image": "node:4",
-                "steps": {
-                    "install": "npm install",
-                    "test": "npm test",
-                    "publish": "npm publish"
-                },
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
                 "environment": {
                     "FOO": "bar",
                     "BAR": "foo",
@@ -16,11 +25,20 @@
             },
             {
                 "image": "node:4",
-                "steps": {
-                    "install": "npm install",
-                    "test": "npm test",
-                    "publish": "npm publish"
-                },
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
                 "environment": {
                     "FOO": "bar",
                     "BAR": "foo",
@@ -31,9 +49,12 @@
         "foobar": [
             {
                 "image": "node:4",
-                "steps": {
-                    "hostname": "hostname"
-                },
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
@@ -43,9 +64,12 @@
             },
             {
                 "image": "node:4",
-                "steps": {
-                    "hostname": "hostname"
-                },
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
@@ -55,9 +79,12 @@
             },
             {
                 "image": "node:4",
-                "steps": {
-                    "hostname": "hostname"
-                },
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",
@@ -67,9 +94,12 @@
             },
             {
                 "image": "node:4",
-                "steps": {
-                    "hostname": "hostname"
-                },
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
                 "environment": {
                     "FOO": "ban",
                     "BAZ": "foo",

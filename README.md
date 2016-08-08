@@ -27,17 +27,17 @@ jobs:
         matrix:
             NODE_VERSION: [4,5,6]
         steps:
-            init: npm install
-            test: npm test
+            - init: npm install
+            - test: npm test
 
     publish:
         environment:
             NODE_TAG: latest
         image: node:4
         steps:
-            bump: npm run bump
-            publish: npm publish --tag $NODE_TAG
-            tag: git push origin --tags
+            - bump: npm run bump
+            - publish: npm publish --tag $NODE_TAG
+            - tag: git push origin --tags
 ```
 
 ## Usage
@@ -57,12 +57,12 @@ parser(fs.readFileSync('screwdriver.yaml'), (err, pipeline) => {
     // pipeline.workflow
 
     // All the main jobs with the steps to execute and environment variables to set
-    // pipeline.jobs.main[].steps
+    // pipeline.jobs.main[].commands
     // pipeline.jobs.main[].environment
     // pipeline.jobs.main[].image
 
     // All the publish jobs with the steps to execute and environment variables to set
-    // pipeline.jobs.publish[].steps
+    // pipeline.jobs.publish[].commands
     // pipeline.jobs.publish[].environment
     // pipeline.jobs.publish[].image
 });

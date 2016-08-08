@@ -1,6 +1,6 @@
 jobs:
     foobar:
         steps:
-            install: npm install
-            test: npm test
-            publish: npm publish
+            - install: npm install
+            - test: npm test
+            - publish: npm publish

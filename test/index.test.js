@@ -100,7 +100,7 @@ describe('config parser', () => {
         it('returns an error if not enough steps', (done) => {
             parser(loadData('not-enough-commands.yaml'), (err) => {
                 assert.isNotNull(err);
-                assert.match(err.toString(), /"steps" requires at least one step/);
+                assert.match(err.toString(), /"steps" must contain at least 1 items/);
                 done();
             });
         });
