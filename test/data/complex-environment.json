@@ -3,9 +3,12 @@
         "main": [
             {
                 "image": "node:4",
-                "steps": {
-                    "install": "npm install"
-                },
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    }
+                ],
                 "environment": {
                     "ARRAY": "[\"a\",\"b\"]",
                     "BOOL": "true",

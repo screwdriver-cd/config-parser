@@ -1,7 +1,7 @@
 shared:
     image: node:4
     steps:
-        hostname: hostname
+        - hostname
     environment:
         FOO: bar
     matrix:
@@ -12,9 +12,9 @@ jobs:
     main:
         image: node:4
         steps:
-            install: npm install
-            test: npm test
-            publish: npm publish
+            - install: npm install
+            - test: npm test
+            - publish: npm publish
         environment:
             BAR: foo
         matrix:

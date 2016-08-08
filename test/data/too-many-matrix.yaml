@@ -1,7 +1,7 @@
 jobs:
     main:
         steps:
-            foo: date
+            - foo: date
         image: node:4
         matrix:
             BLAH: [1,2]

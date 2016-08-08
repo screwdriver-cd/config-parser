@@ -1,4 +1,4 @@
 jobs:
     main:
         steps:
-            "foo bar": baz
+            - "foo bar": baz
