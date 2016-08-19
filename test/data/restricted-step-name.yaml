@@ -1,0 +1,5 @@
+jobs:
+    main:
+        image: node:4
+        steps:
+            - sd-setup: woot
