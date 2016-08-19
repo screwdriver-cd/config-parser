@@ -140,7 +140,16 @@ describe('config parser', () => {
         it('returns an error if matrix is too big', (done) => {
             parser(loadData('too-big-matrix.yaml'), (err) => {
                 assert.isNotNull(err);
-                assert.match(err.toString(), /Job main: Matrix cannot contain >25 permutations/);
+                assert.match(err.toString(), /Job "main": "matrix" cannot contain >25 perm/);
+                done();
+            });
+        });
+
+        it('returns an error if using restricted step names', (done) => {
+            parser(loadData('restricted-step-name.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(),
+                    /Job "main": Step "sd-setup": cannot use a restricted prefix "sd-"/);
                 done();
             });
         });
