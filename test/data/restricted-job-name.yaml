@@ -1,0 +1,9 @@
+jobs:
+    main:
+        image: node:4
+        steps:
+            - setup: woot
+    pr-15:
+        image: node:4
+        steps:
+            - setup: woot

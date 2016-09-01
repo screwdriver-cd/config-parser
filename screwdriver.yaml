@@ -1,14 +1,15 @@
+workflow:
+    - publish
+
+shared:
+    image: node:6
+
 jobs:
     main:
-        image: node:{{NODE_VERSION}}
-        matrix:
-            NODE_VERSION: [4,5,6]
         steps:
-            - npm install
+            - install: npm install
             - test: npm test
-            - build: npm run build
 
     publish:
-        image: node:4
         steps:
             - install: npm publish

@@ -38,6 +38,9 @@ jobs:
             - bump: npm run bump
             - publish: npm publish --tag $NODE_TAG
             - tag: git push origin --tags
+        secrets:
+            - NPM_TOKEN
+            - GIT_KEY
 ```
 
 ## Usage

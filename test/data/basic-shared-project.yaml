@@ -7,6 +7,8 @@ shared:
     matrix:
         VERSION: [1,2]
         DIRECTORY: [a,b]
+    secrets:
+        - GIT_KEY
 
 jobs:
     main:
@@ -24,3 +26,5 @@ jobs:
         environment:
             BAZ: foo
             FOO: ban
+        secrets:
+            - NPM_TOKEN
