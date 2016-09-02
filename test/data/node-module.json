@@ -16,7 +16,8 @@
                 "environment": {
                     "NODE_ENV": "test",
                     "NODE_VERSION": "4"
-                }
+                },
+                "secrets": []
             },
             {
                 "image": "node:5",
@@ -33,7 +34,8 @@
                 "environment": {
                     "NODE_ENV": "test",
                     "NODE_VERSION": "5"
-                }
+                },
+                "secrets": []
             },
             {
                 "image": "node:6",
@@ -50,7 +52,8 @@
                 "environment": {
                     "NODE_ENV": "test",
                     "NODE_VERSION": "6"
-                }
+                },
+                "secrets": []
             }
         ],
         "publish": [
@@ -73,7 +76,10 @@
                 "environment": {
                     "NODE_ENV": "test",
                     "NODE_TAG": "latest"
-                }
+                },
+                "secrets": [
+                    "NPM_TOKEN"
+                ]
             }
         ]
     },

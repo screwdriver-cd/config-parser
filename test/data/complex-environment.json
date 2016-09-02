@@ -16,7 +16,8 @@
                     "NUMBER": "3",
                     "DECIMAL": "3.1415927",
                     "STRING": "test"
-                }
+                },
+                "secrets": []
             }
         ]
     },

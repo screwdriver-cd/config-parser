@@ -21,7 +21,10 @@
                     "FOO": "bar",
                     "BAR": "foo",
                     "DIRECTORY": "c"
-                }
+                },
+                "secrets": [
+                    "GIT_KEY"
+                ]
             },
             {
                 "image": "node:4",
@@ -43,7 +46,10 @@
                     "FOO": "bar",
                     "BAR": "foo",
                     "DIRECTORY": "d"
-                }
+                },
+                "secrets": [
+                    "GIT_KEY"
+                ]
             }
         ],
         "foobar": [
@@ -60,7 +66,11 @@
                     "BAZ": "foo",
                     "VERSION": "1",
                     "DIRECTORY": "a"
-                }
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ]
             },
             {
                 "image": "node:4",
@@ -75,7 +85,11 @@
                     "BAZ": "foo",
                     "VERSION": "1",
                     "DIRECTORY": "b"
-                }
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ]
             },
             {
                 "image": "node:4",
@@ -90,7 +104,11 @@
                     "BAZ": "foo",
                     "VERSION": "2",
                     "DIRECTORY": "a"
-                }
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ]
             },
             {
                 "image": "node:4",
@@ -105,7 +123,11 @@
                     "BAZ": "foo",
                     "VERSION": "2",
                     "DIRECTORY": "b"
-                }
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ]
             }
         ]
     },

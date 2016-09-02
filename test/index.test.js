@@ -153,6 +153,15 @@ describe('config parser', () => {
                 done();
             });
         });
+
+        it('returns an error if using restricted job names', (done) => {
+            parser(loadData('restricted-job-name.yaml'), (err) => {
+                assert.isNotNull(err);
+                assert.match(err.toString(),
+                    /Job "pr-15": cannot use a restricted prefix "pr-"/);
+                done();
+            });
+        });
     });
 
     describe('permutation', () => {
