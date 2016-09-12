@@ -121,7 +121,7 @@ describe('config parser', () => {
             });
         });
 
-        it('returns an error if workflow is missing main', (done) => {
+        it('returns an error if workflow is main is not the first job', (done) => {
             parser(loadData('workflow-main-not-first.yaml'), (err) => {
                 assert.isNotNull(err);
                 assert.match(err.toString(), /Workflow: "main" is implied as the first job/);
