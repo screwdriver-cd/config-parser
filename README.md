@@ -1,5 +1,5 @@
 # Screwdriver.yaml Configuration Parser
-[![Version][npm-image]][npm-url] ![Downloads][downloads-image] [![Build Status][wercker-image]][wercker-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
+[![Version][npm-image]][npm-url] ![Downloads][downloads-image] [![Build Status][status-image]][status-url] [![Open Issues][issues-image]][issues-url] [![Dependency Status][daviddm-image]][daviddm-url] ![License][license-image]
 
 > Node module for validating and parsing `screwdriver.yaml` configurations
 
@@ -89,7 +89,7 @@ Code licensed under the BSD 3-Clause license. See LICENSE file for terms.
 [license-image]: https://img.shields.io/npm/l/screwdriver-config-parser.svg
 [issues-image]: https://img.shields.io/github/issues/screwdriver-cd/config-parser.svg
 [issues-url]: https://github.com/screwdriver-cd/config-parser/issues
-[wercker-image]: https://app.wercker.com/status/1a0ecd0b5c31c377926531a27fe2e4dc
-[wercker-url]: https://app.wercker.com/project/bykey/1a0ecd0b5c31c377926531a27fe2e4dc
+[status-image]: https://cd.screwdriver.cd/pipelines/7e1637f07ce250a465595ffc963d5d46b6840e09/badge
+[status-url]: https://cd.screwdriver.cd/pipelines/7e1637f07ce250a465595ffc963d5d46b6840e09
 [daviddm-image]: https://david-dm.org/screwdriver-cd/config-parser.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/screwdriver-cd/config-parser
