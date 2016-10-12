@@ -8,11 +8,13 @@ const phaseFlatten = require('./lib/phase/flatten');
 const phaseValidateFunctionality = require('./lib/phase/functional');
 const phaseGeneratePermutations = require('./lib/phase/permutation');
 
-const parseYaml = yaml => (new Promise((resolve) => {
-    const parsedYaml = Yaml.safeLoad(yaml);
-
-    resolve(parsedYaml);
-}));
+/**
+ * Parses a yaml file
+ * @method parseYaml
+ * @param  {String}  yaml Raw yaml
+ * @return {Promise}      resoves POJO containing yaml data
+ */
+const parseYaml = yaml => (new Promise(resolve => resolve(Yaml.safeLoad(yaml))));
 
 /**
  * Parse the configuration from a screwdriver.yaml
@@ -35,5 +37,19 @@ module.exports = function configParser(yaml) {
         .then(doc => ({
             jobs: Hoek.reach(doc, 'jobs'),
             workflow: Hoek.reach(doc, 'workflow')
+        }))
+        .catch(err => ({
+            jobs: {
+                main: {
+                    image: 'alpine',
+                    commands: [{
+                        name: 'config-parse-error',
+                        command: `echo "${err}"; exit 1`
+                    }],
+                    secrets: [],
+                    environment: {}
+                }
+            },
+            workflow: ['main']
         }));
 };
