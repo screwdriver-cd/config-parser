@@ -40,7 +40,7 @@ module.exports = function configParser(yaml) {
         }))
         .catch(err => ({
             jobs: {
-                main: {
+                main: [{
                     image: 'alpine',
                     commands: [{
                         name: 'config-parse-error',
@@ -48,7 +48,7 @@ module.exports = function configParser(yaml) {
                     }],
                     secrets: [],
                     environment: {}
-                }
+                }]
             },
             workflow: ['main']
         }));
