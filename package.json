@@ -1,6 +1,6 @@
 {
   "name": "screwdriver-config-parser",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Node module for parsing screwdriver.yaml configurations",
   "main": "index.js",
   "scripts": {
@@ -41,7 +41,6 @@
     "marked-man": "^0.1.5"
   },
   "dependencies": {
-    "async": "^2.0.1",
     "clone": "^2.0.0",
     "hoek": "^4.0.1",
     "joi": "^9.0.1",
