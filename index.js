@@ -41,7 +41,7 @@ module.exports = function configParser(yaml) {
         .catch(err => ({
             jobs: {
                 main: [{
-                    image: 'alpine',
+                    image: 'buildpack-deps',
                     commands: [{
                         name: 'config-parse-error',
                         command: `echo "${err}"; exit 1`
