@@ -21,8 +21,8 @@ describe('config parser', () => {
             parser('foo: :')
                 .then((data) => {
                     assert.deepEqual(data.workflow, ['main']);
-                    assert.strictEqual(data.jobs.main[0].image, 'alpine');
-                    assert.deepEqual(data.jobs.main[0].image, 'alpine');
+                    assert.strictEqual(data.jobs.main[0].image, 'buildpack-deps');
+                    assert.deepEqual(data.jobs.main[0].image, 'buildpack-deps');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
