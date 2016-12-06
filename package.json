@@ -43,7 +43,7 @@
   "dependencies": {
     "clone": "^2.0.0",
     "hoek": "^4.0.1",
-    "joi": "^9.0.1",
+    "joi": "^10.0.5",
     "js-yaml": "^3.6.1",
     "keymbinatorial": "^1.0.0",
     "screwdriver-data-schema": "^15.0.3",
