@@ -44,8 +44,8 @@
     "eslint": "^3.2.2",
     "eslint-config-screwdriver": "^2.0.0",
     "eslint-plugin-import": "^2.0.0",
-    "jenkins-mocha": "^3.0.0",
-    "marked-man": "^0.1.5"
+    "jenkins-mocha": "^4.0.0",
+    "marked-man": "^0.2.0"
   },
   "dependencies": {
     "clone": "^2.0.0",
@@ -53,7 +53,7 @@
     "joi": "^10.0.5",
     "js-yaml": "^3.6.1",
     "keymbinatorial": "^1.0.0",
-    "screwdriver-data-schema": "^15.0.3",
+    "screwdriver-data-schema": "^16.0.1",
     "tinytim": "^0.1.1"
   }
 }
