@@ -87,9 +87,9 @@ Code licensed under the BSD 3-Clause license. See LICENSE file for terms.
 [npm-url]: https://npmjs.org/package/screwdriver-config-parser
 [downloads-image]: https://img.shields.io/npm/dt/screwdriver-config-parser.svg
 [license-image]: https://img.shields.io/npm/l/screwdriver-config-parser.svg
-[issues-image]: https://img.shields.io/github/issues/screwdriver-cd/config-parser.svg
-[issues-url]: https://github.com/screwdriver-cd/config-parser/issues
-[status-image]: https://cd.screwdriver.cd/pipelines/e840cd834b4545320fb95935bcbaa3e1a9c162c3/badge
-[status-url]: https://cd.screwdriver.cd/pipelines/e840cd834b4545320fb95935bcbaa3e1a9c162c3
+[issues-image]: https://img.shields.io/github/issues/screwdriver-cd/screwdriver.svg
+[issues-url]: https://github.com/screwdriver-cd/screwdriver/issues
+[status-image]: https://cd.screwdriver.cd/pipelines/18/badge
+[status-url]: https://cd.screwdriver.cd/pipelines/18
 [daviddm-image]: https://david-dm.org/screwdriver-cd/config-parser.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/screwdriver-cd/config-parser
