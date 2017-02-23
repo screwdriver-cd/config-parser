@@ -9,7 +9,8 @@ shared:
         DIRECTORY: [a,b]
     secrets:
         - GIT_KEY
-
+    settings:
+        email: foo@example.com
 jobs:
     main:
         image: node:4
@@ -21,7 +22,8 @@ jobs:
             BAR: foo
         matrix:
             DIRECTORY: [c,d]
-
+        settings:
+            hipchat: room_a
     foobar:
         environment:
             BAZ: foo

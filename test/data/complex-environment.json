@@ -17,7 +17,8 @@
                     "DECIMAL": "3.1415927",
                     "STRING": "test"
                 },
-                "secrets": []
+                "secrets": [],
+                "settings": {}
             }
         ]
     },

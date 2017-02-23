@@ -24,7 +24,11 @@
                 },
                 "secrets": [
                     "GIT_KEY"
-                ]
+                ],
+                "settings": {
+                    "email": "foo@example.com",
+                    "hipchat": "room_a"
+                }
             },
             {
                 "image": "node:4",
@@ -49,7 +53,11 @@
                 },
                 "secrets": [
                     "GIT_KEY"
-                ]
+                ],
+                "settings": {
+                    "email": "foo@example.com",
+                    "hipchat": "room_a"
+                }
             }
         ],
         "foobar": [
@@ -70,7 +78,10 @@
                 "secrets": [
                     "GIT_KEY",
                     "NPM_TOKEN"
-                ]
+                ],
+                "settings": {
+                    "email": "foo@example.com"
+                }
             },
             {
                 "image": "node:4",
@@ -89,7 +100,10 @@
                 "secrets": [
                     "GIT_KEY",
                     "NPM_TOKEN"
-                ]
+                ],
+                "settings": {
+                    "email": "foo@example.com"
+                }
             },
             {
                 "image": "node:4",
@@ -108,7 +122,10 @@
                 "secrets": [
                     "GIT_KEY",
                     "NPM_TOKEN"
-                ]
+                ],
+                "settings": {
+                    "email": "foo@example.com"
+                }
             },
             {
                 "image": "node:4",
@@ -127,7 +144,10 @@
                 "secrets": [
                     "GIT_KEY",
                     "NPM_TOKEN"
-                ]
+                ],
+                "settings": {
+                    "email": "foo@example.com"
+                }
             }
         ]
     },
