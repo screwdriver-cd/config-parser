@@ -44,8 +44,7 @@
     "eslint": "^3.2.2",
     "eslint-config-screwdriver": "^2.0.0",
     "eslint-plugin-import": "^2.0.0",
-    "jenkins-mocha": "^4.0.0",
-    "marked-man": "^0.2.0"
+    "jenkins-mocha": "^4.0.0"
   },
   "dependencies": {
     "clone": "^2.0.0",

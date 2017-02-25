@@ -71,8 +71,6 @@ parser(fs.readFileSync('screwdriver.yaml'), (err, pipeline) => {
 });
 ```
 
-Or for usage on the command line see [USAGE.md](./USAGE.md).
-
 ## Testing
 
 ```bash
