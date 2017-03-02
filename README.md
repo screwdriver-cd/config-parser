@@ -20,6 +20,8 @@ workflow:
 shared:
     environment:
         NODE_ENV: test
+    settings:
+        email: foo@bar.com
 
 jobs:
     main:
