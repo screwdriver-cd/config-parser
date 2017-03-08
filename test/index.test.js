@@ -1,9 +1,13 @@
 'use strict';
 
 const assert = require('chai').assert;
-const parser = require('../');
 const fs = require('fs');
 const path = require('path');
+const sinon = require('sinon');
+const parser = require('../');
+
+sinon.assert.expose(assert, { prefix: '' });
+require('sinon-as-promised');
 
 /**
  * Load sample data from disk
@@ -95,6 +99,62 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('complex-environment.json')));
                 })
         );
+
+        describe('templates', () => {
+            const firstTemplate = JSON.parse(loadData('template.json'));
+            const secondTemplate = JSON.parse(loadData('template-2.json'));
+            const templateFactoryMock = {
+                getTemplate: sinon.stub()
+            };
+            const firstTemplateConfig = {
+                name: 'mytemplate',
+                version: '1.2.3',
+                label: ''
+            };
+            const secondTemplateConfig = {
+                name: 'yourtemplate',
+                version: '2',
+                label: 'stable'
+            };
+
+            it('flattens templates sucessfully', () => {
+                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
+                    .resolves(firstTemplate);
+                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
+                    .resolves(secondTemplate);
+
+                return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
+                  .then((data) => {
+                      assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template.json')));
+                  });
+            });
+
+            it('returns error if template does not exist', () => {
+                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
+                    .resolves(null);
+                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
+                    .resolves(secondTemplate);
+
+                return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
+                    .then((data) => {
+                        assert.match(data.jobs.main[0].commands[0].command,
+                            /Template mytemplate@1.2.3 does not exist/);
+                    });
+            });
+
+            it('returns error if template (with label) does not exist', () => {
+                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
+                    .resolves(firstTemplate);
+                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
+                    .resolves(null);
+
+                return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
+                    .then((data) => {
+                        assert.match(data.jobs.main[0].commands[0].command,
+                            /Template yourtemplate@2 with label 'stable' does not exist/);
+                    });
+            });
+        });
     });
 
     describe('functional', () => {

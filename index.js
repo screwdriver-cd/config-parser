@@ -12,23 +12,24 @@ const phaseGeneratePermutations = require('./lib/phase/permutation');
  * Parses a yaml file
  * @method parseYaml
  * @param  {String}  yaml Raw yaml
- * @return {Promise}      resoves POJO containing yaml data
+ * @return {Promise}      Resolves POJO containing yaml data
  */
 const parseYaml = yaml => (new Promise(resolve => resolve(Yaml.safeLoad(yaml))));
 
 /**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
- * @param  {String}   yaml      Contents of screwdriver.yaml
- * @param  {Function} callback  Function to call when done (error, { workflow, jobs })
+ * @param  {String}           yaml              Contents of screwdriver.yaml
+ * @param  {TemplateFactory}  templateFactory   Template Factory to get templates
+ * @returns {Promise}
  */
-module.exports = function configParser(yaml) {
+module.exports = function configParser(yaml, templateFactory) {
     // Convert from YAML to JSON
     return parseYaml(yaml)
         // Basic validation
         .then(phaseValidateStructure)
         // Flatten structures
-        .then(phaseFlatten)
+        .then(parsedDoc => phaseFlatten(parsedDoc, templateFactory))
         // Functionality validation
         .then(phaseValidateFunctionality)
         // Generate Permutations

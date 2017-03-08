@@ -1,0 +1,7 @@
+jobs:
+    main:
+        template: mytemplate@1.2.3
+        environment:
+            FOO: 'overwritten by job'
+    publish:
+        template: yourtemplate@2-stable
