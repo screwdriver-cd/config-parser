@@ -1,0 +1,13 @@
+{
+    "name": "yourtemplate",
+    "version": "2",
+    "description": "test template",
+    "maintainer": "foo@bar.com",
+    "labels": ["stable"],
+    "config": {
+        "image": "node:4",
+        "steps": [
+            { "publish": "npm publish" }
+        ]
+    }
+}

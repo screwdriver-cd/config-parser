@@ -43,8 +43,9 @@
     "chai": "^3.5.0",
     "eslint": "^3.2.2",
     "eslint-config-screwdriver": "^2.0.0",
-    "eslint-plugin-import": "^2.0.0",
-    "jenkins-mocha": "^4.0.0"
+    "jenkins-mocha": "^4.0.0",
+    "sinon": "^1.17.7",
+    "sinon-as-promised": "^4.0.2"
   },
   "dependencies": {
     "clone": "^2.0.0",
@@ -52,7 +53,7 @@
     "joi": "^10.0.5",
     "js-yaml": "^3.6.1",
     "keymbinatorial": "^1.0.0",
-    "screwdriver-data-schema": "^16.0.1",
+    "screwdriver-data-schema": "^16.5.0",
     "tinytim": "^0.1.1"
   }
 }
