@@ -51,6 +51,7 @@ module.exports = function configParser(yaml, templateFactory) {
                     environment: {}
                 }]
             },
-            workflow: ['main']
+            workflow: ['main'],
+            errors: [err.toString()]
         }));
 };
