@@ -7,7 +7,6 @@ const sinon = require('sinon');
 const parser = require('../');
 
 sinon.assert.expose(assert, { prefix: '' });
-require('sinon-as-promised');
 
 /**
  * Load sample data from disk
@@ -31,6 +30,7 @@ describe('config parser', () => {
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command, /YAMLException:/);
+                    assert.match(data.errors[0], /YAMLException:/);
                 })
         );
     });
@@ -41,6 +41,7 @@ describe('config parser', () => {
                 parser('foo: bar')
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command, /"jobs" is required/);
+                        assert.match(data.errors[0], /"jobs" is required/);
                     })
             );
         });
@@ -50,6 +51,7 @@ describe('config parser', () => {
                 parser(loadData('missing-main-job.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command, /"main" is required/);
+                        assert.match(data.errors[0], /"main" is required/);
                     })
             );
         });
@@ -138,6 +140,8 @@ describe('config parser', () => {
                 return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
+                            /Template mytemplate@1.2.3 does not exist/);
+                        assert.match(data.errors[0],
                             /Template mytemplate@1.2.3 does not exist/);
                     });
             });
