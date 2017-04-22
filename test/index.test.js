@@ -102,6 +102,13 @@ describe('config parser', () => {
                 })
         );
 
+        it('flattens verbosely defined steps', () =>
+            parser(loadData('verbose-project.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(loadData('verbose-project.json')));
+                })
+        );
+
         describe('templates', () => {
             const firstTemplate = JSON.parse(loadData('template.json'));
             const secondTemplate = JSON.parse(loadData('template-2.json'));
