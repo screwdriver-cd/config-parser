@@ -6,8 +6,7 @@
                 "commands": [
                     {
                         "name": "install",
-                        "command": "npm install",
-                        "alwaysRun": false
+                        "command": "npm install"
                     }
                 ],
                 "environment": {
