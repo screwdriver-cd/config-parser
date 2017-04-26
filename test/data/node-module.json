@@ -6,13 +6,11 @@
                 "commands": [
                     {
                         "name": "init",
-                        "command": "npm install",
-                        "alwaysRun": false
+                        "command": "npm install"
                     },
                     {
                         "name": "test",
-                        "command": "npm test",
-                        "alwaysRun": false
+                        "command": "npm test"
                     }
                 ],
                 "environment": {
@@ -27,13 +25,11 @@
                 "commands": [
                     {
                         "name": "init",
-                        "command": "npm install",
-                        "alwaysRun": false
+                        "command": "npm install"
                     },
                     {
                         "name": "test",
-                        "command": "npm test",
-                        "alwaysRun": false
+                        "command": "npm test"
                     }
                 ],
                 "environment": {
@@ -48,13 +44,11 @@
                 "commands": [
                     {
                         "name": "init",
-                        "command": "npm install",
-                        "alwaysRun": false
+                        "command": "npm install"
                     },
                     {
                         "name": "test",
-                        "command": "npm test",
-                        "alwaysRun": false
+                        "command": "npm test"
                     }
                 ],
                 "environment": {
@@ -71,18 +65,15 @@
                 "commands": [
                     {
                         "name": "bump",
-                        "command": "npm run bump",
-                        "alwaysRun": false
+                        "command": "npm run bump"
                     },
                     {
                         "name": "publish",
-                        "command": "npm publish --tag $NODE_TAG",
-                        "alwaysRun": false
+                        "command": "npm publish --tag $NODE_TAG"
                     },
                     {
                         "name": "tag",
-                        "command": "git push origin --tags",
-                        "alwaysRun": false
+                        "command": "git push origin --tags"
                     }
                 ],
                 "environment": {

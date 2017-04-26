@@ -6,18 +6,15 @@
                 "commands": [
                     {
                         "name": "install",
-                        "command": "npm install",
-                        "alwaysRun": false
+                        "command": "npm install"
                     },
                     {
                         "name": "test",
-                        "command": "npm test",
-                        "alwaysRun": false
+                        "command": "npm test"
                     },
                     {
                         "name": "publish",
-                        "command": "npm publish",
-                        "alwaysRun": false
+                        "command": "npm publish"
                     }
                 ],
                 "environment": {
@@ -38,18 +35,15 @@
                 "commands": [
                     {
                         "name": "install",
-                        "command": "npm install",
-                        "alwaysRun": false
+                        "command": "npm install"
                     },
                     {
                         "name": "test",
-                        "command": "npm test",
-                        "alwaysRun": false
+                        "command": "npm test"
                     },
                     {
                         "name": "publish",
-                        "command": "npm publish",
-                        "alwaysRun": false
+                        "command": "npm publish"
                     }
                 ],
                 "environment": {
@@ -72,8 +66,7 @@
                 "commands": [
                     {
                         "name": "step-1",
-                        "command": "hostname",
-                        "alwaysRun": false
+                        "command": "hostname"
                     }
                 ],
                 "environment": {
@@ -95,8 +88,7 @@
                 "commands": [
                     {
                         "name": "step-1",
-                        "command": "hostname",
-                        "alwaysRun": false
+                        "command": "hostname"
                     }
                 ],
                 "environment": {
@@ -118,8 +110,7 @@
                 "commands": [
                     {
                         "name": "step-1",
-                        "command": "hostname",
-                        "alwaysRun": false
+                        "command": "hostname"
                     }
                 ],
                 "environment": {
@@ -141,8 +132,7 @@
                 "commands": [
                     {
                         "name": "step-1",
-                        "command": "hostname",
-                        "alwaysRun": false
+                        "command": "hostname"
                     }
                 ],
                 "environment": {
