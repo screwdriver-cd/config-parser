@@ -20,6 +20,22 @@ function loadData(name) {
 
 describe('config parser', () => {
     describe('yaml parser', () => {
+        it('returns an error if yaml does not exist', () => {
+            const YAMLMISSING = /screwdriver.yaml does not exist/;
+
+            return parser('')
+                .then((data) => {
+                    assert.deepEqual(data.workflow, ['main']);
+                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].secrets, []);
+                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command, YAMLMISSING);
+                    assert.match(data.errors[0], YAMLMISSING);
+                });
+        });
+
         it('returns an error if unparsable yaml', () =>
             parser('foo: :')
                 .then((data) => {
