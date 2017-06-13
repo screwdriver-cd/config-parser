@@ -14,7 +14,15 @@ const phaseGeneratePermutations = require('./lib/phase/permutation');
  * @param  {String}  yaml Raw yaml
  * @return {Promise}      Resolves POJO containing yaml data
  */
-const parseYaml = yaml => (new Promise(resolve => resolve(Yaml.safeLoad(yaml))));
+function parseYaml(yaml) {
+    // If no yaml exists, throw error
+    if (!yaml) {
+        return Promise.reject('screwdriver.yaml does not exist. Please ' +
+        'create a screwdriver.yaml and try to rerun your build.');
+    }
+
+    return new Promise(resolve => resolve(Yaml.safeLoad(yaml)));
+}
 
 /**
  * Parse the configuration from a screwdriver.yaml
