@@ -1,0 +1,12 @@
+shared:
+    annotations:
+        foo: a
+        bar: b
+
+jobs:
+    main:
+        annotations:
+            foo: c
+        image: node:4
+        steps:
+            - install: npm install

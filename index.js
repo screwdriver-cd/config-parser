@@ -44,10 +44,12 @@ module.exports = function configParser(yaml, templateFactory) {
         .then(phaseGeneratePermutations)
         // Output in the right format
         .then(doc => ({
+            annotations: Hoek.reach(doc, 'annotations', { default: {} }),
             jobs: Hoek.reach(doc, 'jobs'),
             workflow: Hoek.reach(doc, 'workflow')
         }))
         .catch(err => ({
+            annotations: {},
             jobs: {
                 main: [{
                     image: 'node:6',

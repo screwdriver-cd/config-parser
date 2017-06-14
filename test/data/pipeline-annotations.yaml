@@ -1,0 +1,9 @@
+annotations:
+    foo: a
+    bar: b
+
+jobs:
+    main:
+        image: node:4
+        steps:
+            - install: npm install
