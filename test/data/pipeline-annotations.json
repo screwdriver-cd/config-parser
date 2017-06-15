@@ -1,5 +1,8 @@
 {
-    "annotations": {},
+    "annotations": {
+      "foo": "a",
+      "bar": "b"
+    },
     "jobs": {
         "main": [
             {
@@ -12,12 +15,6 @@
                     }
                 ],
                 "environment": {
-                    "ARRAY": "[\"a\",\"b\"]",
-                    "BOOL": "true",
-                    "OBJECT": "{\"a\":\"cat\",\"b\":\"dog\"}",
-                    "NUMBER": "3",
-                    "DECIMAL": "3.1415927",
-                    "STRING": "test"
                 },
                 "secrets": [],
                 "settings": {}

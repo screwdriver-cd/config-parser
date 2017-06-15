@@ -118,6 +118,29 @@ describe('config parser', () => {
                 })
         );
 
+        it('flattens shared annotations to each job', () =>
+            parser(loadData('shared-annotations.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(loadData('shared-annotations.json')));
+                })
+        );
+
+        it('includes pipeline- and job-level annotations', () =>
+            parser(loadData('pipeline-and-job-annotations.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-and-job-annotations.json')));
+                })
+        );
+
+        it('job-level annotations override shared-level annotations', () =>
+            parser(loadData('shared-job-annotations.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('shared-job-annotations.json')));
+                })
+        );
+
         describe('templates', () => {
             const firstTemplate = JSON.parse(loadData('template.json'));
             const secondTemplate = JSON.parse(loadData('template-2.json'));
@@ -198,7 +221,6 @@ describe('config parser', () => {
             parser(loadData('too-many-matrix.yaml'))
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
-
                         /"environment" and "matrix" can only have a combined/);
                 })
         );
@@ -240,6 +262,13 @@ describe('config parser', () => {
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /Job "pr-15": cannot use a restricted prefix "pr-"/);
+                })
+        );
+
+        it('reads annotations on the pipeline-level', () =>
+            parser(loadData('pipeline-annotations.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-annotations.json')));
                 })
         );
     });
