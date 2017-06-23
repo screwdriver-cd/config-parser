@@ -1,0 +1,9 @@
+shared:
+    image: node:4
+
+jobs:
+    main:
+        description: "This is a description"
+        steps:
+            - hello: "echo hi world"
+            - maybe: "which asdfzxcvasdfqwer1234"
