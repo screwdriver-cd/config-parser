@@ -271,6 +271,15 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-annotations.json')));
                 })
         );
+
+        it('allows a description key', () =>
+            parser(loadData('basic-job-with-description.yaml'))
+                .then((data) => {
+                    assert.isDefined(data.jobs.main[0].description);
+                    assert.equal(data.jobs.main[0].description,
+                        'This is a description');
+                })
+        );
     });
 
     describe('permutation', () => {
