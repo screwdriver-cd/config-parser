@@ -1,0 +1,6 @@
+jobs:
+    main:
+        template: mytemplate@1.2.3
+        steps:
+            - pretest: echo pre-test
+            - postinstall: echo post-install
