@@ -142,8 +142,6 @@ describe('config parser', () => {
         );
 
         describe('templates', () => {
-            const firstTemplate = JSON.parse(loadData('template.json'));
-            const secondTemplate = JSON.parse(loadData('template-2.json'));
             const templateFactoryMock = {
                 getTemplate: sinon.stub()
             };
@@ -157,24 +155,32 @@ describe('config parser', () => {
                 version: '2',
                 label: 'stable'
             };
+            let firstTemplate;
+            let secondTemplate;
 
-            it('flattens templates sucessfully', () => {
+            beforeEach(() => {
+                firstTemplate = JSON.parse(loadData('template.json'));
+                secondTemplate = JSON.parse(loadData('template-2.json'));
                 templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
                     .resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
                     .resolves(secondTemplate);
-
-                return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
-                  .then((data) => {
-                      assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template.json')));
-                  });
             });
 
+            it('flattens templates sucessfully', () =>
+                parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
+                .then(data => assert.deepEqual(
+                    data, JSON.parse(loadData('basic-job-with-template.json'))))
+            );
+
+            it('flattens templates with wrapped steps ', () =>
+                parser(loadData('basic-job-with-template-wrapped-steps.yaml'), templateFactoryMock)
+                .then(data => assert.deepEqual(
+                    data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json'))))
+            );
+
             it('returns error if template does not exist', () => {
-                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
-                    .resolves(null);
-                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
-                    .resolves(secondTemplate);
+                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig).resolves(null);
 
                 return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
                     .then((data) => {
@@ -186,16 +192,12 @@ describe('config parser', () => {
             });
 
             it('returns error if template (with label) does not exist', () => {
-                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
-                    .resolves(firstTemplate);
-                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
-                    .resolves(null);
+                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig).resolves(null);
 
                 return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
-                    .then((data) => {
+                    .then(data =>
                         assert.match(data.jobs.main[0].commands[0].command,
-                            /Template yourtemplate@2 with label 'stable' does not exist/);
-                    });
+                            /Template yourtemplate@2 with label 'stable' does not exist/));
             });
         });
     });
