@@ -1,0 +1,36 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [{
+            "annotations": {},
+            "image": "node:4",
+            "commands": [
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "pretest",
+                    "command": "echo pre-test"
+                },
+                {
+                    "name": "test",
+                    "command": "echo 'my job is overriding this step'"
+                }
+            ],
+            "environment": {
+                "FOO": "from template",
+                "BAR": "foo"
+            },
+            "secrets": [
+                "GIT_KEY"
+            ],
+            "settings": {
+                "email": "foo@example.com"
+            }
+        }]
+    },
+    "workflow": [
+        "main"
+    ]
+}

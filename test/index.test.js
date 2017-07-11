@@ -179,6 +179,12 @@ describe('config parser', () => {
                     data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json'))))
             );
 
+            it('flattens templates with job steps ', () =>
+                parser(loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
+                .then(data => assert.deepEqual(
+                    data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
+            );
+
             it('returns error if template does not exist', () => {
                 templateFactoryMock.getTemplate.withArgs(firstTemplateConfig).resolves(null);
 
