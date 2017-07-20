@@ -145,25 +145,15 @@ describe('config parser', () => {
             const templateFactoryMock = {
                 getTemplate: sinon.stub()
             };
-            const firstTemplateConfig = {
-                name: 'mytemplate',
-                version: '1.2.3',
-                label: ''
-            };
-            const secondTemplateConfig = {
-                name: 'yourtemplate',
-                version: '2',
-                label: 'stable'
-            };
             let firstTemplate;
             let secondTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
                 secondTemplate = JSON.parse(loadData('template-2.json'));
-                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig)
+                templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
-                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig)
+                templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
                     .resolves(secondTemplate);
             });
 
@@ -186,7 +176,7 @@ describe('config parser', () => {
             );
 
             it('returns error if template does not exist', () => {
-                templateFactoryMock.getTemplate.withArgs(firstTemplateConfig).resolves(null);
+                templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(null);
 
                 return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
                     .then((data) => {
@@ -195,15 +185,6 @@ describe('config parser', () => {
                         assert.match(data.errors[0],
                             /Template mytemplate@1.2.3 does not exist/);
                     });
-            });
-
-            it('returns error if template (with label) does not exist', () => {
-                templateFactoryMock.getTemplate.withArgs(secondTemplateConfig).resolves(null);
-
-                return parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
-                    .then(data =>
-                        assert.match(data.jobs.main[0].commands[0].command,
-                            /Template yourtemplate@2 with label 'stable' does not exist/));
             });
         });
     });

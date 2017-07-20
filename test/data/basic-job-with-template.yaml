@@ -4,4 +4,4 @@ jobs:
         environment:
             FOO: 'overwritten by job'
     publish:
-        template: yourtemplate@2-stable
+        template: yourtemplate@2
