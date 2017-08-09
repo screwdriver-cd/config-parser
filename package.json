@@ -52,7 +52,7 @@
     "joi": "^10.0.5",
     "js-yaml": "^3.8.3",
     "keymbinatorial": "^1.0.0",
-    "screwdriver-data-schema": "^16.10.0",
+    "screwdriver-data-schema": "^17.0.0",
     "tinytim": "^0.1.1"
   }
 }
