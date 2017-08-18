@@ -49,6 +49,34 @@ describe('config parser', () => {
                     assert.match(data.errors[0], /YAMLException:/);
                 })
         );
+
+        it('returns an error if multiple documents without hint', () =>
+            parser('foo: bar\n---\nfoo: baz')
+                .then((data) => {
+                    assert.deepEqual(data.workflow, ['main']);
+                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].secrets, []);
+                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command, /YAMLException:.*ambigious/);
+                    assert.match(data.errors[0], /YAMLException:.*ambigious/);
+                })
+        );
+
+        it('picks the document with version hint', () =>
+            parser('jobs: {}\n---\nversion: 4')
+                .then((data) => {
+                    assert.deepEqual(data.workflow, ['main']);
+                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].secrets, []);
+                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command, /ValidationError:.*"jobs" is required/);
+                    assert.match(data.errors[0], /ValidationError:.*"jobs" is required/);
+                })
+        );
     });
 
     describe('structure validation', () => {
