@@ -21,7 +21,7 @@ function parseYaml(yaml) {
         'create a screwdriver.yaml and try to rerun your build.');
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         const documents = YamlParser.safeLoadAll(yaml);
 
         // If only one document, return it
@@ -30,11 +30,11 @@ function parseYaml(yaml) {
         }
 
         // If more than one document, look for "version: 4"
-        const doc = documents.find((yamlDoc) => yamlDoc && yamlDoc.version === 4);
+        const doc = documents.find(yamlDoc => yamlDoc && yamlDoc.version === 4);
 
         if (!doc) {
             throw new YamlParser.YAMLException('Configuration is too ambigious - '
-                                             + 'contains multiple documents without a version hint');
+            + 'contains multiple documents without a version hint');
         }
 
         return resolve(doc);
