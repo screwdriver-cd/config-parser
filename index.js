@@ -1,6 +1,6 @@
 'use strict';
 
-const Yaml = require('js-yaml');
+const YamlParser = require('js-yaml');
 const Hoek = require('hoek');
 
 const phaseValidateStructure = require('./lib/phase/structural');
@@ -21,7 +21,24 @@ function parseYaml(yaml) {
         'create a screwdriver.yaml and try to rerun your build.');
     }
 
-    return new Promise(resolve => resolve(Yaml.safeLoad(yaml)));
+    return new Promise((resolve) => {
+        const documents = YamlParser.safeLoadAll(yaml);
+
+        // If only one document, return it
+        if (documents.length === 1) {
+            return resolve(documents[0]);
+        }
+
+        // If more than one document, look for "version: 4"
+        const doc = documents.find(yamlDoc => yamlDoc && yamlDoc.version === 4);
+
+        if (!doc) {
+            throw new YamlParser.YAMLException('Configuration is too ambigious - '
+            + 'contains multiple documents without a version hint');
+        }
+
+        return resolve(doc);
+    });
 }
 
 /**

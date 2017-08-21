@@ -49,6 +49,36 @@ describe('config parser', () => {
                     assert.match(data.errors[0], /YAMLException:/);
                 })
         );
+
+        it('returns an error if multiple documents without hint', () =>
+            parser('foo: bar\n---\nfoo: baz')
+                .then((data) => {
+                    assert.deepEqual(data.workflow, ['main']);
+                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].secrets, []);
+                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        /YAMLException:.*ambigious/);
+                    assert.match(data.errors[0], /YAMLException:.*ambigious/);
+                })
+        );
+
+        it('picks the document with version hint', () =>
+            parser('jobs: {}\n---\nversion: 4')
+                .then((data) => {
+                    assert.deepEqual(data.workflow, ['main']);
+                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].secrets, []);
+                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        /ValidationError:.*"jobs" is required/);
+                    assert.match(data.errors[0], /ValidationError:.*"jobs" is required/);
+                })
+        );
     });
 
     describe('structure validation', () => {
@@ -159,20 +189,20 @@ describe('config parser', () => {
 
             it('flattens templates sucessfully', () =>
                 parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
-                .then(data => assert.deepEqual(
-                    data, JSON.parse(loadData('basic-job-with-template.json'))))
+                    .then(data => assert.deepEqual(
+                        data, JSON.parse(loadData('basic-job-with-template.json'))))
             );
 
             it('flattens templates with wrapped steps ', () =>
                 parser(loadData('basic-job-with-template-wrapped-steps.yaml'), templateFactoryMock)
-                .then(data => assert.deepEqual(
-                    data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json'))))
+                    .then(data => assert.deepEqual(
+                        data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json'))))
             );
 
             it('flattens templates with job steps ', () =>
                 parser(loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
-                .then(data => assert.deepEqual(
-                    data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
+                    .then(data => assert.deepEqual(
+                        data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
             );
 
             it('returns error if template does not exist', () => {
