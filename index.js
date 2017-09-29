@@ -60,11 +60,18 @@ module.exports = function configParser(yaml, templateFactory) {
         // Generate Permutations
         .then(phaseGeneratePermutations)
         // Output in the right format
-        .then(doc => ({
-            annotations: Hoek.reach(doc, 'annotations', { default: {} }),
-            jobs: Hoek.reach(doc, 'jobs'),
-            workflow: Hoek.reach(doc, 'workflow')
-        }))
+        .then((doc) => {
+            const res = {
+                annotations: Hoek.reach(doc, 'annotations', { default: {} }),
+                jobs: Hoek.reach(doc, 'jobs')
+            };
+
+            if (doc.workflow) {
+                res.workflow = doc.workflow;
+            }
+
+            return res;
+        })
         .catch(err => ({
             annotations: {},
             jobs: {
@@ -78,7 +85,7 @@ module.exports = function configParser(yaml, templateFactory) {
                     environment: {}
                 }]
             },
-            workflow: ['main'],
+            workflow: ['main'], // remove this after we stop supporting workflow
             errors: [err.toString()]
         }));
 };

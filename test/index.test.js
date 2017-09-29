@@ -308,5 +308,12 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('node-module.json')));
                 })
         );
+
+        it('generates correct jobs with ', () =>
+            parser(loadData('pipeline-with-requires.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-with-requires.json')));
+                })
+        );
     });
 });
