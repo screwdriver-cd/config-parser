@@ -1,0 +1,60 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "requires": "~commit",
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ]
+            }
+        ],
+        "foobar": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": "main",
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ]
+            }
+        ],
+        "baz": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-world",
+                        "command": "echo world"
+                    }
+                ]
+            }
+        ]
+    }
+}
