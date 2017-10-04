@@ -8,7 +8,7 @@
                 "settings": {},
                 "environment": {},
                 "image": "node:4",
-                "requires": "~commit",
+                "requires": ["~commit"],
                 "commands": [
                     {
                         "name": "install",
@@ -31,7 +31,7 @@
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "requires": "main",
+                "requires": ["main"],
                 "image": "node:4",
                 "commands": [
                     {
