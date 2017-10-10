@@ -56,5 +56,16 @@
                 ]
             }
         ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "main" },
+            { "name": "foobar" },
+            { "name": "baz" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "foobar" }
+        ]
     }
 }
