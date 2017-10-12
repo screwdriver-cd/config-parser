@@ -67,9 +67,8 @@ module.exports = function configParser(yaml, templateFactory) {
                 workflowGraph: Hoek.reach(doc, 'workflowGraph')
             };
 
-            if (doc.workflow) {
-                res.workflow = doc.workflow;
-            }
+            // Set it as empty array so we don't need to check if it's undefined and delete the field later
+            res.workflow = doc.workflow || [];
 
             return res;
         })

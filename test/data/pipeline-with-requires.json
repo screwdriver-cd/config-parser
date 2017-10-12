@@ -57,8 +57,11 @@
             }
         ]
     },
+    "workflow": [],
     "workflowGraph": {
         "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
             { "name": "main" },
             { "name": "foobar" },
             { "name": "baz" }

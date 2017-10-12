@@ -299,38 +299,6 @@ describe('config parser', () => {
                         'This is a description');
                 })
         );
-
-        it('creates workflowGraph for legacy workflow', () =>
-            parser(loadData('pipeline-with-legacy-workflow.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data.workflowGraph.nodes, [
-                        { name: 'main' },
-                        { name: 'foobar' },
-                        { name: 'baz' }
-                    ]);
-                    assert.deepEqual(data.workflowGraph.edges, [
-                        { src: '~pr', dest: 'main' },
-                        { src: '~commit', dest: 'main' },
-                        { src: 'main', dest: 'foobar' },
-                        { src: 'foobar', dest: 'baz' }
-                    ]);
-                })
-        );
-
-        it('creates workflowGraph for new workflow', () =>
-            parser(loadData('pipeline-with-requires.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data.workflowGraph.nodes, [
-                        { name: 'main' },
-                        { name: 'foobar' },
-                        { name: 'baz' }
-                    ]);
-                    assert.deepEqual(data.workflowGraph.edges, [
-                        { src: '~commit', dest: 'main' },
-                        { src: 'main', dest: 'foobar' }
-                    ]);
-                })
-        );
     });
 
     describe('permutation', () => {

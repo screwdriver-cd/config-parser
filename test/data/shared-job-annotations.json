@@ -23,5 +23,16 @@
     },
     "workflow": [
         "main"
-    ]
+    ],
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" }
+        ]
+    }
 }
