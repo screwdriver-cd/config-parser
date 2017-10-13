@@ -299,6 +299,14 @@ describe('config parser', () => {
                         'This is a description');
                 })
         );
+
+        it('returns an error if workflowGraph has cycle', () =>
+            parser(loadData('pipeline-with-requires-cycle.yaml'))
+                .then((data) => {
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        /Jobs: should not have circular dependency in jobs/);
+                })
+        );
     });
 
     describe('permutation', () => {

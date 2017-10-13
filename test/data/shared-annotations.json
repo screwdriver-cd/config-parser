@@ -179,5 +179,18 @@
     "workflow": [
         "main",
         "foobar"
-    ]
+    ],
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" },
+            { "name": "foobar" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "foobar" }
+        ]
+    }
 }

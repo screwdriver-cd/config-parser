@@ -1,0 +1,18 @@
+shared:
+    image: node:4
+jobs:
+    main:
+        steps:
+            - install: npm install
+            - test: npm test
+            - publish: npm publish
+        requires:
+            - ~commit
+            - foobar
+    foobar:
+        steps:
+            - echo-hello: echo hello
+        requires: main
+    baz:
+        steps:
+            - echo-world: echo world

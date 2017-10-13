@@ -63,12 +63,12 @@ module.exports = function configParser(yaml, templateFactory) {
         .then((doc) => {
             const res = {
                 annotations: Hoek.reach(doc, 'annotations', { default: {} }),
-                jobs: Hoek.reach(doc, 'jobs')
+                jobs: Hoek.reach(doc, 'jobs'),
+                workflowGraph: Hoek.reach(doc, 'workflowGraph')
             };
 
-            if (doc.workflow) {
-                res.workflow = doc.workflow;
-            }
+            // Set it as empty array so we don't need to check if it's undefined and delete the field later
+            res.workflow = doc.workflow || [];
 
             return res;
         })
