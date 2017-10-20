@@ -86,6 +86,17 @@ module.exports = function configParser(yaml, templateFactory) {
                 }]
             },
             workflow: ['main'], // remove this after we stop supporting workflow
+            workflowGraph: {
+                nodes: [
+                    { name: '~pr' },
+                    { name: '~commit' },
+                    { name: 'main' }
+                ],
+                edges: [
+                    { src: '~pr', dest: 'main' },
+                    { src: '~commit', dest: 'main' }
+                ]
+            },
             errors: [err.toString()]
         }));
 };

@@ -26,6 +26,17 @@ describe('config parser', () => {
             return parser('')
                 .then((data) => {
                     assert.deepEqual(data.workflow, ['main']);
+                    assert.deepEqual(data.workflowGraph, {
+                        nodes: [
+                            { name: '~pr' },
+                            { name: '~commit' },
+                            { name: 'main' }
+                        ],
+                        edges: [
+                            { src: '~pr', dest: 'main' },
+                            { src: '~commit', dest: 'main' }
+                        ]
+                    });
                     assert.strictEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
