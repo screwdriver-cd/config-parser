@@ -104,11 +104,18 @@ describe('config parser', () => {
         });
 
         describe('jobs', () => {
-            it('returns an error if missing main job', () =>
+            it('returns an error if missing main job for legacy config', () =>
                 parser(loadData('missing-main-job.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command, /"main" is required/);
                         assert.match(data.errors[0], /"main" is required/);
+                    })
+            );
+
+            it('Do not return error if missing main job for new config', () =>
+                parser(loadData('missing-main-job-with-requires.yaml'))
+                    .then((data) => {
+                        assert.notOk(data.errors);
                     })
             );
         });

@@ -1,0 +1,8 @@
+jobs:
+    foobar:
+        image: node:6
+        requires: ~commit
+        steps:
+            - install: npm install
+            - test: npm test
+            - publish: npm publish
