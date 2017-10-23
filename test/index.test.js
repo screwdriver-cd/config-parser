@@ -250,7 +250,7 @@ describe('config parser', () => {
             parser(loadData('too-many-environment.yaml'))
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
-                        /"environment" can only have 25 environment/);
+                        /"environment" can only have 35 environment/);
                 })
         );
 
