@@ -325,6 +325,15 @@ describe('config parser', () => {
                         /Jobs: should not have circular dependency in jobs/);
                 })
         );
+
+        it('returns an error if workflowGraph has join', () =>
+            parser(loadData('pipeline-with-requires-join.yaml'))
+                .then((data) => {
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        // eslint-disable-next-line max-len
+                        /Jobs: should not require more than one job since we do not support join yet/);
+                })
+        );
     });
 
     describe('permutation', () => {
