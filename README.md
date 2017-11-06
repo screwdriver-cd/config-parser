@@ -4,7 +4,7 @@
 > Node module for validating and parsing `screwdriver.yaml` configurations
 
  - Validates a `screwdriver.yaml` for structural and functional specification
- - Outputs the pipeline's workflow
+ - Outputs the pipeline's workflow graph configuration
  - Generates a list of jobs to execute, including:
      - build permutations
      - environment variables to set
@@ -14,9 +14,6 @@
 ## YAML
 
 ```yaml
-workflow:
-    - publish
-
 shared:
     environment:
         NODE_ENV: test
@@ -25,12 +22,13 @@ shared:
 
 jobs:
     main:
-        image: node:{{NODE_VERSION}}
-        matrix:
-            NODE_VERSION: [4,5,6]
+        image: node:6
         steps:
             - init: npm install
             - test: npm test
+        requires:
+            - ~pr
+            - ~commit
 
     publish:
         environment:
@@ -43,6 +41,8 @@ jobs:
         secrets:
             - NPM_TOKEN
             - GIT_KEY
+        requires:
+            - main
 ```
 
 ## Usage
@@ -57,9 +57,9 @@ Parse in Node.js:
 const parser = require('screwdriver-config-parser');
 
 // Configuration (in YAML form)
-parser(fs.readFileSync('screwdriver.yaml'), (err, pipeline) => {
+parser(fs.readFileSync('screwdriver.yaml')).then((pipeline) => {
     // Workflow for the pipeline
-    // pipeline.workflow
+    // pipeline.workflowGraph
 
     // All the main jobs with the steps to execute and environment variables to set
     // pipeline.jobs.main[].commands
