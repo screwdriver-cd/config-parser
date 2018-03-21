@@ -189,6 +189,14 @@ describe('config parser', () => {
                 })
         );
 
+        it.only('job-level srcpaths override shared-level srcpaths', () =>
+            parser(loadData('pipeline-with-srcpaths.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-srcpaths.json')));
+                })
+        );
+
         describe('templates', () => {
             const templateFactoryMock = {
                 getTemplate: sinon.stub()
