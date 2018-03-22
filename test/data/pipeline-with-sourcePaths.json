@@ -7,13 +7,13 @@
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "srcpaths": [
+                "sourcePaths": [
+                  "src/sharedsubdir",
                   "test",
-                  "src/mysubdir",
-                  "src/sharedsubdir"
+                  "src/mysubdir"
                 ],
                 "image": "node:6",
-                "requires": ["~commit"],
+                "requires": ["~commit", "~pr"],
                 "commands": [
                     {
                         "name": "install",
@@ -26,11 +26,13 @@
     "workflow": [],
     "workflowGraph": {
         "nodes": [
+            { "name": "~pr" },
             { "name": "~commit" },
             { "name": "component" }
         ],
         "edges": [
-            { "src": "~commit", "dest": "component" }
+            { "src": "~commit", "dest": "component" },
+            { "src": "~pr", "dest": "component" }
         ]
     }
 }

@@ -189,11 +189,11 @@ describe('config parser', () => {
                 })
         );
 
-        it.only('job-level srcpaths override shared-level srcpaths', () =>
-            parser(loadData('pipeline-with-srcpaths.yaml'))
+        it('job-level sourcePaths override shared-level sourcePaths', () =>
+            parser(loadData('pipeline-with-sourcePaths.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-srcpaths.json')));
+                        JSON.parse(loadData('pipeline-with-sourcePaths.json')));
                 })
         );
 

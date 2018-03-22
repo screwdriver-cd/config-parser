@@ -1,12 +1,14 @@
 shared:
     image: node:6
-    srcpaths:
+    sourcePaths:
         - src/sharedsubdir
 jobs:
     component:
         steps:
             - install: npm install
-        requires: ~commit
-        srcpaths:
+        requires:
+            - ~commit
+            - ~pr
+        sourcePaths:
             - test
             - src/mysubdir
