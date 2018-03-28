@@ -1,0 +1,38 @@
+{
+    "annotations": {},
+    "jobs": {
+        "component": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "sourcePaths": [
+                  "src/sharedsubdir",
+                  "test",
+                  "src/mysubdir"
+                ],
+                "image": "node:6",
+                "requires": ["~commit", "~pr"],
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    }
+                ]
+            }
+        ]
+    },
+    "workflow": [],
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "component" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "component" },
+            { "src": "~pr", "dest": "component" }
+        ]
+    }
+}

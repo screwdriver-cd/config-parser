@@ -1,0 +1,14 @@
+shared:
+    image: node:6
+    sourcePaths:
+        - src/sharedsubdir
+jobs:
+    component:
+        steps:
+            - install: npm install
+        requires:
+            - ~commit
+            - ~pr
+        sourcePaths:
+            - test
+            - src/mysubdir
