@@ -1,7 +1,6 @@
 shared:
     image: node:6
-    sourcePaths:
-        - src/sharedsubdir/
+    sourcePaths: testFile.js
 jobs:
     component:
         steps:
@@ -9,6 +8,4 @@ jobs:
         requires:
             - ~commit
             - ~pr
-        sourcePaths:
-            - test
-            - src/mysubdir/
+        sourcePaths: README.md
