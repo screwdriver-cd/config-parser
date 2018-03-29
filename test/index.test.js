@@ -197,6 +197,14 @@ describe('config parser', () => {
                 })
         );
 
+        it('flattens when sourcePaths are string', () =>
+            parser(loadData('pipeline-with-sourcePaths-string.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-sourcePaths-string.json')));
+                })
+        );
+
         describe('templates', () => {
             const templateFactoryMock = {
                 getTemplate: sinon.stub()

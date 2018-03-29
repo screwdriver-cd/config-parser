@@ -8,9 +8,8 @@
                 "settings": {},
                 "environment": {},
                 "sourcePaths": [
-                  "src/sharedsubdir/",
-                  "test",
-                  "src/mysubdir/"
+                  "testFile.js",
+                  "README.md"
                 ],
                 "image": "node:6",
                 "requires": ["~commit", "~pr"],
