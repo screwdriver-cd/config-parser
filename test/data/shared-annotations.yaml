@@ -27,9 +27,14 @@ jobs:
             DIRECTORY: [c,d]
         settings:
             hipchat: room_a
+        requires:
+            - ~pr
+            - ~commit
     foobar:
         environment:
             BAZ: foo
             FOO: ban
         secrets:
             - NPM_TOKEN
+        requires:
+            - main

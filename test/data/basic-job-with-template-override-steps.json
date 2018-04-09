@@ -27,12 +27,13 @@
             ],
             "settings": {
                 "email": "foo@example.com"
-            }
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ]
         }]
     },
-    "workflow": [
-        "main"
-    ],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

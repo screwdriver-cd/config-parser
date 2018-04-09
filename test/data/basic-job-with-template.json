@@ -23,7 +23,11 @@
             ],
             "settings": {
                 "email": "foo@example.com"
-            }
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ]
         }],
       "publish": [{
           "annotations": {},
@@ -36,13 +40,12 @@
           ],
           "environment": {},
           "secrets": [],
-          "settings": {}
+          "settings": {},
+          "requires": [
+              "main"
+          ]
       }]
     },
-    "workflow": [
-        "main",
-        "publish"
-    ],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

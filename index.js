@@ -67,9 +67,6 @@ module.exports = function configParser(yaml, templateFactory) {
                 workflowGraph: Hoek.reach(doc, 'workflowGraph')
             };
 
-            // Set it as empty array so we don't need to check if it's undefined and delete the field later
-            res.workflow = doc.workflow || [];
-
             return res;
         })
         .catch(err => ({
@@ -85,7 +82,6 @@ module.exports = function configParser(yaml, templateFactory) {
                     environment: {}
                 }]
             },
-            workflow: ['main'], // remove this after we stop supporting workflow
             workflowGraph: {
                 nodes: [
                     { name: '~pr' },

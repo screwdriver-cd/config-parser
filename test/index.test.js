@@ -25,7 +25,6 @@ describe('config parser', () => {
 
             return parser('')
                 .then((data) => {
-                    assert.deepEqual(data.workflow, ['main']);
                     assert.deepEqual(data.workflowGraph, {
                         nodes: [
                             { name: '~pr' },
@@ -50,7 +49,6 @@ describe('config parser', () => {
         it('returns an error if unparsable yaml', () =>
             parser('foo: :')
                 .then((data) => {
-                    assert.deepEqual(data.workflow, ['main']);
                     assert.strictEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
@@ -64,7 +62,6 @@ describe('config parser', () => {
         it('returns an error if multiple documents without hint', () =>
             parser('foo: bar\n---\nfoo: baz')
                 .then((data) => {
-                    assert.deepEqual(data.workflow, ['main']);
                     assert.strictEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
@@ -79,7 +76,6 @@ describe('config parser', () => {
         it('picks the document with version hint', () =>
             parser('jobs: {}\n---\nversion: 4')
                 .then((data) => {
-                    assert.deepEqual(data.workflow, ['main']);
                     assert.strictEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].image, 'node:6');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
@@ -104,14 +100,6 @@ describe('config parser', () => {
         });
 
         describe('jobs', () => {
-            it('returns an error if missing main job for legacy config', () =>
-                parser(loadData('missing-main-job.yaml'))
-                    .then((data) => {
-                        assert.match(data.jobs.main[0].commands[0].command, /"main" is required/);
-                        assert.match(data.errors[0], /"main" is required/);
-                    })
-            );
-
             it('Do not return error if missing main job for new config', () =>
                 parser(loadData('missing-main-job-with-requires.yaml'))
                     .then((data) => {
@@ -275,22 +263,6 @@ describe('config parser', () => {
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /"environment" and "matrix" can only have a combined/);
-                })
-        );
-
-        it('returns an error if workflow is main is not the first job', () =>
-            parser(loadData('workflow-main-not-first.yaml'))
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /Workflow: "main" is implied as the first job/);
-                })
-        );
-
-        it('returns an error if workflow contains different jobs', () =>
-            parser(loadData('workflow-wrong-jobs.yaml'))
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /Workflow: must contain all the jobs listed/);
                 })
         );
 

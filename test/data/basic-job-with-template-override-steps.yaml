@@ -4,3 +4,6 @@ jobs:
         steps:
             - pretest: echo pre-test
             - test: echo 'my job is overriding this step'
+        requires:
+            - ~pr
+            - ~commit

@@ -30,7 +30,11 @@
                 "settings": {
                     "email": "foo@example.com",
                     "hipchat": "room_a"
-                }
+                },
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
             },
             {
                 "annotations": {},
@@ -60,7 +64,11 @@
                 "settings": {
                     "email": "foo@example.com",
                     "hipchat": "room_a"
-                }
+                },
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
             }
         ],
         "foobar": [
@@ -85,7 +93,10 @@
                 ],
                 "settings": {
                     "email": "foo@example.com"
-                }
+                },
+                "requires": [
+                    "main"
+                ]
             },
             {
                 "annotations": {},
@@ -108,7 +119,10 @@
                 ],
                 "settings": {
                     "email": "foo@example.com"
-                }
+                },
+                "requires": [
+                    "main"
+                ]
             },
             {
                 "annotations": {},
@@ -131,7 +145,10 @@
                 ],
                 "settings": {
                     "email": "foo@example.com"
-                }
+                },
+                "requires": [
+                    "main"
+                ]
             },
             {
                 "annotations": {},
@@ -154,14 +171,13 @@
                 ],
                 "settings": {
                     "email": "foo@example.com"
-                }
+                },
+                "requires": [
+                    "main"
+                ]
             }
         ]
     },
-    "workflow": [
-        "main",
-        "foobar"
-    ],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

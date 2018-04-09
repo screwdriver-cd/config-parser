@@ -23,7 +23,6 @@
             }
         ]
     },
-    "workflow": [],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

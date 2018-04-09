@@ -4,3 +4,6 @@ jobs:
         steps:
             - pretest: echo pre-test
             - postinstall: echo post-install
+        requires:
+            - ~pr
+            - ~commit
