@@ -1,0 +1,43 @@
+jobs:
+    main:
+        steps:
+            - foo: date
+        image: node:4
+        environment:
+            VAR0: 0
+            VAR1: 1
+            VAR2: 2
+            VAR3: 3
+            VAR4: 4
+            VAR5: 5
+            VAR6: 6
+            VAR7: 7
+            VAR8: 8
+            VAR9: 9
+            VAR10: 10
+            VAR11: 11
+            VAR12: 12
+            VAR13: 13
+            VAR14: 14
+            VAR15: 15
+            VAR16: 16
+            VAR17: 17
+            VAR18: 18
+            VAR19: 19
+            VAR20: 20
+            VAR21: 21
+            VAR22: 22
+            VAR23: 23
+            VAR24: 24
+            VAR25: 25
+            VAR26: 26
+            VAR27: 27
+            VAR28: 28
+            VAR29: 29
+            VAR30: 30
+            VAR31: 31
+            VAR32: 32
+            VAR33: 33
+            VAR34: 34
+            SD_TEMPLATE_NAME: mytemplate
+            SD_TEMPLATE_VERSION: 1.2.3

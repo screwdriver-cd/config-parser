@@ -270,6 +270,14 @@ describe('config parser', () => {
                 })
         );
 
+        it('do not count SD_TEMPLATE variables for max environment variables', () =>
+            parser(loadData('environment-with-SD-variable.yaml'))
+                .then((data) => {
+                    assert.notMatch(data.jobs.main[0].commands[0].command,
+                        /"environment" can only have 35 environment/);
+                })
+        );
+
         it('returns an error if too many environment + matrix variables', () =>
             parser(loadData('too-many-matrix.yaml'))
                 .then((data) => {

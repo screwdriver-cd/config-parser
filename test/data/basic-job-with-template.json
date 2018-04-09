@@ -16,7 +16,9 @@
             ],
             "environment": {
                 "FOO": "overwritten by job",
-                "BAR": "foo"
+                "BAR": "foo",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_VERSION": "1.2.3"
             },
             "secrets": [
                 "GIT_KEY"
@@ -34,7 +36,10 @@
                   "command": "npm publish"
               }
           ],
-          "environment": {},
+          "environment": {
+              "SD_TEMPLATE_NAME": "yourtemplate",
+              "SD_TEMPLATE_VERSION": "2"
+          },
           "secrets": [],
           "settings": {}
       }]
