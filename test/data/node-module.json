@@ -1,0 +1,123 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "init",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ],
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_VERSION": "4"
+                },
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
+            },
+            {
+                "annotations": {},
+                "image": "node:5",
+                "commands": [
+                    {
+                        "name": "init",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ],
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_VERSION": "5"
+                },
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
+            },
+            {
+                "annotations": {},
+                "image": "node:6",
+                "commands": [
+                    {
+                        "name": "init",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ],
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_VERSION": "6"
+                },
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
+            }
+        ],
+        "publish": [
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "bump",
+                        "command": "npm run bump"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish --tag $NODE_TAG"
+                    },
+                    {
+                        "name": "tag",
+                        "command": "git push origin --tags"
+                    }
+                ],
+                "environment": {
+                    "NODE_ENV": "test",
+                    "NODE_TAG": "latest"
+                },
+                "secrets": [
+                    "NPM_TOKEN"
+                ],
+                "settings": {},
+                "requires": [
+                    "main"
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" },
+            { "name": "publish" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "publish" }
+        ]
+    }
+}
