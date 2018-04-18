@@ -7,3 +7,6 @@ jobs:
         steps:
             - hello: "echo hi world"
             - maybe: "which asdfzxcvasdfqwer1234"
+        requires:
+            - ~pr
+            - ~commit

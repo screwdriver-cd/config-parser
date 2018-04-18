@@ -25,7 +25,11 @@
             ],
             "settings": {
                 "email": "foo@example.com"
-            }
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ]
         }],
       "publish": [{
           "annotations": {},
@@ -41,13 +45,12 @@
               "SD_TEMPLATE_VERSION": "2"
           },
           "secrets": [],
-          "settings": {}
+          "settings": {},
+          "requires": [
+              "main"
+          ]
       }]
     },
-    "workflow": [
-        "main",
-        "publish"
-    ],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

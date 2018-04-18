@@ -4,7 +4,7 @@
 > Node module for validating and parsing `screwdriver.yaml` configurations
 
  - Validates a `screwdriver.yaml` for structural and functional specification
- - Outputs the pipeline's workflow graph configuration
+ - Outputs the pipeline's workflowGraph configuration
  - Generates a list of jobs to execute, including:
      - build permutations
      - environment variables to set

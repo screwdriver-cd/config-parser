@@ -13,6 +13,9 @@ jobs:
         steps:
             - init: npm install
             - test: npm test
+        requires:
+            - ~pr
+            - ~commit
 
     publish:
         environment:
@@ -24,3 +27,5 @@ jobs:
             - tag: git push origin --tags
         secrets:
             - NPM_TOKEN
+        requires:
+            - main

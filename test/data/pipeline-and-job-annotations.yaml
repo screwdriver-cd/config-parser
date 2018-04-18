@@ -12,3 +12,6 @@ jobs:
         image: node:4
         steps:
             - install: npm install
+        requires:
+            - ~pr
+            - ~commit

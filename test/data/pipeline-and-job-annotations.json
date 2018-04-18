@@ -20,13 +20,14 @@
                 "environment": {
                 },
                 "secrets": [],
-                "settings": {}
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
             }
         ]
     },
-    "workflow": [
-        "main"
-    ],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },
