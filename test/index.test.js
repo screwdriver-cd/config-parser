@@ -193,6 +193,14 @@ describe('config parser', () => {
                 })
         );
 
+        it('job-level scm overrides shared-level scm', () =>
+            parser(loadData('pipeline-with-scm.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-scm.json')));
+                })
+        );
+
         describe('templates', () => {
             const templateFactoryMock = {
                 getTemplate: sinon.stub()

@@ -1,0 +1,13 @@
+shared:
+    image: node:6
+    scm:
+      repo: git@github.com:screwdriver-cd/data-schema.git
+jobs:
+    component:
+        steps:
+            - install: npm install
+        requires:
+            - ~commit
+            - ~pr
+        scm:
+          repo: git@github.com:screwdriver-cd/data-schema.git/RepoManifest.xml#branch
