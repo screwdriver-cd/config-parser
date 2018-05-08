@@ -1,0 +1,35 @@
+{
+    "annotations": {},
+    "jobs": {
+        "component": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "scm": {
+                    "repo": "git@github.com:screwdriver-cd/data-schema.git/RepoManifest.xml#branch"
+                },
+                "image": "node:6",
+                "requires": ["~commit", "~pr"],
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    }
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "component" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "component" },
+            { "src": "~pr", "dest": "component" }
+        ]
+    }
+}
