@@ -194,10 +194,10 @@ describe('config parser', () => {
         );
 
         it('flattens blockedBy', () =>
-            parser(loadData('pipeline-with-blockedBy.yaml'))
+            parser(loadData('pipeline-with-blocked-by.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-blockedBy.json')));
+                        JSON.parse(loadData('pipeline-with-blocked-by.json')));
                 })
         );
 
