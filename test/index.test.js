@@ -193,6 +193,14 @@ describe('config parser', () => {
                 })
         );
 
+        it('flattens blockedBy', () =>
+            parser(loadData('pipeline-with-blocked-by.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-blocked-by.json')));
+                })
+        );
+
         describe('templates', () => {
             const templateFactoryMock = {
                 getTemplate: sinon.stub()
