@@ -107,6 +107,7 @@
             }
         ]
     },
+    "scmUrls": [],
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

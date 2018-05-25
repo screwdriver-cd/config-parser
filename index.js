@@ -64,6 +64,7 @@ module.exports = function configParser(yaml, templateFactory) {
             const res = {
                 annotations: Hoek.reach(doc, 'annotations', { default: {} }),
                 jobs: Hoek.reach(doc, 'jobs'),
+                scmUrls: Hoek.reach(doc, 'scmUrls', { default: [] }),
                 workflowGraph: Hoek.reach(doc, 'workflowGraph')
             };
 
@@ -82,6 +83,7 @@ module.exports = function configParser(yaml, templateFactory) {
                     environment: {}
                 }]
             },
+            scmUrls: [],
             workflowGraph: {
                 nodes: [
                     { name: '~pr' },
