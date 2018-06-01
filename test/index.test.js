@@ -207,21 +207,37 @@ describe('config parser', () => {
             };
             let firstTemplate;
             let secondTemplate;
+            let namespaceTemplate;
+            let defaultTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
                 secondTemplate = JSON.parse(loadData('template-2.json'));
+                namespaceTemplate = JSON.parse(loadData('templateWithNamespace.json'));
+                defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
                     .resolves(secondTemplate);
+                templateFactoryMock.getTemplate.withArgs('mynamespace/mytemplate@1.2.3')
+                    .resolves(namespaceTemplate);
             });
 
-            it('flattens templates sucessfully', () =>
+            it('flattens templates successfully', () =>
                 parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
                         data, JSON.parse(loadData('basic-job-with-template.json'))))
             );
+
+            it('flattens templates successfully when template namespace exists', () => {
+                templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
+                    .resolves(defaultTemplate);
+
+                return parser(loadData('basic-job-with-template-with-namespace.yaml'),
+                    templateFactoryMock)
+                    .then(data => assert.deepEqual(
+                        data, JSON.parse(loadData('basic-job-with-template-with-namespace.json'))));
+            });
 
             it('flattens templates with wrapped steps ', () =>
                 parser(loadData('basic-job-with-template-wrapped-steps.yaml'), templateFactoryMock)

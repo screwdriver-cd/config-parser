@@ -10,24 +10,16 @@
                     "command": "npm install"
                 },
                 {
-                    "name": "postinstall",
-                    "command": "echo post-install"
-                },
-                {
-                    "name": "pretest",
-                    "command": "echo pre-test"
-                },
-                {
                     "name": "test",
                     "command": "npm test"
                 }
             ],
             "environment": {
-                "FOO": "from template",
+                "FOO": "overwritten by job",
                 "BAR": "foo",
-                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_FULLNAME": "mynamespace/mytemplate",
                 "SD_TEMPLATE_NAME": "mytemplate",
-                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_NAMESPACE": "mynamespace",
                 "SD_TEMPLATE_VERSION": "1.2.3"
             },
             "secrets": [
@@ -40,17 +32,40 @@
                 "~pr",
                 "~commit"
             ]
-        }]
+        }],
+      "publish": [{
+          "annotations": {},
+          "image": "node:4",
+          "commands": [
+              {
+                  "name": "publish",
+                  "command": "npm publish"
+              }
+          ],
+          "environment": {
+              "SD_TEMPLATE_FULLNAME": "yourtemplate",
+              "SD_TEMPLATE_NAME": "yourtemplate",
+              "SD_TEMPLATE_NAMESPACE": "default",
+              "SD_TEMPLATE_VERSION": "2"
+          },
+          "secrets": [],
+          "settings": {},
+          "requires": [
+              "main"
+          ]
+      }]
     },
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },
             { "name": "~commit" },
-            { "name": "main" }
+            { "name": "main" },
+            { "name": "publish" }
         ],
         "edges": [
             { "src": "~pr", "dest": "main" },
-            { "src": "~commit", "dest": "main" }
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "publish" }
         ]
     }
 }

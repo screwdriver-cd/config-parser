@@ -1,0 +1,12 @@
+jobs:
+    main:
+        template: mynamespace/mytemplate@1.2.3
+        environment:
+            FOO: 'overwritten by job'
+        requires:
+            - ~pr
+            - ~commit
+    publish:
+        template: yourtemplate@2
+        requires:
+            - main

@@ -24,7 +24,7 @@
                 "settings": {},
                 "environment": {},
                 "requires": ["~commit"],
-                "blockedBy": ["main", "~sd@123:publish"],
+                "blockedBy": ["~main", "~sd@123:publish"],
                 "image": "node:4",
                 "commands": [
                     {
