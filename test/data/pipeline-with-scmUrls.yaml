@@ -1,0 +1,20 @@
+scmUrls:
+    - git@github.com:org/repo.git
+    - https://github.com:org/repo2.git
+
+shared:
+    image: node:4
+jobs:
+    main:
+        steps:
+            - install: npm install
+            - test: npm test
+            - publish: npm publish
+        requires: ~commit
+    foobar:
+        steps:
+            - echo-hello: echo hello
+        requires: main
+    baz:
+        steps:
+            - echo-world: echo world

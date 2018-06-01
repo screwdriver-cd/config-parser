@@ -137,6 +137,16 @@ describe('config parser', () => {
                     })
             );
         });
+
+        describe('scmUrls', () => {
+            it('returns an error if bad scm URL', () =>
+                parser(loadData('bad-scm-url.yaml'))
+                    .then((data) => {
+                        assert.match(data.jobs.main[0].commands[0].command,
+                            /"fakeScmUrl" fails to match the required pattern:/);
+                    })
+            );
+        });
     });
 
     describe('flatten', () => {
@@ -198,6 +208,14 @@ describe('config parser', () => {
                 .then((data) => {
                     assert.deepEqual(data,
                         JSON.parse(loadData('pipeline-with-blocked-by.json')));
+                })
+        );
+
+        it('includes scm URLs', () =>
+            parser(loadData('pipeline-with-scmUrls.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-scmUrls.json')));
                 })
         );
 
