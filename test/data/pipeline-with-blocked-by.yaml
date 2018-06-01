@@ -10,5 +10,5 @@ jobs:
             - echo-hello: echo hello
         requires: ~commit
         blockedBy:
-            - main
+            - ~main
             - ~sd@123:publish

@@ -21,7 +21,9 @@
             "environment": {
                 "FOO": "from template",
                 "BAR": "foo",
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
                 "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
                 "SD_TEMPLATE_VERSION": "1.2.3"
             },
             "secrets": [
