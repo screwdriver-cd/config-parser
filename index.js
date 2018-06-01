@@ -68,6 +68,10 @@ module.exports = function configParser(yaml, templateFactory) {
                 workflowGraph: Hoek.reach(doc, 'workflowGraph')
             };
 
+            if (res.scmUrls.length === 0) {
+                delete res.scmUrls;
+            }
+
             return res;
         })
         .catch(err => ({
