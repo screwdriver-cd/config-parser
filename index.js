@@ -87,7 +87,6 @@ module.exports = function configParser(yaml, templateFactory) {
                     environment: {}
                 }]
             },
-            scmUrls: [],
             workflowGraph: {
                 nodes: [
                     { name: '~pr' },
