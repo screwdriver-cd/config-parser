@@ -227,18 +227,22 @@ describe('config parser', () => {
             let secondTemplate;
             let namespaceTemplate;
             let defaultTemplate;
+            let imagesTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
                 secondTemplate = JSON.parse(loadData('template-2.json'));
                 namespaceTemplate = JSON.parse(loadData('templateWithNamespace.json'));
                 defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
+                imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
                     .resolves(secondTemplate);
                 templateFactoryMock.getTemplate.withArgs('mynamespace/mytemplate@1.2.3')
                     .resolves(namespaceTemplate);
+                templateFactoryMock.getTemplate.withArgs('imagestemplate@2')
+                    .resolves(imagesTemplate);
             });
 
             it('flattens templates successfully', () =>
@@ -267,6 +271,12 @@ describe('config parser', () => {
                 parser(loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
                         data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
+            );
+
+            it('flattens templates with images', () =>
+                parser(loadData('basic-job-with-images.yaml'), templateFactoryMock)
+                    .then(data => assert.deepEqual(
+                        data, JSON.parse(loadData('basic-job-with-images.json'))))
             );
 
             it('returns error if template does not exist', () => {

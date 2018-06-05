@@ -1,0 +1,62 @@
+{
+  "annotations": {},
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm install",
+            "name": "install"
+          },
+          {
+            "command": "echo hello world",
+            "name": "hello"
+          }
+        ],
+        "environment": {
+          "SD_TEMPLATE_FULLNAME": "imagestemplate",
+          "SD_TEMPLATE_NAME": "imagestemplate",
+          "SD_TEMPLATE_NAMESPACE": "",
+          "SD_TEMPLATE_VERSION": "2"
+        },
+        "image": "node:5",
+        "secrets": [],
+        "settings": {}
+      }
+    ],
+    "publish": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm publish",
+            "name": "publish"
+          }
+        ],
+        "description": "This is the publish description",
+        "environment": {},
+        "image": "node:4",
+        "secrets": [],
+        "settings": {}
+      }
+    ]
+  },
+  "workflowGraph": {
+    "edges": [],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "publish"
+      },
+      {
+        "name": "main"
+      }
+    ]
+  }
+}
