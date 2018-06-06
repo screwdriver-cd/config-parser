@@ -15,9 +15,9 @@
           }
         ],
         "environment": {
-          "SD_TEMPLATE_FULLNAME": "imagestemplate",
+          "SD_TEMPLATE_FULLNAME": "ImagesTestNamespace/imagestemplate",
           "SD_TEMPLATE_NAME": "imagestemplate",
-          "SD_TEMPLATE_NAMESPACE": "",
+          "SD_TEMPLATE_NAMESPACE": "ImagesTestNamespace",
           "SD_TEMPLATE_VERSION": "2"
         },
         "image": "node:5",

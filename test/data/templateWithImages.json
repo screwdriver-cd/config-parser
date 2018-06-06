@@ -1,4 +1,5 @@
 {
+    "namespace": "ImagesTestNamespace",
     "name": "imagestemplate",
     "version": "2",
     "description": "test template",
