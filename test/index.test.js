@@ -241,7 +241,7 @@ describe('config parser', () => {
                     .resolves(secondTemplate);
                 templateFactoryMock.getTemplate.withArgs('mynamespace/mytemplate@1.2.3')
                     .resolves(namespaceTemplate);
-                templateFactoryMock.getTemplate.withArgs('imagestemplate@2')
+                templateFactoryMock.getTemplate.withArgs('ImagesTestNamespace/imagestemplate@2')
                     .resolves(imagesTemplate);
             });
 
