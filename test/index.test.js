@@ -138,9 +138,9 @@ describe('config parser', () => {
             );
         });
 
-        describe('scmUrls', () => {
-            it('returns an error if bad scm URL', () =>
-                parser(loadData('bad-scm-url.yaml'))
+        describe('childPipelines', () => {
+            it('returns an error if bad childPipelines', () =>
+                parser(loadData('bad-external-scm.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
                             /"fakeScmUrl" fails to match the required pattern:/);
@@ -212,10 +212,10 @@ describe('config parser', () => {
         );
 
         it('includes scm URLs', () =>
-            parser(loadData('pipeline-with-scmUrls.yaml'))
+            parser(loadData('pipeline-with-childPipelines.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-scmUrls.json')));
+                        JSON.parse(loadData('pipeline-with-childPipelines.json')));
                 })
         );
 

@@ -1,6 +1,8 @@
-scmUrls:
-    - git@github.com:org/repo.git
-    - https://github.com:org/repo2.git
+childPipelines:
+    scmUrls:
+        - git@github.com:org/repo.git
+        - https://github.com:org/repo2.git
+    startAll: true
 
 shared:
     image: node:4
