@@ -1,0 +1,10 @@
+jobs:
+    main:
+        image: latest-image
+        template: ImagesTestNamespace/imagestemplate@2
+        description: "This is the main description"
+    publish:
+        image: node:4
+        description: "This is the publish description"
+        steps:
+            - publish: "npm publish"
