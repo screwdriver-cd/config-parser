@@ -1,0 +1,7 @@
+jobs:
+    main:
+        image: node:6
+        steps:
+            - echo1: echo hello
+            - teardown-cleanup: echo cleanup
+            - echo2: echo bye

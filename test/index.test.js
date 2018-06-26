@@ -116,6 +116,14 @@ describe('config parser', () => {
                             /"foo bar" only supports the following characters A-Z,a-z,0-9,-,_/);
                     })
             );
+
+            it('returns an error if teardown step is not at the end', () =>
+                parser(loadData('bad-step-teardown.yaml'))
+                    .then((data) => {
+                        assert.match(data.errors[0],
+                            /User teardown steps need to be at the end/);
+                    })
+            );
         });
 
         describe('environment', () => {

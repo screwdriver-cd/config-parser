@@ -32,6 +32,10 @@
           {
             "command": "npm publish",
             "name": "publish"
+          },
+          {
+            "command": "echo bye",
+            "name": "teardown-mystep"
           }
         ],
         "description": "This is the publish description",

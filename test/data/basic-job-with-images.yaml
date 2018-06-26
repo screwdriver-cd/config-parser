@@ -8,3 +8,4 @@ jobs:
         description: "This is the publish description"
         steps:
             - publish: "npm publish"
+            - teardown-mystep: "echo bye"
