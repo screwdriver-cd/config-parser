@@ -120,7 +120,6 @@ describe('config parser', () => {
             it('returns an error if teardown step is not at the end', () =>
                 parser(loadData('bad-step-teardown.yaml'))
                     .then((data) => {
-                        assert.isOk(data.errors);
                         assert.match(data.errors[0],
                             /User teardown steps need to be at the end/);
                     })
