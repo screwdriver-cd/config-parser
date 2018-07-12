@@ -6,6 +6,7 @@ jobs:
             - install: npm install
             - test: npm test
             - publish: npm publish
+            - teardown-step: echo test
         requires: ~commit
     foobar:
         steps:
