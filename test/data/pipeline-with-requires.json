@@ -21,6 +21,10 @@
                     {
                         "name": "publish",
                         "command": "npm publish"
+                    },
+                    {
+                        "name": "teardown-step",
+                        "command": "echo test"
                     }
                 ]
             }
