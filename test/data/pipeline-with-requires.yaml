@@ -15,3 +15,15 @@ jobs:
     baz:
         steps:
             - echo-world: echo world
+    test-or:
+        steps:
+            - echo-or: echo OR
+        requires:
+            - ~foobar
+            - ~main
+    test-and:
+        steps:
+            - echo-and: echo AND
+        requires:
+            - foobar
+            - main

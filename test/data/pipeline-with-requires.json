@@ -59,6 +59,44 @@
                     }
                 ]
             }
+        ],
+        "test-or": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo OR",
+                        "name": "echo-or"
+                    }
+                ],
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "~foobar",
+                    "~main"
+                ],
+                "secrets": [],
+                "settings": {}
+            }
+        ],
+        "test-and": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo AND",
+                        "name": "echo-and"
+                    }
+                ],
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "foobar",
+                    "main"
+                ],
+                "secrets": [],
+                "settings": {}
+            }
         ]
     },
     "workflowGraph": {
@@ -67,11 +105,17 @@
             { "name": "~commit" },
             { "name": "main" },
             { "name": "foobar" },
-            { "name": "baz" }
+            { "name": "baz" },
+            { "name": "test-or" },
+            { "name": "test-and" }
         ],
         "edges": [
             { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "foobar" }
+            { "src": "main", "dest": "foobar" },
+            { "src": "foobar", "dest": "test-or" },
+            { "src": "main", "dest": "test-or" },
+            { "src": "foobar", "dest": "test-and", "join": true },
+            { "src": "main", "dest": "test-and", "join": true }
         ]
     }
 }
