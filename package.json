@@ -49,12 +49,12 @@
   },
   "dependencies": {
     "clone": "^2.1.2",
-    "hoek": "^5.0.3",
-    "joi": "^13.4.0",
+    "hoek": "^5.0.4",
+    "joi": "^13.6.0",
     "js-yaml": "^3.12.0",
     "keymbinatorial": "^1.1.4",
     "screwdriver-data-schema": "^18.24.3",
-    "screwdriver-workflow-parser": "^1.5.0",
+    "screwdriver-workflow-parser": "^1.6.0",
     "tinytim": "^0.1.1"
   }
 }
