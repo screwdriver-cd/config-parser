@@ -70,6 +70,16 @@ describe('config parser', () => {
                 })
         );
 
+        it('does not return an error if job has no step names', () =>
+            parser(loadData('basic-job-with-no-step-names.yaml'))
+                .then((data) => {
+                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.deepEqual(data.jobs.main[0].secrets, []);
+                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.notOk(data.errors);
+                })
+        );
+
         it('returns an error if multiple documents without hint', () =>
             parser('foo: bar\n---\nfoo: baz')
                 .then((data) => {

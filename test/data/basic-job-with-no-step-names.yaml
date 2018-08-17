@@ -1,0 +1,8 @@
+jobs:
+  main:
+        image: node:6
+        description: "This is the publish description"
+        steps:
+            - npm publish
+            - echo duplciate step
+            - teardown-mystep: "echo bye"
