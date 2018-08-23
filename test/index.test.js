@@ -333,7 +333,7 @@ describe('config parser', () => {
             parser(loadData('too-many-environment.yaml'))
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
-                        /"environment" can only have 35 environment/);
+                        /"environment" can only have 100 environment/);
                 })
         );
 
@@ -341,7 +341,7 @@ describe('config parser', () => {
             parser(loadData('environment-with-SD-variable.yaml'))
                 .then((data) => {
                     assert.notMatch(data.jobs.main[0].commands[0].command,
-                        /"environment" can only have 35 environment/);
+                        /"environment" can only have 100 environment/);
                 })
         );
 
