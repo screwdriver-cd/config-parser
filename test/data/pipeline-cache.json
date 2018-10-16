@@ -19,13 +19,19 @@
                     "~pr",
                     "~commit"
                 ],
-                "cache": [
-                    "/tmp/test",
-                    "/sd/workspace/test/",
-                    "/tmp/test",
-                    "a.b",
-                    "mainjob"
-                ]
+                "cache": {
+                    "event": [
+                        "/sd/workspace/test/",
+                        "/tmp/test",
+                        "a.b"
+                    ],
+                    "pipeline": [
+                        "/tmp/test"
+                    ],
+                    "job": [
+                        "mainjob"
+                    ]
+                }
             }
         ],
         "test": [
@@ -45,12 +51,17 @@
                 "requires": [
                     "main"
                 ],
-                "cache": [
-                    "/tmp/test",
-                    "/sd/workspace/test/",
-                    "/tmp/test",
-                    "a.b"
-                ]
+                "cache": {
+                    "event": [
+                        "/sd/workspace/test/",
+                        "/tmp/test",
+                        "a.b"
+                    ],
+                    "pipeline": [
+                        "/tmp/test"
+                    ],
+                    "job": []
+                }
             }
         ],
         "publish": [
@@ -70,13 +81,19 @@
                 "requires": [
                     "test"
                 ],
-                "cache": [
-                    "/tmp/test",
-                    "/sd/workspace/test/",
-                    "/tmp/test",
-                    "a.b",
-                    "publishjob"
-                ]
+                "cache": {
+                    "event": [
+                        "/sd/workspace/test/",
+                        "/tmp/test",
+                        "a.b"
+                    ],
+                    "pipeline": [
+                        "/tmp/test"
+                    ],
+                    "job": [
+                        "publishjob"
+                    ]
+                }
             }
         ]
     },
