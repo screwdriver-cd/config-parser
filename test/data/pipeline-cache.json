@@ -1,0 +1,98 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    }
+                ],
+                "environment": {
+                },
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ],
+                "cache": [
+                    "/tmp/test",
+                    "/sd/workspace/test/",
+                    "/tmp/test",
+                    "a.b",
+                    "mainjob"
+                ]
+            }
+        ],
+        "test": [
+            {
+                "annotations": {},
+                "image": "node:6",
+                "commands": [
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ],
+                "environment": {
+                },
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "main"
+                ],
+                "cache": [
+                    "/tmp/test",
+                    "/sd/workspace/test/",
+                    "/tmp/test",
+                    "a.b"
+                ]
+            }
+        ],
+        "publish": [
+            {
+                "annotations": {},
+                "image": "node:10",
+                "commands": [
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
+                "environment": {
+                },
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "test"
+                ],
+                "cache": [
+                    "/tmp/test",
+                    "/sd/workspace/test/",
+                    "/tmp/test",
+                    "a.b",
+                    "publishjob"
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" },
+            { "name": "test" },
+            { "name": "publish" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "test" },
+            { "src": "test", "dest": "publish" }
+        ]
+    }
+}

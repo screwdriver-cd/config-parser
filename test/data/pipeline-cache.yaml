@@ -1,0 +1,26 @@
+cache:
+  pipeline: ['/tmp/test']
+  event: ['/sd/workspace/test/', '/tmp/test', 'a.b']
+  job:
+      main: ['mainjob']
+      publish: ['publishjob']
+jobs:
+    main:
+        image: node:4
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit
+    test:   # no job cache
+        image: node:6
+        steps:
+            - test: npm test
+        requires:
+            - main
+    publish:
+        image: node:10
+        steps:
+            - publish: npm publish
+        requires:
+            - test

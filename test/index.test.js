@@ -384,6 +384,21 @@ describe('config parser', () => {
                 })
         );
 
+        it('reads cache on the pipeline-level', () =>
+            parser(loadData('pipeline-cache.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-cache.json')));
+                })
+        );
+
+        it('returns an error if job specified in cache config does not exist', () =>
+            parser(loadData('pipeline-cache-nonexist-job.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(
+                        loadData('pipeline-cache-nonexist-job.json')));
+                })
+        );
+
         it('allows a description key', () =>
             parser(loadData('basic-job-with-description.yaml'))
                 .then((data) => {
