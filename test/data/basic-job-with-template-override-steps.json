@@ -18,6 +18,11 @@
                     "command": "echo 'my job is overriding this step'"
                 }
             ],
+            "cache": {
+              "event": ["/tmp/test"],
+              "job": [],
+              "pipeline": []
+            },
             "environment": {
                 "FOO": "from template",
                 "BAR": "foo",

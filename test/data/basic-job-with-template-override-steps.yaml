@@ -1,3 +1,5 @@
+cache:
+    event: [/tmp/test]
 jobs:
     main:
         template: mytemplate@1.2.3
