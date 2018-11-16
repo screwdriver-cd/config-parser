@@ -65,8 +65,8 @@ describe('config parser', () => {
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command,
-                        /Error:.*main has duplicate step: publish/);
-                    assert.match(data.errors[0], /Error:.*main has duplicate step: publish/);
+                        /"steps" position 1 contains a duplicate value/);
+                    assert.match(data.errors[0], /"steps" position 1 contains a duplicate value/);
                 })
         );
 
