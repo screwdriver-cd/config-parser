@@ -1,0 +1,44 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [
+            {
+                "image": "node:6",
+                "commands": [
+                    {
+                        "name": "config-parse-error",
+                        "command": "echo \"Error: Annotation \"screwdriver.cd/buildCluster\": doesnotexist is not a valid build cluster\"; exit 1"
+                    }
+                ],
+                "secrets": [],
+                "environment": {}
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            {
+                "name": "~pr"
+            },
+            {
+                "name": "~commit"
+            },
+            {
+                "name": "main"
+            }
+        ],
+        "edges": [
+            {
+                "src": "~pr",
+                "dest": "main"
+            },
+            {
+                "src": "~commit",
+                "dest": "main"
+            }
+        ]
+    },
+    "errors": [
+        "Error: Annotation \"screwdriver.cd/buildCluster\": doesnotexist is not a valid build cluster"
+    ]
+}
