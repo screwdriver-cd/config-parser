@@ -1,0 +1,7 @@
+jobs:
+    main:
+        template: restrictedjob@1
+        steps:
+            - preinstall: echo 'overriding'
+            - pretest: echo 'overriding'
+            - test: echo 'my job is overriding this step'

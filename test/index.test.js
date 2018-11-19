@@ -255,7 +255,7 @@ describe('config parser', () => {
             let namespaceTemplate;
             let defaultTemplate;
             let imagesTemplate;
-            let restrictedjobTemplate
+            let restrictedjobTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
