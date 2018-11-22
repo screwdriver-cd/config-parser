@@ -178,6 +178,7 @@
             }
         ]
     },
+    "prChain": false,
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

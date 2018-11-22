@@ -63,6 +63,7 @@ module.exports = function configParser(yaml, templateFactory) {
         .then((doc) => {
             const res = {
                 annotations: Hoek.reach(doc, 'annotations', { default: {} }),
+                prChain: Hoek.reach(doc, 'prChain'),
                 jobs: Hoek.reach(doc, 'jobs'),
                 childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
                 workflowGraph: Hoek.reach(doc, 'workflowGraph')
@@ -87,6 +88,7 @@ module.exports = function configParser(yaml, templateFactory) {
                     environment: {}
                 }]
             },
+            prChain: false,
             workflowGraph: {
                 nodes: [
                     { name: '~pr' },

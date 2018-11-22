@@ -1,16 +1,10 @@
 {
-    "annotations": {
-      "foo": "a",
-      "bar": "b"
-    },
+    "annotations": {},
     "jobs": {
         "main": [
             {
-                "annotations": {
-                    "foo": "a",
-                    "bar": "b"
-                },
-                "image": "node:4",
+                "annotations": {},
+                "image": "node:8",
                 "commands": [
                     {
                         "name": "install",
@@ -28,7 +22,7 @@
             }
         ]
     },
-    "prChain": false,
+    "prChain": true,
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },

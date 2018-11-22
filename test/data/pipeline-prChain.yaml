@@ -1,0 +1,7 @@
+prChain: true
+jobs:
+    main:
+        image: node:8
+        requires: [ ~pr, ~commit ]
+        steps:
+            - install: npm install
