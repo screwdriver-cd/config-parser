@@ -1,0 +1,13 @@
+{
+    "name": "restrictedjob",
+    "version": "1",
+    "config": {
+        "image": "node:8",
+        "steps": [
+            { "preinstall": "npm preinstall" },
+            { "install": "npm install" },
+            { "pretest": "npm pretest" },
+            { "test": "npm test" }
+        ]
+    }
+}

@@ -255,6 +255,7 @@ describe('config parser', () => {
             let namespaceTemplate;
             let defaultTemplate;
             let imagesTemplate;
+            let restrictedjobTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
@@ -262,6 +263,7 @@ describe('config parser', () => {
                 namespaceTemplate = JSON.parse(loadData('templateWithNamespace.json'));
                 defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                 imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
+                restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
@@ -270,6 +272,8 @@ describe('config parser', () => {
                     .resolves(namespaceTemplate);
                 templateFactoryMock.getTemplate.withArgs('ImagesTestNamespace/imagestemplate@2')
                     .resolves(imagesTemplate);
+                templateFactoryMock.getTemplate.withArgs('restrictedjob@1')
+                    .resolves(restrictedjobTemplate);
             });
 
             it('flattens templates successfully', () =>
@@ -298,6 +302,19 @@ describe('config parser', () => {
                 parser(loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
                         data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
+            );
+
+            it('returns errors if flattens templates with job has duplicate steps', () =>
+                parser(
+                    loadData('basic-job-with-template-duplicate-steps.yaml'), templateFactoryMock)
+                    .then((data) => {
+                        assert.strictEqual(data.jobs.main[0].commands[0].name,
+                            'config-parse-error');
+                        assert.match(data.jobs.main[0].commands[0].command,
+                            /Error:.*main has duplicate step: preinstall,.* pretest/);
+                        assert.match(data.errors[0],
+                            /Error:.*main has duplicate step: preinstall,.* pretest/);
+                    })
             );
 
             it('flattens templates with images', () =>
