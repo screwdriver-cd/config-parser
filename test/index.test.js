@@ -65,8 +65,8 @@ describe('config parser', () => {
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command,
-                        /Error:.*main has duplicate step: publish/);
-                    assert.match(data.errors[0], /Error:.*main has duplicate step: publish/);
+                        /"steps" position 1 contains a duplicate value/);
+                    assert.match(data.errors[0], /"steps" position 1 contains a duplicate value/);
                 })
         );
 
@@ -255,6 +255,7 @@ describe('config parser', () => {
             let namespaceTemplate;
             let defaultTemplate;
             let imagesTemplate;
+            let restrictedjobTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
@@ -262,6 +263,7 @@ describe('config parser', () => {
                 namespaceTemplate = JSON.parse(loadData('templateWithNamespace.json'));
                 defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                 imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
+                restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
@@ -270,6 +272,8 @@ describe('config parser', () => {
                     .resolves(namespaceTemplate);
                 templateFactoryMock.getTemplate.withArgs('ImagesTestNamespace/imagestemplate@2')
                     .resolves(imagesTemplate);
+                templateFactoryMock.getTemplate.withArgs('restrictedjob@1')
+                    .resolves(restrictedjobTemplate);
             });
 
             it('flattens templates successfully', () =>
@@ -300,6 +304,19 @@ describe('config parser', () => {
                         data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
             );
 
+            it('returns errors if flattens templates with job has duplicate steps', () =>
+                parser(
+                    loadData('basic-job-with-template-duplicate-steps.yaml'), templateFactoryMock)
+                    .then((data) => {
+                        assert.strictEqual(data.jobs.main[0].commands[0].name,
+                            'config-parse-error');
+                        assert.match(data.jobs.main[0].commands[0].command,
+                            /Error:.*main has duplicate step: preinstall,.* pretest/);
+                        assert.match(data.errors[0],
+                            /Error:.*main has duplicate step: preinstall,.* pretest/);
+                    })
+            );
+
             it('flattens templates with images', () =>
                 parser(loadData('basic-job-with-images.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
@@ -321,8 +338,27 @@ describe('config parser', () => {
     });
 
     describe('functional', () => {
+        const templateFactoryMock = {
+            getTemplate: sinon.stub().resolves(JSON.parse(loadData('template.json')))
+        };
+        const buildClusterFactoryMock = {
+            list: sinon.stub().resolves([{
+                name: 'test',
+                description: 'Testing out the buildclusters API',
+                scmContext: 'github:github.com',
+                scmOrganizations: [
+                    'screwdriver-cd-test'
+                ],
+                isActive: true,
+                managedByScrewdriver: false,
+                maintainer: 'foo@bar.com',
+                weightage: 100
+            }])
+        };
+
         it('returns an error if not enough steps', () =>
-            parser(loadData('not-enough-commands.yaml'))
+            parser(loadData('not-enough-commands.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /"steps" must contain at least 1 items/);
@@ -330,7 +366,8 @@ describe('config parser', () => {
         );
 
         it('returns an error if too many environment variables', () =>
-            parser(loadData('too-many-environment.yaml'))
+            parser(loadData('too-many-environment.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /"environment" can only have 100 environment/);
@@ -338,7 +375,8 @@ describe('config parser', () => {
         );
 
         it('do not count SD_TEMPLATE variables for max environment variables', () =>
-            parser(loadData('environment-with-SD-variable.yaml'))
+            parser(loadData('environment-with-SD-variable.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.notMatch(data.jobs.main[0].commands[0].command,
                         /"environment" can only have 100 environment/);
@@ -346,7 +384,8 @@ describe('config parser', () => {
         );
 
         it('returns an error if too many environment + matrix variables', () =>
-            parser(loadData('too-many-matrix.yaml'))
+            parser(loadData('too-many-matrix.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /"environment" and "matrix" can only have a combined/);
@@ -354,7 +393,8 @@ describe('config parser', () => {
         );
 
         it('returns an error if matrix is too big', () =>
-            parser(loadData('too-big-matrix.yaml'))
+            parser(loadData('too-big-matrix.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /Job "main": "matrix" cannot contain >25 perm/);
@@ -362,7 +402,8 @@ describe('config parser', () => {
         );
 
         it('returns an error if using restricted step names', () =>
-            parser(loadData('restricted-step-name.yaml'))
+            parser(loadData('restricted-step-name.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /Job "main": Step "sd-setup": cannot use a restricted prefix "sd-"/);
@@ -370,7 +411,8 @@ describe('config parser', () => {
         );
 
         it('returns an error if using restricted job names', () =>
-            parser(loadData('restricted-job-name.yaml'))
+            parser(loadData('restricted-job-name.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /Job "pr-15": cannot use a restricted prefix "pr-"/);
@@ -378,7 +420,8 @@ describe('config parser', () => {
         );
 
         it('reads annotations on the pipeline-level', () =>
-            parser(loadData('pipeline-annotations.yaml'))
+            parser(loadData('pipeline-annotations.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-annotations.json')));
                 })
@@ -392,22 +435,39 @@ describe('config parser', () => {
         );
 
         it('reads cache on the pipeline-level', () =>
-            parser(loadData('pipeline-cache.yaml'))
+            parser(loadData('pipeline-cache.yaml'), templateFactoryMock, buildClusterFactoryMock)
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-cache.json')));
                 })
         );
 
         it('returns an error if job specified in cache config does not exist', () =>
-            parser(loadData('pipeline-cache-nonexist-job.yaml'))
+            parser(loadData('pipeline-cache-nonexist-job.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(
                         loadData('pipeline-cache-nonexist-job.json')));
                 })
         );
 
+        it('validates build cluster', () =>
+            parser(loadData('build-cluster.yaml'), templateFactoryMock, buildClusterFactoryMock)
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(loadData('build-cluster.json')));
+                })
+        );
+
+        it('returns an error if build cluster does not exist', () =>
+            parser(loadData('bad-build-cluster.yaml'), templateFactoryMock, buildClusterFactoryMock)
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(
+                        loadData('bad-build-cluster.json')));
+                })
+        );
+
         it('allows a description key', () =>
-            parser(loadData('basic-job-with-description.yaml'))
+            parser(loadData('basic-job-with-description.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.isDefined(data.jobs.main[0].description);
                     assert.equal(data.jobs.main[0].description,
@@ -416,7 +476,8 @@ describe('config parser', () => {
         );
 
         it('returns an error if workflowGraph has cycle', () =>
-            parser(loadData('pipeline-with-requires-cycle.yaml'))
+            parser(loadData('pipeline-with-requires-cycle.yaml'), templateFactoryMock,
+                buildClusterFactoryMock)
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
                         /Jobs: should not have circular dependency in jobs/);

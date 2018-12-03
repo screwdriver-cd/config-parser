@@ -44,11 +44,12 @@ function parseYaml(yaml) {
 /**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
- * @param  {String}           yaml              Contents of screwdriver.yaml
- * @param  {TemplateFactory}  templateFactory   Template Factory to get templates
+ * @param  {String}               yaml                Contents of screwdriver.yaml
+ * @param  {BuildClusterFactory}  buildClusterFactory Build cluster Factory to get build clusters
+ * @param  {TemplateFactory}      templateFactory     Template Factory to get templates
  * @returns {Promise}
  */
-module.exports = function configParser(yaml, templateFactory) {
+module.exports = function configParser(yaml, templateFactory, buildClusterFactory) {
     // Convert from YAML to JSON
     return parseYaml(yaml)
         // Basic validation
@@ -56,7 +57,7 @@ module.exports = function configParser(yaml, templateFactory) {
         // Flatten structures
         .then(parsedDoc => phaseFlatten(parsedDoc, templateFactory))
         // Functionality validation
-        .then(phaseValidateFunctionality)
+        .then(flattenedDoc => phaseValidateFunctionality(flattenedDoc, buildClusterFactory))
         // Generate Permutations
         .then(phaseGeneratePermutations)
         // Output in the right format
