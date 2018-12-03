@@ -15,6 +15,7 @@
             }
         ]
     },
+    "prChain": false,
     "workflowGraph": {
         "nodes": [
             {
