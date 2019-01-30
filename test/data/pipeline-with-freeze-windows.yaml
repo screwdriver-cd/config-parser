@@ -1,0 +1,14 @@
+shared:
+    image: node:4
+jobs:
+    test:
+        steps:
+            - test: npm test
+        requires: ~commit
+    echo:
+        steps:
+            - echo-hello: echo hello
+        requires: ~commit
+        freezeWindows:
+            - "* * ? * 1"
+            - "0-59 0-23 * 1 ?"
