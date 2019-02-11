@@ -1,0 +1,51 @@
+{
+    "annotations": {},
+    "jobs": {
+        "test": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "requires": ["~commit"],
+                "commands": [
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ]
+            }
+        ],
+        "echo": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["~commit"],
+                "freezeWindows": ["* * ? * 1", "0-59 0-23 * 1 ?"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ]
+            }
+        ]
+    },
+    "prChain": false,
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "test" },
+            { "name": "echo" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "test" },
+            { "src": "~commit", "dest": "echo" }
+        ]
+    }
+}
