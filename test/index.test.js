@@ -435,13 +435,6 @@ describe('config parser', () => {
                 })
         );
 
-        it('reads prChain flag', () =>
-            parser(loadData('pipeline-prChain.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(loadData('pipeline-prChain.json')));
-                })
-        );
-
         it('reads cache on the pipeline-level', () =>
             parser(loadData('pipeline-cache.yaml'), templateFactoryMock, buildClusterFactoryMock)
                 .then((data) => {
