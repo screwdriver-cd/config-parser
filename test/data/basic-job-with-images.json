@@ -46,7 +46,6 @@
       }
     ]
   },
-  "prChain": false,
   "workflowGraph": {
     "edges": [],
     "nodes": [
