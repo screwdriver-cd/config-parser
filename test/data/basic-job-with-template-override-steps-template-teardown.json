@@ -16,6 +16,10 @@
                 {
                     "name": "test",
                     "command": "echo 'my job is overriding this step'"
+                },
+                {
+                    "name": "teardown-step",
+                    "command": "echo template teardown"
                 }
             ],
             "cache": {

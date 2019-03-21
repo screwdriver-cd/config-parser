@@ -312,9 +312,29 @@ describe('config parser', () => {
                         data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
             );
 
+            it('template-teardown is merged into steps', () => {
+                templateFactoryMock.getTemplate = sinon.stub().resolves(
+                    JSON.parse(loadData('template-with-teardown.json')));
+
+                return parser(
+                    loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
+                    .then(data => assert.deepEqual(data, JSON.parse(loadData(
+                        'basic-job-with-template-override-steps-template-teardown.json'))));
+            });
+
+            it('user-teardown overrides template-teardown', () => {
+                templateFactoryMock.getTemplate = sinon.stub().resolves(
+                    JSON.parse(loadData('template-with-teardown.json')));
+
+                return parser(loadData(
+                    'basic-job-with-template-override-steps-teardown.yaml'), templateFactoryMock)
+                    .then(data => assert.deepEqual(data, JSON.parse(loadData(
+                        'basic-job-with-template-override-steps-teardown.json'))));
+            });
+
             it('returns errors if flattens templates with job has duplicate steps', () =>
-                parser(
-                    loadData('basic-job-with-template-duplicate-steps.yaml'), templateFactoryMock)
+                parser(loadData(
+                    'basic-job-with-template-duplicate-steps.yaml'), templateFactoryMock)
                     .then((data) => {
                         assert.strictEqual(data.jobs.main[0].commands[0].name,
                             'config-parse-error');
