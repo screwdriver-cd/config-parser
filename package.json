@@ -43,18 +43,18 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^4.19.1",
-    "eslint-config-screwdriver": "^3.0.0",
+    "eslint-config-screwdriver": "^3.0.1",
     "jenkins-mocha": "^6.0.0",
     "sinon": "^2.4.1"
   },
   "dependencies": {
     "clone": "^2.1.2",
     "hoek": "^5.0.4",
-    "joi": "^13.6.0",
-    "js-yaml": "^3.12.0",
-    "keymbinatorial": "^1.1.4",
+    "joi": "^13.7.0",
+    "js-yaml": "^3.13.0",
+    "keymbinatorial": "^1.1.5",
     "screwdriver-data-schema": "^18.43.2",
-    "screwdriver-workflow-parser": "^1.6.0",
+    "screwdriver-workflow-parser": "^1.8.3",
     "tinytim": "^0.1.1"
   }
 }

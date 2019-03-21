@@ -6,6 +6,7 @@ jobs:
         steps:
             - pretest: echo pre-test
             - test: echo 'my job is overriding this step'
+            - teardown-user: echo teardown
         requires:
             - ~pr
             - ~commit

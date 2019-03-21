@@ -16,6 +16,10 @@
                 {
                     "name": "test",
                     "command": "echo 'my job is overriding this step'"
+                },
+                {
+                    "name": "teardown-user",
+                    "command": "echo teardown"
                 }
             ],
             "cache": {
