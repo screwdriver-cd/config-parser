@@ -1,0 +1,61 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [{
+            "annotations": {},
+            "image": "node:4",
+            "commands": [
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "pretest",
+                    "command": "echo pre-test"
+                },
+                {
+                    "name": "test",
+                    "command": "echo 'my job is overriding this step'"
+                },
+                {
+                    "name": "teardown-step",
+                    "command": "echo template teardown"
+                }
+            ],
+            "cache": {
+              "event": ["/tmp/test"],
+              "job": [],
+              "pipeline": []
+            },
+            "environment": {
+                "FOO": "from template",
+                "BAR": "foo",
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "secrets": [
+                "GIT_KEY"
+            ],
+            "settings": {
+                "email": "foo@example.com"
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ]
+        }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" }
+        ]
+    }
+}
