@@ -41,11 +41,11 @@
   },
   "engine-strict": true,
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.2.0",
     "eslint": "^4.19.1",
-    "eslint-config-screwdriver": "^3.0.1",
-    "jenkins-mocha": "^6.0.0",
-    "sinon": "^2.4.1"
+    "eslint-config-screwdriver": "^4.0.0",
+    "jenkins-mocha": "^7.0.0",
+    "sinon": "^7.3.2"
   },
   "dependencies": {
     "clone": "^2.1.2",

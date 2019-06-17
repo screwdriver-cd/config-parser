@@ -3,7 +3,7 @@
     "jobs": {
         "main": [
             {
-                "image": "node:6",
+                "image": "node:10",
                 "commands": [
                     {
                         "name": "config-parse-error",

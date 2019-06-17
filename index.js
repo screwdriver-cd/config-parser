@@ -17,8 +17,8 @@ const phaseGeneratePermutations = require('./lib/phase/permutation');
 function parseYaml(yaml) {
     // If no yaml exists, throw error
     if (!yaml) {
-        return Promise.reject('screwdriver.yaml does not exist. Please ' +
-        'create a screwdriver.yaml and try to rerun your build.');
+        return Promise.reject(new Error('screwdriver.yaml does not exist. Please '
+        + 'create a screwdriver.yaml and try to rerun your build.'));
     }
 
     return new Promise((resolve) => {
@@ -79,7 +79,7 @@ module.exports = function configParser(yaml, templateFactory, buildClusterFactor
             annotations: {},
             jobs: {
                 main: [{
-                    image: 'node:6',
+                    image: 'node:10',
                     commands: [{
                         name: 'config-parse-error',
                         command: `echo "${err}"; exit 1`
