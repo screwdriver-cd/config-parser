@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('chai').assert;
+const { assert } = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
@@ -36,7 +36,7 @@ describe('config parser', () => {
                             { src: '~commit', dest: 'main' }
                         ]
                     });
-                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.strictEqual(data.jobs.main[0].image, 'node:10');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
@@ -45,214 +45,183 @@ describe('config parser', () => {
                 });
         });
 
-        it('returns an error if unparsable yaml', () =>
-            parser('foo: :')
-                .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
-                    assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
-                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
-                    assert.match(data.jobs.main[0].commands[0].command, /YAMLException:/);
-                    assert.match(data.errors[0], /YAMLException:/);
-                })
-        );
+        it('returns an error if unparsable yaml', () => parser('foo: :')
+            .then((data) => {
+                assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                assert.deepEqual(data.jobs.main[0].secrets, []);
+                assert.deepEqual(data.jobs.main[0].environment, {});
+                assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                assert.match(data.jobs.main[0].commands[0].command, /YAMLException:/);
+                assert.match(data.errors[0], /YAMLException:/);
+            }));
 
-        it('returns an error if job has duplicate steps', () =>
-            parser(loadData('basic-job-with-duplicate-steps.yaml'))
+        it('returns an error if job has duplicate steps',
+            () => parser(loadData('basic-job-with-duplicate-steps.yaml'))
                 .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.strictEqual(data.jobs.main[0].image, 'node:10');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command,
                         /Error:.*main has duplicate step: publish/);
                     assert.match(data.errors[0], /Error:.*main has duplicate step: publish/);
-                })
-        );
+                }));
 
-        it('does not return an error if job has no step names', () =>
-            parser(loadData('basic-job-with-no-step-names.yaml'))
-                .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
-                    assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
-                    assert.notOk(data.errors);
-                })
-        );
+        it('does not return an error if job has no step names',
+            () => parser(loadData('basic-job-with-no-step-names.yaml')).then((data) => {
+                assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                assert.deepEqual(data.jobs.main[0].secrets, []);
+                assert.deepEqual(data.jobs.main[0].environment, {});
+                assert.notOk(data.errors);
+            }));
 
-        it('returns an error if multiple documents without hint', () =>
-            parser('foo: bar\n---\nfoo: baz')
+        it('returns an error if multiple documents without hint',
+            () => parser('foo: bar\n---\nfoo: baz')
                 .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
+                    assert.strictEqual(data.jobs.main[0].image, 'node:10');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command,
                         /YAMLException:.*ambigious/);
                     assert.match(data.errors[0], /YAMLException:.*ambigious/);
-                })
-        );
+                }));
 
-        it('picks the document with version hint', () =>
-            parser('jobs: {}\n---\nversion: 4')
-                .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:6');
-                    assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
-                    assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /ValidationError:.*"jobs" is required/);
-                    assert.match(data.errors[0], /ValidationError:.*"jobs" is required/);
-                })
-        );
+        it('picks the document with version hint', () => parser('jobs: {}\n---\nversion: 4')
+            .then((data) => {
+                assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                assert.deepEqual(data.jobs.main[0].secrets, []);
+                assert.deepEqual(data.jobs.main[0].environment, {});
+                assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /ValidationError:.*"jobs" is required/);
+                assert.match(data.errors[0], /ValidationError:.*"jobs" is required/);
+            }));
     });
 
     describe('structure validation', () => {
         describe('overall config', () => {
-            it('returns an error if missing jobs', () =>
-                parser('foo: bar')
-                    .then((data) => {
-                        assert.match(data.jobs.main[0].commands[0].command, /"jobs" is required/);
-                        assert.match(data.errors[0], /"jobs" is required/);
-                    })
-            );
+            it('returns an error if missing jobs', () => parser('foo: bar')
+                .then((data) => {
+                    assert.match(data.jobs.main[0].commands[0].command, /"jobs" is required/);
+                    assert.match(data.errors[0], /"jobs" is required/);
+                }));
         });
 
         describe('jobs', () => {
-            it('Do not return error if missing main job for new config', () =>
-                parser(loadData('missing-main-job-with-requires.yaml'))
+            it('Do not return error if missing main job for new config',
+                () => parser(loadData('missing-main-job-with-requires.yaml'))
                     .then((data) => {
                         assert.notOk(data.errors);
-                    })
-            );
+                    }));
         });
 
         describe('steps', () => {
-            it('returns an error if not bad named steps', () =>
-                parser(loadData('bad-step-name.yaml'))
+            it('returns an error if not bad named steps',
+                () => parser(loadData('bad-step-name.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
                             /"foo bar" only supports the following characters A-Z,a-z,0-9,-,_/);
-                    })
-            );
+                    }));
 
-            it('returns an error if teardown step is not at the end', () =>
-                parser(loadData('bad-step-teardown.yaml'))
+            it('returns an error if teardown step is not at the end',
+                () => parser(loadData('bad-step-teardown.yaml'))
                     .then((data) => {
                         assert.match(data.errors[0],
                             /User teardown steps need to be at the end/);
-                    })
-            );
+                    }));
         });
 
         describe('environment', () => {
-            it('returns an error if bad environment name', () =>
-                parser(loadData('bad-environment-name.yaml'))
+            it('returns an error if bad environment name',
+                () => parser(loadData('bad-environment-name.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
                             /"foo bar" only supports uppercase letters,/);
-                    })
-            );
+                    }));
         });
 
         describe('matrix', () => {
-            it('returns an error if bad matrix name', () =>
-                parser(loadData('bad-matrix-name.yaml'))
-                    .then((data) => {
-                        assert.match(data.jobs.main[0].commands[0].command,
-                            /"foo bar" only supports uppercase letters,/);
-                    })
-            );
+            it('returns an error if bad matrix name', () => parser(loadData('bad-matrix-name.yaml'))
+                .then((data) => {
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        /"foo bar" only supports uppercase letters,/);
+                }));
         });
 
         describe('childPipelines', () => {
-            it('returns an error if bad childPipelines', () =>
-                parser(loadData('bad-external-scm.yaml'))
+            it('returns an error if bad childPipelines',
+                () => parser(loadData('bad-external-scm.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
                             /"fakeScmUrl" fails to match the required pattern:/);
-                    })
-            );
+                    }));
         });
     });
 
     describe('flatten', () => {
-        it('replaces steps, matrix, image, but merges environment', () =>
-            parser(loadData('basic-shared-project.yaml'))
+        it('replaces steps, matrix, image, but merges environment',
+            () => parser(loadData('basic-shared-project.yaml'))
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('basic-shared-project.json')));
-                })
-        );
+                }));
 
-        it('flattens complex environments', () =>
-            parser(loadData('complex-environment.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(loadData('complex-environment.json')));
-                })
-        );
+        it('flattens complex environments', () => parser(loadData('complex-environment.yaml'))
+            .then((data) => {
+                assert.deepEqual(data, JSON.parse(loadData('complex-environment.json')));
+            }));
 
-        it('flattens shared annotations to each job', () =>
-            parser(loadData('shared-annotations.yaml'))
+        it('flattens shared annotations to each job',
+            () => parser(loadData('shared-annotations.yaml'))
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('shared-annotations.json')));
-                })
-        );
+                }));
 
-        it('includes pipeline- and job-level annotations', () =>
-            parser(loadData('pipeline-and-job-annotations.yaml'))
+        it('includes pipeline- and job-level annotations',
+            () => parser(loadData('pipeline-and-job-annotations.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
                         JSON.parse(loadData('pipeline-and-job-annotations.json')));
-                })
-        );
+                }));
 
-        it('job-level annotations override shared-level annotations', () =>
-            parser(loadData('shared-job-annotations.yaml'))
+        it('job-level annotations override shared-level annotations',
+            () => parser(loadData('shared-job-annotations.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
                         JSON.parse(loadData('shared-job-annotations.json')));
-                })
-        );
+                }));
 
-        it('job-level sourcePaths override shared-level sourcePaths', () =>
-            parser(loadData('pipeline-with-sourcePaths.yaml'))
+        it('job-level sourcePaths override shared-level sourcePaths',
+            () => parser(loadData('pipeline-with-sourcePaths.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
                         JSON.parse(loadData('pipeline-with-sourcePaths.json')));
-                })
-        );
+                }));
 
-        it('flattens when sourcePaths are string', () =>
-            parser(loadData('pipeline-with-sourcePaths-string.yaml'))
+        it('flattens when sourcePaths are string',
+            () => parser(loadData('pipeline-with-sourcePaths-string.yaml'))
                 .then((data) => {
                     assert.deepEqual(data,
                         JSON.parse(loadData('pipeline-with-sourcePaths-string.json')));
-                })
-        );
+                }));
 
-        it('flattens blockedBy', () =>
-            parser(loadData('pipeline-with-blocked-by.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-blocked-by.json')));
-                })
-        );
+        it('flattens blockedBy', () => parser(loadData('pipeline-with-blocked-by.yaml'))
+            .then((data) => {
+                assert.deepEqual(data,
+                    JSON.parse(loadData('pipeline-with-blocked-by.json')));
+            }));
 
-        it('flattens freezeWindows', () =>
-            parser(loadData('pipeline-with-freeze-windows.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-freeze-windows.json')));
-                })
-        );
+        it('flattens freezeWindows', () => parser(loadData('pipeline-with-freeze-windows.yaml'))
+            .then((data) => {
+                assert.deepEqual(data,
+                    JSON.parse(loadData('pipeline-with-freeze-windows.json')));
+            }));
 
-        it('includes scm URLs', () =>
-            parser(loadData('pipeline-with-childPipelines.yaml'))
-                .then((data) => {
-                    assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-childPipelines.json')));
-                })
-        );
+        it('includes scm URLs', () => parser(loadData('pipeline-with-childPipelines.yaml'))
+            .then((data) => {
+                assert.deepEqual(data,
+                    JSON.parse(loadData('pipeline-with-childPipelines.json')));
+            }));
 
         describe('templates', () => {
             const templateFactoryMock = {
@@ -284,11 +253,11 @@ describe('config parser', () => {
                     .resolves(restrictedjobTemplate);
             });
 
-            it('flattens templates successfully', () =>
-                parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
+            it('flattens templates successfully',
+                () => parser(loadData('basic-job-with-template.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
-                        data, JSON.parse(loadData('basic-job-with-template.json'))))
-            );
+                        data, JSON.parse(loadData('basic-job-with-template.json'))
+                    )));
 
             it('flattens templates successfully when template namespace exists', () => {
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
@@ -297,59 +266,70 @@ describe('config parser', () => {
                 return parser(loadData('basic-job-with-template-with-namespace.yaml'),
                     templateFactoryMock)
                     .then(data => assert.deepEqual(
-                        data, JSON.parse(loadData('basic-job-with-template-with-namespace.json'))));
+                        data, JSON.parse(loadData('basic-job-with-template-with-namespace.json'))
+                    ));
             });
 
-            it('flattens templates with wrapped steps ', () =>
-                parser(loadData('basic-job-with-template-wrapped-steps.yaml'), templateFactoryMock)
-                    .then(data => assert.deepEqual(
-                        data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json'))))
-            );
+            it('flattens templates with wrapped steps ',
+                () => parser(
+                    loadData('basic-job-with-template-wrapped-steps.yaml'),
+                    templateFactoryMock
+                ).then(data => assert.deepEqual(
+                    data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json'))
+                )));
 
-            it('flattens templates with job steps ', () =>
-                parser(loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
-                    .then(data => assert.deepEqual(
-                        data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))))
-            );
+            it('flattens templates with job steps ',
+                () => parser(
+                    loadData('basic-job-with-template-override-steps.yaml'),
+                    templateFactoryMock
+                ).then(data => assert.deepEqual(
+                    data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))
+                )));
 
             it('template-teardown is merged into steps', () => {
                 templateFactoryMock.getTemplate = sinon.stub().resolves(
-                    JSON.parse(loadData('template-with-teardown.json')));
+                    JSON.parse(loadData('template-with-teardown.json'))
+                );
 
                 return parser(
-                    loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock)
+                    loadData('basic-job-with-template-override-steps.yaml'), templateFactoryMock
+                )
                     .then(data => assert.deepEqual(data, JSON.parse(loadData(
-                        'basic-job-with-template-override-steps-template-teardown.json'))));
+                        'basic-job-with-template-override-steps-template-teardown.json'
+                    ))));
             });
 
             it('user-teardown overrides template-teardown', () => {
                 templateFactoryMock.getTemplate = sinon.stub().resolves(
-                    JSON.parse(loadData('template-with-teardown.json')));
+                    JSON.parse(loadData('template-with-teardown.json'))
+                );
 
                 return parser(loadData(
-                    'basic-job-with-template-override-steps-teardown.yaml'), templateFactoryMock)
+                    'basic-job-with-template-override-steps-teardown.yaml'
+                ), templateFactoryMock)
                     .then(data => assert.deepEqual(data, JSON.parse(loadData(
-                        'basic-job-with-template-override-steps-teardown.json'))));
+                        'basic-job-with-template-override-steps-teardown.json'
+                    ))));
             });
 
-            it('returns errors if flattens templates with job has duplicate steps', () =>
-                parser(loadData(
-                    'basic-job-with-template-duplicate-steps.yaml'), templateFactoryMock)
-                    .then((data) => {
-                        assert.strictEqual(data.jobs.main[0].commands[0].name,
-                            'config-parse-error');
-                        assert.match(data.jobs.main[0].commands[0].command,
-                            /Error:.*main has duplicate step: preinstall,.* pretest/);
-                        assert.match(data.errors[0],
-                            /Error:.*main has duplicate step: preinstall,.* pretest/);
-                    })
-            );
+            it('returns errors if flattens templates with job has duplicate steps',
+                () => parser(
+                    loadData('basic-job-with-template-duplicate-steps.yaml'),
+                    templateFactoryMock
+                ).then((data) => {
+                    assert.strictEqual(data.jobs.main[0].commands[0].name,
+                        'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        /Error:.*main has duplicate step: preinstall,.* pretest/);
+                    assert.match(data.errors[0],
+                        /Error:.*main has duplicate step: preinstall,.* pretest/);
+                }));
 
-            it('flattens templates with images', () =>
-                parser(loadData('basic-job-with-images.yaml'), templateFactoryMock)
+            it('flattens templates with images',
+                () => parser(loadData('basic-job-with-images.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
-                        data, JSON.parse(loadData('basic-job-with-images.json'))))
-            );
+                        data, JSON.parse(loadData('basic-job-with-images.json'))
+                    )));
 
             it('returns error if template does not exist', () => {
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(null);
@@ -384,141 +364,158 @@ describe('config parser', () => {
             }])
         };
 
-        it('returns an error if not enough steps', () =>
-            parser(loadData('not-enough-commands.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /"steps" must contain at least 1 items/);
-                })
-        );
+        it('returns an error if not enough steps',
+            () => parser(
+                loadData('not-enough-commands.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /"steps" must contain at least 1 items/);
+            }));
 
-        it('returns an error if too many environment variables', () =>
-            parser(loadData('too-many-environment.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /"environment" can only have 100 environment/);
-                })
-        );
+        it('returns an error if too many environment variables',
+            () => parser(
+                loadData('too-many-environment.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /"environment" can only have 100 environment/);
+            }));
 
-        it('do not count SD_TEMPLATE variables for max environment variables', () =>
-            parser(loadData('environment-with-SD-variable.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.notMatch(data.jobs.main[0].commands[0].command,
-                        /"environment" can only have 100 environment/);
-                })
-        );
+        it('do not count SD_TEMPLATE variables for max environment variables',
+            () => parser(
+                loadData('environment-with-SD-variable.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.notMatch(data.jobs.main[0].commands[0].command,
+                    /"environment" can only have 100 environment/);
+            }));
 
-        it('returns an error if too many environment + matrix variables', () =>
-            parser(loadData('too-many-matrix.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /"environment" and "matrix" can only have a combined/);
-                })
-        );
+        it('returns an error if too many environment + matrix variables',
+            () => parser(
+                loadData('too-many-matrix.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /"environment" and "matrix" can only have a combined/);
+            }));
 
-        it('returns an error if matrix is too big', () =>
-            parser(loadData('too-big-matrix.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /Job "main": "matrix" cannot contain >25 perm/);
-                })
-        );
+        it('returns an error if matrix is too big',
+            () => parser(
+                loadData('too-big-matrix.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /Job "main": "matrix" cannot contain >25 perm/);
+            }));
 
-        it('returns an error if using restricted step names', () =>
-            parser(loadData('restricted-step-name.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /Job "main": Step "sd-setup": cannot use a restricted prefix "sd-"/);
-                })
-        );
+        it('returns an error if using restricted step names',
+            () => parser(
+                loadData('restricted-step-name.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /Job "main": Step "sd-setup": cannot use a restricted prefix "sd-"/);
+            }));
 
-        it('returns an error if using restricted job names', () =>
-            parser(loadData('restricted-job-name.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /Job "pr-15": cannot use a restricted prefix "pr-"/);
-                })
-        );
+        it('returns an error if using restricted job names',
+            () => parser(
+                loadData('restricted-job-name.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /Job "pr-15": cannot use a restricted prefix "pr-"/);
+            }));
 
-        it('reads annotations on the pipeline-level', () =>
-            parser(loadData('pipeline-annotations.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(loadData('pipeline-annotations.json')));
-                })
-        );
+        it('reads annotations on the pipeline-level',
+            () => parser(
+                loadData('pipeline-annotations.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(loadData('pipeline-annotations.json')));
+            }));
 
-        it('reads cache on the pipeline-level', () =>
-            parser(loadData('pipeline-cache.yaml'), templateFactoryMock, buildClusterFactoryMock)
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(loadData('pipeline-cache.json')));
-                })
-        );
+        it('reads cache on the pipeline-level',
+            () => parser(
+                loadData('pipeline-cache.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(loadData('pipeline-cache.json')));
+            }));
 
-        it('returns an error if job specified in cache config does not exist', () =>
-            parser(loadData('pipeline-cache-nonexist-job.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(
-                        loadData('pipeline-cache-nonexist-job.json')));
-                })
-        );
+        it('returns an error if job specified in cache config does not exist',
+            () => parser(
+                loadData('pipeline-cache-nonexist-job.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('pipeline-cache-nonexist-job.json')
+                ));
+            }));
 
-        it('validates build cluster', () =>
-            parser(loadData('build-cluster.yaml'), templateFactoryMock, buildClusterFactoryMock)
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(loadData('build-cluster.json')));
-                })
-        );
+        it('validates build cluster',
+            () => parser(
+                loadData('build-cluster.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(loadData('build-cluster.json')));
+            }));
 
-        it('returns an error if build cluster does not exist', () =>
-            parser(loadData('bad-build-cluster.yaml'), templateFactoryMock, buildClusterFactoryMock)
-                .then((data) => {
-                    assert.deepEqual(data, JSON.parse(
-                        loadData('bad-build-cluster.json')));
-                })
-        );
+        it('returns an error if build cluster does not exist',
+            () => parser(
+                loadData('bad-build-cluster.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('bad-build-cluster.json')
+                ));
+            }));
 
-        it('allows a description key', () =>
-            parser(loadData('basic-job-with-description.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.isDefined(data.jobs.main[0].description);
-                    assert.equal(data.jobs.main[0].description,
-                        'This is a description');
-                })
-        );
+        it('allows a description key',
+            () => parser(
+                loadData('basic-job-with-description.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.isDefined(data.jobs.main[0].description);
+                assert.equal(data.jobs.main[0].description,
+                    'This is a description');
+            }));
 
-        it('returns an error if workflowGraph has cycle', () =>
-            parser(loadData('pipeline-with-requires-cycle.yaml'), templateFactoryMock,
-                buildClusterFactoryMock)
-                .then((data) => {
-                    assert.match(data.jobs.main[0].commands[0].command,
-                        /Jobs: should not have circular dependency in jobs/);
-                })
-        );
+        it('returns an error if workflowGraph has cycle',
+            () => parser(
+                loadData('pipeline-with-requires-cycle.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock
+            ).then((data) => {
+                assert.match(data.jobs.main[0].commands[0].command,
+                    /Jobs: should not have circular dependency in jobs/);
+            }));
     });
 
     describe('permutation', () => {
-        it('generates complex permutations and expands image', () =>
-            parser(loadData('node-module.yaml'))
+        it('generates complex permutations and expands image',
+            () => parser(loadData('node-module.yaml'))
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('node-module.json')));
-                })
-        );
+                }));
 
-        it('generates correct jobs with ', () =>
-            parser(loadData('pipeline-with-requires.yaml'))
+        it('generates correct jobs with ',
+            () => parser(loadData('pipeline-with-requires.yaml'))
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-requires.json')));
-                })
-        );
+                }));
     });
 });
