@@ -1,0 +1,80 @@
+{
+  "annotations": {},
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm install",
+            "name": "install"
+          },
+          {
+            "command": "npm test",
+            "name": "test"
+          }
+        ],
+        "environment": {
+          "A": "meow",
+          "B": "${A}",
+          "BAR": "foo",
+          "BAZ": "world",
+          "FOO": "${B}",
+          "SD_TEMPLATE_FULLNAME": "mynamespace/environment",
+          "SD_TEMPLATE_NAME": "environment",
+          "SD_TEMPLATE_NAMESPACE": "mynamespace",
+          "SD_TEMPLATE_VERSION": "1.2.3"
+        },
+        "image": "latest-image",
+        "secrets": [
+            "GIT_KEY"
+        ],
+        "settings": {
+            "email": "foo@example.com"
+        }
+      }
+    ],
+    "publish": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm publish",
+            "name": "publish"
+          },
+          {
+            "command": "echo bye",
+            "name": "teardown-mystep"
+          }
+        ],
+        "description": "This is the publish description",
+        "environment": {
+            "A": "hello",
+            "B": "${A}",
+            "BAZ": "world",
+            "FOO": "${B}"
+        },
+        "image": "node:4",
+        "secrets": [],
+        "settings": {}
+      }
+    ]
+  },
+  "workflowGraph": {
+    "edges": [],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "publish"
+      },
+      {
+        "name": "main"
+      }
+    ]
+  }
+}

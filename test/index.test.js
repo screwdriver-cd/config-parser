@@ -232,6 +232,7 @@ describe('config parser', () => {
             let namespaceTemplate;
             let defaultTemplate;
             let imagesTemplate;
+            let environmentTemplate;
             let restrictedjobTemplate;
 
             beforeEach(() => {
@@ -240,6 +241,7 @@ describe('config parser', () => {
                 namespaceTemplate = JSON.parse(loadData('templateWithNamespace.json'));
                 defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                 imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
+                environmentTemplate = JSON.parse(loadData('templateWithEnvironment.json'));
                 restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
@@ -249,6 +251,8 @@ describe('config parser', () => {
                     .resolves(namespaceTemplate);
                 templateFactoryMock.getTemplate.withArgs('ImagesTestNamespace/imagestemplate@2')
                     .resolves(imagesTemplate);
+                templateFactoryMock.getTemplate.withArgs('mynamespace/environment@1.2.3')
+                    .resolves(environmentTemplate);
                 templateFactoryMock.getTemplate.withArgs('restrictedjob@1')
                     .resolves(restrictedjobTemplate);
             });
@@ -329,6 +333,12 @@ describe('config parser', () => {
                 () => parser(loadData('basic-job-with-images.yaml'), templateFactoryMock)
                     .then(data => assert.deepEqual(
                         data, JSON.parse(loadData('basic-job-with-images.json'))
+                    )));
+
+            it('flattens templates with environment variables properly',
+                () => parser(loadData('basic-job-with-environment.yaml'), templateFactoryMock)
+                    .then(data => assert.deepEqual(
+                        data, JSON.parse(loadData('basic-job-with-environment.json'))
                     )));
 
             it('returns error if template does not exist', () => {
