@@ -337,9 +337,31 @@ describe('config parser', () => {
 
             it('flattens templates with environment variables properly',
                 () => parser(loadData('basic-job-with-environment.yaml'), templateFactoryMock)
-                    .then(data => assert.deepEqual(
-                        data, JSON.parse(loadData('basic-job-with-environment.json'))
-                    )));
+                    .then((data) => {
+                        /* eslint-disable */
+                        const expected = [{ BAR: 'foo' },
+                            { SD_TEMPLATE_FULLNAME: 'mynamespace/environment' },
+                            { SD_TEMPLATE_NAME: 'environment' },
+                            { SD_TEMPLATE_NAMESPACE: 'mynamespace' },
+                            { SD_TEMPLATE_VERSION: '1.2.3' },
+                            { BAZ: 'world' },
+                            { A: 'meow' },
+                            { B: '${A}' },
+                            { FOO: '${B}' }];
+                        const result = [];
+
+                        if (data) {
+                            // Create array of json objects
+                            for (var key in data.jobs.main[0].environment) {
+                                result.push({ [key]: data.jobs.main[0].environment[key] });
+                            }
+                            // Compare results
+                            for (var i in result) {
+                                assert.deepEqual(result[i], expected[i]);
+                            }
+                        }
+                        /* eslint-enable */
+                    }));
 
             it('returns error if template does not exist', () => {
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(null);
