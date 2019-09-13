@@ -1,0 +1,25 @@
+{
+    "name": "environment",
+    "namespace": "mynamespace",
+    "version": "1.2.3",
+    "description": "test template",
+    "maintainer": "bar@foo.com",
+    "labels": [],
+    "config": {
+        "image": "node:4",
+        "steps": [
+            { "install": "npm install" },
+            { "test": "npm test" }
+        ],
+        "environment": {
+            "FOO": "",
+            "BAR": "foo"
+        },
+        "secrets": [
+            "GIT_KEY"
+        ],
+        "settings": {
+            "email": "foo@example.com"
+        }
+    }
+}
