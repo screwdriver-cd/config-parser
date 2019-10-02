@@ -363,12 +363,17 @@ describe('config parser', () => {
                 weightage: 100
             }])
         };
+        const triggerFactory = {
+            getDestFromSrc: sinon.stub().resolves([]),
+            getSrcFromDest: sinon.stub().resolves([])
+        };
 
         it('returns an error if not enough steps',
             () => parser(
                 loadData('not-enough-commands.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /"steps" must contain at least 1 items/);
@@ -378,7 +383,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('too-many-environment.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /"environment" can only have 100 environment/);
@@ -388,7 +394,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('environment-with-SD-variable.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.notMatch(data.jobs.main[0].commands[0].command,
                     /"environment" can only have 100 environment/);
@@ -398,7 +405,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('too-many-matrix.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /"environment" and "matrix" can only have a combined/);
@@ -408,7 +416,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('too-big-matrix.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /Job "main": "matrix" cannot contain >25 perm/);
@@ -418,7 +427,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('restricted-step-name.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /Job "main": Step "sd-setup": cannot use a restricted prefix "sd-"/);
@@ -428,7 +438,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('restricted-job-name.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /Job "pr-15": cannot use a restricted prefix "pr-"/);
@@ -438,7 +449,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('pipeline-annotations.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-annotations.json')));
             }));
@@ -447,7 +459,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('pipeline-cache.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-cache.json')));
             }));
@@ -456,7 +469,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('pipeline-cache-nonexist-job.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.deepEqual(data, JSON.parse(
                     loadData('pipeline-cache-nonexist-job.json')
@@ -467,7 +481,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('build-cluster.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.deepEqual(data, JSON.parse(loadData('build-cluster.json')));
             }));
@@ -476,7 +491,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('bad-build-cluster.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.deepEqual(data, JSON.parse(
                     loadData('bad-build-cluster.json')
@@ -487,7 +503,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('basic-job-with-description.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.isDefined(data.jobs.main[0].description);
                 assert.equal(data.jobs.main[0].description,
@@ -498,7 +515,8 @@ describe('config parser', () => {
             () => parser(
                 loadData('pipeline-with-requires-cycle.yaml'),
                 templateFactoryMock,
-                buildClusterFactoryMock
+                buildClusterFactoryMock,
+                triggerFactory
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /Jobs: should not have circular dependency in jobs/);
@@ -512,10 +530,17 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('node-module.json')));
                 }));
 
-        it('generates correct jobs with ',
+        it('generates correct jobs',
             () => parser(loadData('pipeline-with-requires.yaml'))
                 .then((data) => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-requires.json')));
+                }));
+
+        it('generates correct nodes with external pipeline',
+            () => parser(loadData('pipeline-with-requires-external.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-requires-external.json')));
                 }));
     });
 });

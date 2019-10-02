@@ -1,0 +1,75 @@
+{
+    "annotations": {},
+    "jobs": {
+        "A": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "requires": ["~commit"],
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    }
+                ]
+            }
+        ],
+        "D": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["A"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ]
+            }
+        ],
+        "E": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-world",
+                        "command": "echo world"
+                    }
+                ],
+                "requires": [
+                    "D",
+                    "sd@123:B",
+                    "sd@456:C"
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "A" },
+            { "name": "D" },
+            { "name": "E" },
+            { "name": "sd@123:B" },
+            { "name": "sd@456:C" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "A" },
+            { "src": "A", "dest": "D" },
+            { "src": "D", "dest": "E", "join": true },
+            { "src": "sd@123:B", "dest": "E", "join": true },
+            { "src": "sd@456:C", "dest": "E", "join": true }
+        ]
+    }
+}
