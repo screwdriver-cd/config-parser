@@ -1,6 +1,6 @@
 {
   "name": "screwdriver-config-parser",
-  "version": "4.11.0",
+  "version": "5.0.0",
   "description": "Node module for parsing screwdriver.yaml configurations",
   "main": "index.js",
   "scripts": {
@@ -54,7 +54,7 @@
     "js-yaml": "^3.13.0",
     "keymbinatorial": "^1.1.5",
     "screwdriver-data-schema": "^18.43.2",
-    "screwdriver-workflow-parser": "^1.8.3",
+    "screwdriver-workflow-parser": "^2.0.0",
     "tinytim": "^0.1.1"
   }
 }
