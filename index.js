@@ -44,11 +44,11 @@ function parseYaml(yaml) {
 /**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
- * @param  {String}               yaml                Contents of screwdriver.yaml
- * @param  {TemplateFactory}      templateFactory     Template Factory to get templates
- * @param  {BuildClusterFactory}  buildClusterFactory Build cluster Factory to get build clusters
- * @param  {TriggerFactory}       triggerFactory      Trigger Factory to find external triggers
- * @param  {Number}               pipelineId          Id of the current pipeline
+ * @param   {String}               yaml                Contents of screwdriver.yaml
+ * @param   {TemplateFactory}      templateFactory     Template Factory to get templates
+ * @param   {BuildClusterFactory}  buildClusterFactory Build cluster Factory to get build clusters
+ * @param   {TriggerFactory}       triggerFactory      Trigger Factory to find external triggers
+ * @param   {Number}               pipelineId          Id of the current pipeline
  * @returns {Promise}
  */
 module.exports = function configParser(
