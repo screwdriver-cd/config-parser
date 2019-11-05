@@ -71,7 +71,8 @@ module.exports = function configParser(
                 annotations: Hoek.reach(doc, 'annotations', { default: {} }),
                 jobs: Hoek.reach(doc, 'jobs'),
                 childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
-                workflowGraph: Hoek.reach(doc, 'workflowGraph')
+                workflowGraph: Hoek.reach(doc, 'workflowGraph'),
+                parameters: Hoek.reach(doc, 'parameters')
             };
 
             if (Hoek.deepEqual(res.childPipelines, {})) {

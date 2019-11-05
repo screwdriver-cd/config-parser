@@ -2,6 +2,7 @@
     "annotations": {
         "screwdriver.cd/buildCluster": "test"
     },
+    "parameters": {},
     "jobs": {
         "main": [
             {

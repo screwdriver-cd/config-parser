@@ -3,6 +3,7 @@
       "foo": "a",
       "bar": "b"
     },
+    "parameters": {},
     "jobs": {
         "main": [
             {
