@@ -45,7 +45,7 @@
     "eslint": "^4.19.1",
     "eslint-config-screwdriver": "4.0.0",
     "jenkins-mocha": "^8.0.0",
-    "sinon": "^7.3.2"
+    "sinon": "^7.5.0"
   },
   "dependencies": {
     "clone": "^2.1.2",
@@ -54,7 +54,7 @@
     "js-yaml": "^3.13.0",
     "keymbinatorial": "^1.1.5",
     "screwdriver-data-schema": "^19.0.0",
-    "screwdriver-workflow-parser": "^1.8.3",
+    "screwdriver-workflow-parser": "^1.8.9",
     "tinytim": "^0.1.1"
   }
 }

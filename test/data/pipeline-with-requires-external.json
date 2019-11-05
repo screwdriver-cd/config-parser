@@ -54,6 +54,7 @@
             }
         ]
     },
+    "parameters": {},
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },
