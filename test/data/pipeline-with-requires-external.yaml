@@ -1,0 +1,18 @@
+shared:
+    image: node:4
+jobs:
+    A:
+        steps:
+            - install: npm install
+        requires: ~commit
+    D:
+        steps:
+            - echo-hello: echo hello
+        requires: A
+    E:
+        steps:
+            - echo-world: echo world
+        requires:
+            - D
+            - sd@123:B
+            - sd@456:C
