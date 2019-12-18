@@ -53,7 +53,7 @@
     "joi": "^13.7.0",
     "js-yaml": "^3.13.0",
     "keymbinatorial": "^1.1.5",
-    "screwdriver-data-schema": "^19.0.0",
+    "screwdriver-data-schema": "^19.1.1",
     "screwdriver-workflow-parser": "^2.0.0",
     "tinytim": "^0.1.1"
   }
