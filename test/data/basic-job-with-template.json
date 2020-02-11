@@ -32,7 +32,8 @@
             "requires": [
                 "~pr",
                 "~commit"
-            ]
+            ],
+            "templateId": 7754
         }],
       "publish": [{
           "annotations": {},
@@ -53,7 +54,8 @@
           "settings": {},
           "requires": [
               "main"
-          ]
+          ],
+          "templateId": 1234
       }]
     },
     "workflowGraph": {

@@ -23,7 +23,8 @@
         },
         "image": "node:5",
         "secrets": [],
-        "settings": {}
+        "settings": {},
+        "templateId": 9
       }
     ],
     "publish": [

@@ -41,7 +41,8 @@
             "requires": [
                 "~pr",
                 "~commit"
-            ]
+            ],
+            "templateId": 7754
         }]
     },
     "workflowGraph": {
