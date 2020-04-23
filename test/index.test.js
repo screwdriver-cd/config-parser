@@ -488,6 +488,19 @@ describe('config parser', () => {
                 ));
             }));
 
+        it('reads cache false on the job',
+            () => parser(
+                loadData('pipeline-cache-false-job.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('pipeline-cache-false-job.json')
+                ));
+            }));
+
         it('validates build cluster',
             () => parser(
                 loadData('build-cluster.yaml'),
