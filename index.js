@@ -2,6 +2,7 @@
 
 const YamlParser = require('js-yaml');
 const Hoek = require('hoek');
+const shellescape = require('shell-escape');
 
 const phaseValidateStructure = require('./lib/phase/structural');
 const phaseFlatten = require('./lib/phase/flatten');
@@ -88,7 +89,7 @@ module.exports = function configParser(
                     image: 'node:10',
                     commands: [{
                         name: 'config-parse-error',
-                        command: `echo $'${err.toString().replace(/'/g, "\\'")}'; exit 1`
+                        command: `echo ${shellescape([err.toString()])}; exit 1`
                     }],
                     secrets: [],
                     environment: {}
