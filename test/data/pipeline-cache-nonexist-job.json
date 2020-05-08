@@ -7,7 +7,7 @@
                 "commands": [
                     {
                         "name": "config-parse-error",
-                        "command": "echo $'Error: Cache is set for non-existing job: badjob'; exit 1"
+                        "command": "echo 'Error: Cache is set for non-existing job: badjob'; exit 1"
                     }
                 ],
                 "secrets": [],
