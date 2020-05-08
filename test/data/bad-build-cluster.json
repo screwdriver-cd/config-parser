@@ -7,7 +7,7 @@
                 "commands": [
                     {
                         "name": "config-parse-error",
-                        "command": "echo \"Error: Annotation \"screwdriver.cd/buildCluster\": doesnotexist is not a valid build cluster\"; exit 1"
+                        "command": "echo $'Error: Annotation \"screwdriver.cd/buildCluster\": doesnotexist is not a valid build cluster'; exit 1"
                     }
                 ],
                 "secrets": [],
