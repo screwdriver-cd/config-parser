@@ -88,7 +88,7 @@ module.exports = function configParser(
                     image: 'node:10',
                     commands: [{
                         name: 'config-parse-error',
-                        command: `echo $'${err}'; exit 1`
+                        command: `echo $'${err.toString().replace(/'/g, "\\'")}'; exit 1`
                     }],
                     secrets: [],
                     environment: {}
