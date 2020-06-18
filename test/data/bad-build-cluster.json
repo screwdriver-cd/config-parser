@@ -3,7 +3,7 @@
     "jobs": {
         "main": [
             {
-                "image": "node:10",
+                "image": "node:12",
                 "commands": [
                     {
                         "name": "config-parse-error",
@@ -25,6 +25,9 @@
             },
             {
                 "name": "main"
+            },
+            {
+                "name": "~pr:/.*/"
             }
         ],
         "edges": [
@@ -34,6 +37,10 @@
             },
             {
                 "src": "~commit",
+                "dest": "main"
+            },
+            {
+                "src": "~pr:/.*/",
                 "dest": "main"
             }
         ]

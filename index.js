@@ -86,7 +86,7 @@ module.exports = function configParser(
             annotations: {},
             jobs: {
                 main: [{
-                    image: 'node:10',
+                    image: 'node:12',
                     commands: [{
                         name: 'config-parse-error',
                         command: `echo ${shellescape([err.toString()])}; exit 1`
@@ -99,11 +99,13 @@ module.exports = function configParser(
                 nodes: [
                     { name: '~pr' },
                     { name: '~commit' },
-                    { name: 'main' }
+                    { name: 'main' },
+                    { name: '~pr:/.*/' }
                 ],
                 edges: [
                     { src: '~pr', dest: 'main' },
-                    { src: '~commit', dest: 'main' }
+                    { src: '~commit', dest: 'main' },
+                    { src: '~pr:/.*/', dest: 'main' }
                 ]
             },
             errors: [err.toString()]
