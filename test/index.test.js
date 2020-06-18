@@ -30,14 +30,16 @@ describe('config parser', () => {
                         nodes: [
                             { name: '~pr' },
                             { name: '~commit' },
-                            { name: 'main' }
+                            { name: 'main' },
+                            { name: '~pr:/.*/' }
                         ],
                         edges: [
                             { src: '~pr', dest: 'main' },
-                            { src: '~commit', dest: 'main' }
+                            { src: '~commit', dest: 'main' },
+                            { src: '~pr:/.*/', dest: 'main' }
                         ]
                     });
-                    assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                    assert.strictEqual(data.jobs.main[0].image, 'node:12');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
@@ -48,7 +50,7 @@ describe('config parser', () => {
 
         it('returns an error if unparsable yaml', () => parser('foo: :')
             .then((data) => {
-                assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                assert.strictEqual(data.jobs.main[0].image, 'node:12');
                 assert.deepEqual(data.jobs.main[0].secrets, []);
                 assert.deepEqual(data.jobs.main[0].environment, {});
                 assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
@@ -59,7 +61,7 @@ describe('config parser', () => {
         it('returns an error if job has duplicate steps',
             () => parser(loadData('basic-job-with-duplicate-steps.yaml'))
                 .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                    assert.strictEqual(data.jobs.main[0].image, 'node:12');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
@@ -79,7 +81,7 @@ describe('config parser', () => {
         it('returns an error if multiple documents without hint',
             () => parser('foo: bar\n---\nfoo: baz')
                 .then((data) => {
-                    assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                    assert.strictEqual(data.jobs.main[0].image, 'node:12');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
                     assert.deepEqual(data.jobs.main[0].environment, {});
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
@@ -90,7 +92,7 @@ describe('config parser', () => {
 
         it('picks the document with version hint', () => parser('jobs: {}\n---\nversion: 4')
             .then((data) => {
-                assert.strictEqual(data.jobs.main[0].image, 'node:10');
+                assert.strictEqual(data.jobs.main[0].image, 'node:12');
                 assert.deepEqual(data.jobs.main[0].secrets, []);
                 assert.deepEqual(data.jobs.main[0].environment, {});
                 assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
