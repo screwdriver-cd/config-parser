@@ -68,6 +68,9 @@ module.exports = function configParser(
         .then(phaseGeneratePermutations)
         // Output in the right format
         .then((doc) => {
+            // TODO  Getting a warning annotation is not yet implemented.
+            const warnAnnotations = [];
+
             const res = {
                 annotations: Hoek.reach(doc, 'annotations', { default: {} }),
                 jobs: Hoek.reach(doc, 'jobs'),
@@ -75,6 +78,10 @@ module.exports = function configParser(
                 workflowGraph: Hoek.reach(doc, 'workflowGraph'),
                 parameters: Hoek.reach(doc, 'parameters')
             };
+
+            if (warnAnnotations.length > 0) {
+                res.warnAnnotations = warnAnnotations;
+            }
 
             if (Hoek.deepEqual(res.childPipelines, {})) {
                 delete res.childPipelines;
