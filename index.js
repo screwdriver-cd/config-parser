@@ -1,7 +1,7 @@
 'use strict';
 
 const YamlParser = require('js-yaml');
-const Hoek = require('hoek');
+const Hoek = require('@hapi/hoek');
 const shellescape = require('shell-escape');
 
 const phaseValidateStructure = require('./lib/phase/structural');
@@ -19,7 +19,7 @@ function parseYaml(yaml) {
     // If no yaml exists, throw error
     if (!yaml) {
         return Promise.reject(new Error('screwdriver.yaml does not exist. Please '
-        + 'create a screwdriver.yaml and try to rerun your build.'));
+            + 'create a screwdriver.yaml and try to rerun your build.'));
     }
 
     return new Promise((resolve) => {
@@ -35,7 +35,7 @@ function parseYaml(yaml) {
 
         if (!doc) {
             throw new YamlParser.YAMLException('Configuration is too ambigious - '
-            + 'contains multiple documents without a version hint');
+                + 'contains multiple documents without a version hint');
         }
 
         return resolve(doc);

@@ -48,13 +48,13 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
+    "@hapi/hoek": "^9.0.4",
     "clone": "^2.1.2",
-    "hoek": "^5.0.4",
-    "joi": "^13.7.0",
+    "joi": "^17.1.1",
     "js-yaml": "^3.13.0",
     "keymbinatorial": "^1.1.5",
-    "screwdriver-data-schema": "^19.1.1",
-    "screwdriver-workflow-parser": "^2.0.0",
+    "screwdriver-data-schema": "git://github.com/screwdriver-cd/data-schema.git#hapi-v19",
+    "screwdriver-workflow-parser": "git://github.com/screwdriver-cd/workflow-parser.git#hapi-v19",
     "shell-escape": "^0.2.0",
     "tinytim": "^0.1.1"
   }
