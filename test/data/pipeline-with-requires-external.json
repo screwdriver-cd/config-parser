@@ -72,5 +72,6 @@
             { "src": "sd@123:B", "dest": "E", "join": true },
             { "src": "sd@456:C", "dest": "E", "join": true }
         ]
-    }
+    },
+    "subscribe": {}
 }

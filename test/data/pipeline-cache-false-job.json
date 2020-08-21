@@ -99,5 +99,6 @@
             { "src": "main", "dest": "test" },
             { "src": "test", "dest": "publish" }
         ]
-    }
+    },
+    "subscribe": {}
 }

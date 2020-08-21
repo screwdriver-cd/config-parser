@@ -34,5 +34,6 @@
             { "src": "~commit", "dest": "component" },
             { "src": "~pr", "dest": "component" }
         ]
-    }
+    },
+    "subscribe": {}
 }

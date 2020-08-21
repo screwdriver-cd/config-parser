@@ -2,18 +2,14 @@
     "annotations": {},
     "parameters": {},
     "jobs": {
-        "component": [
+        "main": [
             {
                 "annotations": {},
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "sourcePaths": [
-                  "testFile.js",
-                  "README.md"
-                ],
                 "image": "node:6",
-                "requires": ["~commit", "~pr"],
+                "requires": ["~commit", "~pr", "~subscribe"],
                 "commands": [
                     {
                         "name": "install",
@@ -27,12 +23,16 @@
         "nodes": [
             { "name": "~pr" },
             { "name": "~commit" },
-            { "name": "component" }
+            { "name": "main" },
+            { "name": "subscribe" }
         ],
         "edges": [
-            { "src": "~commit", "dest": "component" },
-            { "src": "~pr", "dest": "component" }
+            { "src": "~commit", "dest": "main" },
+            { "src": "~pr", "dest": "main" },
+            { "src": "subscribe", "dest": "main" }
         ]
     },
-    "subscribe": {}
+    "subscribe": {
+        "scmUrls": [{"git@github.com:supra08/quickstart-generic.git#master": ["~commit", "~tags", "~release"]}]
+    }
 }

@@ -118,5 +118,6 @@
             { "src": "foobar", "dest": "test-and", "join": true },
             { "src": "main", "dest": "test-and", "join": true }
         ]
-    }
+    },
+    "subscribe": {}
 }
