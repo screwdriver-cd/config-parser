@@ -1,11 +1,11 @@
 {
   "name": "screwdriver-config-parser",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Node module for parsing screwdriver.yaml configurations",
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "jenkins-mocha --recursive",
+    "test": "mocha --recursive",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
@@ -44,17 +44,17 @@
     "chai": "^4.2.0",
     "eslint": "^4.19.1",
     "eslint-config-screwdriver": "4.0.0",
-    "jenkins-mocha": "^8.0.0",
+    "mocha": "^8.1.1",
     "sinon": "^7.5.0"
   },
   "dependencies": {
+    "@hapi/hoek": "^9.0.4",
     "clone": "^2.1.2",
-    "hoek": "^5.0.4",
-    "joi": "^13.7.0",
+    "joi": "^17.1.1",
     "js-yaml": "^3.13.0",
     "keymbinatorial": "^1.1.5",
-    "screwdriver-data-schema": "^19.1.1",
-    "screwdriver-workflow-parser": "^2.0.0",
+    "screwdriver-data-schema": "^20.0.0",
+    "screwdriver-workflow-parser": "3.0.0",
     "shell-escape": "^0.2.0",
     "tinytim": "^0.1.1"
   }

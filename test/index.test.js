@@ -124,7 +124,7 @@ describe('config parser', () => {
                 () => parser(loadData('bad-step-name.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
-                            /"foo bar" only supports the following characters A-Z,a-z,0-9,-,_/);
+                            /.foo bar" only supports the following characters A-Z,a-z,0-9,-,_';/);
                     }));
 
             it('returns an error if teardown step is not at the end',
@@ -140,7 +140,7 @@ describe('config parser', () => {
                 () => parser(loadData('bad-environment-name.yaml'))
                     .then((data) => {
                         assert.match(data.jobs.main[0].commands[0].command,
-                            /"foo bar" only supports uppercase letters,/);
+                            /"jobs.main.environment.foo bar" only supports uppercase letters,/);
                     }));
         });
 
@@ -148,7 +148,7 @@ describe('config parser', () => {
             it('returns an error if bad matrix name', () => parser(loadData('bad-matrix-name.yaml'))
                 .then((data) => {
                     assert.match(data.jobs.main[0].commands[0].command,
-                        /"foo bar" only supports uppercase letters,/);
+                        /"jobs.main.matrix.foo bar" only supports uppercase letters,/);
                 }));
         });
 
@@ -380,7 +380,7 @@ describe('config parser', () => {
                 pipelineId
             ).then((data) => {
                 assert.match(data.jobs.main[0].commands[0].command,
-                    /"steps" must contain at least 1 items/);
+                    /"jobs.main.steps" must contain at least 1 items/);
             }));
 
         it('returns an error if too many environment variables',
