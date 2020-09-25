@@ -24,12 +24,12 @@
             { "name": "~pr" },
             { "name": "~commit" },
             { "name": "main" },
-            { "name": "subscribe" }
+            { "name": "~subscribe" }
         ],
         "edges": [
             { "src": "~commit", "dest": "main" },
             { "src": "~pr", "dest": "main" },
-            { "src": "subscribe", "dest": "main" }
+            { "src": "~subscribe", "dest": "main" }
         ]
     },
     "subscribe": {
