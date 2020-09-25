@@ -80,9 +80,6 @@ module.exports = function configParser(
                 subscribe: Hoek.reach(doc, 'subscribe', { default: {} })
             };
 
-            console.log('here - 10001');
-            console.log(doc.workflowGraph);
-
             if (warnAnnotations.length > 0) {
                 res.warnAnnotations = warnAnnotations;
             }
