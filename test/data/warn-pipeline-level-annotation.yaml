@@ -1,0 +1,14 @@
+annotations:
+    screwdriver.cd/pipelineDescription: "foo"
+
+shared:
+    image: node:4
+    annotations:
+        screwdriver.cd/chainPR: true
+
+jobs:
+    main:
+        steps:
+            - foo: bar
+        annotations:
+            screwdriver.cd/restrictPR: true
