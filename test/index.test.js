@@ -559,16 +559,18 @@ describe('config parser', () => {
                 .then((data) => {
                     /* eslint-disable max-len */
                     assert.match(data.warnAnnotations[0],
-                        /screwdriver.cd\/(chainPR|restrictPR) is not an annotation that is reserved for Pipeline-Level/);
-                    assert.match(data.warnAnnotations[1],
-                        /screwdriver.cd\/(chainPR|restrictPR) is not an annotation that is reserved for Pipeline-Level/);
+                        /screwdriver.cd\/ram is not an annotation that is reserved for Pipeline-Level/);
                     /* eslint-enable max-len */
                 }));
         it('warning it is not job-level annotation',
             () => parser(loadData('warn-job-level-annotation.yaml'))
                 .then((data) => {
+                    /* eslint-disable max-len */
                     assert.match(data.warnAnnotations[0],
-                        /screwdriver.cd\/ram is not an annotation that is reserved for Job-Level/);
+                        /screwdriver.cd\/(chainPR|restrictPR) is not an annotation that is reserved for Job-Level/);
+                    assert.match(data.warnAnnotations[1],
+                        /screwdriver.cd\/(chainPR|restrictPR) is not an annotation that is reserved for Job-Level/);
+                    /* eslint-enable max-len */
                 }));
     });
 

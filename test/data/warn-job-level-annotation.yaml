@@ -1,14 +1,14 @@
 annotations:
-    screwdriver.cd/ram: 3
+    screwdriver.cd/pipelineDescription: "foo"
 
 shared:
     image: node:4
     annotations:
-        screwdriver.cd/cpu: 1
+        screwdriver.cd/chainPR: true
 
 jobs:
     main:
         steps:
             - foo: bar
         annotations:
-            screwdriver.cd/disk: 2
+            screwdriver.cd/restrictPR: true
