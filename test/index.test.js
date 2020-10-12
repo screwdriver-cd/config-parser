@@ -160,6 +160,15 @@ describe('config parser', () => {
                             /"fakeScmUrl" fails to match the required pattern:/);
                     }));
         });
+
+        describe('subscribe', () => {
+            it('fetches subscribe from the config and adds to parsed doc',
+                () => parser(loadData('pipeline-with-subscribed-scms.yaml'))
+                    .then((data) => {
+                        assert.deepEqual(data,
+                            JSON.parse(loadData('pipeline-with-subscribed-scms.json')));
+                    }));
+        });
     });
 
     describe('flatten', () => {

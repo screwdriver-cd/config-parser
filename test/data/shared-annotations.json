@@ -209,5 +209,6 @@
             { "src": "~commit", "dest": "main" },
             { "src": "main", "dest": "foobar" }
         ]
-    }
+    },
+    "subscribe": {}
 }

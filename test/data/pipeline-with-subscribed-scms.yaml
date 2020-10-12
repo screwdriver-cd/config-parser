@@ -1,0 +1,15 @@
+shared:
+    image: node:6
+
+subscribe: 
+    scmUrls:
+        - git@github.com:supra08/quickstart-generic.git#master: [~commit, ~tags, ~release]
+
+jobs:
+    main:
+        steps:
+            - install: npm install
+        requires:
+            - ~commit
+            - ~pr
+            - ~subscribe

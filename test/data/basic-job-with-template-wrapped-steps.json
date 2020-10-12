@@ -54,5 +54,6 @@
             { "src": "~pr", "dest": "main" },
             { "src": "~commit", "dest": "main" }
         ]
-    }
+    },
+    "subscribe": {}
 }

@@ -47,5 +47,6 @@
             { "src": "~commit", "dest": "test" },
             { "src": "~commit", "dest": "echo" }
         ]
-    }
+    },
+    "subscribe": {}
 }

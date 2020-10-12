@@ -132,7 +132,8 @@ module.exports = function configParser(
                 jobs: Hoek.reach(doc, 'jobs'),
                 childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
                 workflowGraph: Hoek.reach(doc, 'workflowGraph'),
-                parameters: Hoek.reach(doc, 'parameters')
+                parameters: Hoek.reach(doc, 'parameters'),
+                subscribe: Hoek.reach(doc, 'subscribe', { default: {} })
             };
 
             if (warnAnnotations.length > 0) {
