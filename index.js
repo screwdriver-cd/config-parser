@@ -4,6 +4,11 @@ const YamlParser = require('js-yaml');
 const Hoek = require('@hapi/hoek');
 const shellescape = require('shell-escape');
 
+/* eslint-disable max-len */
+const RESERVED_JOB_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedJobAnnotations;
+const RESERVED_PIPELINE_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedPipelineAnnotations;
+/* eslint-enable max-len */
+
 const phaseValidateStructure = require('./lib/phase/structural');
 const phaseFlatten = require('./lib/phase/flatten');
 const phaseValidateFunctionality = require('./lib/phase/functional');
@@ -43,6 +48,52 @@ function parseYaml(yaml) {
 }
 
 /**
+ * Check reserved annotations
+ * @method validateReservedAnnotation
+ * @param  {Object}               doc Document that went through functional validation
+ * @return {Array}                List of warnings
+ */
+function validateReservedAnnotation(doc) {
+    let warnings = [];
+
+    if (RESERVED_PIPELINE_ANNOTATIONS) {
+        const pipelineAnnotations = Hoek.reach(doc, 'annotations', { default: {} });
+
+        warnings = warnings.concat(
+            Object.keys(pipelineAnnotations).filter((key) => {
+                if (key.startsWith('screwdriver.cd/')) {
+                    return RESERVED_PIPELINE_ANNOTATIONS.indexOf(key) === -1;
+                }
+
+                return false;
+            })
+                .map(value => `${value} is not an annotation that is reserved for Pipeline-Level`)
+        );
+    }
+
+    if (RESERVED_JOB_ANNOTATIONS) {
+        Object.keys(doc.jobs).forEach((jobName) => {
+            const jobAnnotations = Hoek.reach(doc.jobs[jobName], 'annotations', {
+                default: {}
+            });
+
+            warnings = warnings.concat(
+                Object.keys(jobAnnotations).filter((key) => {
+                    if (key.startsWith('screwdriver.cd/')) {
+                        return RESERVED_JOB_ANNOTATIONS.indexOf(key) === -1;
+                    }
+
+                    return false;
+                })
+                    .map(value => `${value} is not an annotation that is reserved for Job-Level`)
+            );
+        });
+    }
+
+    return warnings;
+}
+
+/**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
  * @param   {String}               yaml                Contents of screwdriver.yaml
@@ -55,6 +106,8 @@ function parseYaml(yaml) {
 module.exports = function configParser(
     yaml, templateFactory, buildClusterFactory, triggerFactory, pipelineId
 ) {
+    let warnAnnotations = [];
+
     // Convert from YAML to JSON
     return parseYaml(yaml)
         // Basic validation
@@ -64,13 +117,16 @@ module.exports = function configParser(
         // Functionality validation
         .then(flattenedDoc => phaseValidateFunctionality(flattenedDoc,
             buildClusterFactory, triggerFactory, pipelineId))
+        // Check warnAnnotations
+        .then((doc) => {
+            warnAnnotations = warnAnnotations.concat(validateReservedAnnotation(doc));
+
+            return doc;
+        })
         // Generate Permutations
         .then(phaseGeneratePermutations)
         // Output in the right format
         .then((doc) => {
-            // TODO  Getting a warning annotation is not yet implemented.
-            const warnAnnotations = [];
-
             const res = {
                 annotations: Hoek.reach(doc, 'annotations', { default: {} }),
                 jobs: Hoek.reach(doc, 'jobs'),
