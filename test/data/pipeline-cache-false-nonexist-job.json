@@ -1,0 +1,49 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [
+            {
+                "image": "node:4",
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ],
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "npm install",
+                        "name": "install"
+                    }
+                ],
+                "secrets": [],
+                "settings": {},
+                "environment": {}
+            }
+        ]
+    },
+    "parameters": {},
+    "subscribe": {},
+    "workflowGraph": {
+        "nodes": [
+            {
+                "name": "~pr"
+            },
+            {
+                "name": "~commit"
+            },
+            {
+                "name": "main"
+            }
+        ],
+        "edges": [
+            {
+                "src": "~pr",
+                "dest": "main"
+            },
+            {
+                "src": "~commit",
+                "dest": "main"
+            }
+        ]
+    }
+}

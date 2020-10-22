@@ -512,6 +512,19 @@ describe('config parser', () => {
                 ));
             }));
 
+        it('ignore cache false on the job when the cache config does not exist',
+            () => parser(
+                loadData('pipeline-cache-false-nonexist-job.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('pipeline-cache-false-nonexist-job.json')
+                ));
+            }));
+
         it('validates build cluster',
             () => parser(
                 loadData('build-cluster.yaml'),
