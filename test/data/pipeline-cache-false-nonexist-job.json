@@ -3,26 +3,18 @@
     "jobs": {
         "main": [
             {
-                "image": "node:4",
-                "requires": [
-                    "~pr",
-                    "~commit"
-                ],
-                "annotations": {},
+                "image": "node:12",
                 "commands": [
                     {
-                        "command": "npm install",
-                        "name": "install"
+                        "name": "config-parse-error",
+                        "command": "echo 'Error: Cache disable/enable is set without the cache setting itself.'; exit 1"
                     }
                 ],
                 "secrets": [],
-                "settings": {},
                 "environment": {}
             }
         ]
     },
-    "parameters": {},
-    "subscribe": {},
     "workflowGraph": {
         "nodes": [
             {
@@ -33,6 +25,9 @@
             },
             {
                 "name": "main"
+            },
+            {
+                "name": "~pr:/.*/"
             }
         ],
         "edges": [
@@ -43,7 +38,14 @@
             {
                 "src": "~commit",
                 "dest": "main"
+            },
+            {
+                "src": "~pr:/.*/",
+                "dest": "main"
             }
         ]
-    }
+    },
+    "errors": [
+        "Error: Cache disable/enable is set without the cache setting itself."
+    ]
 }
