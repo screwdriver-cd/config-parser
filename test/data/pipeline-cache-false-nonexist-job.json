@@ -1,0 +1,51 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [
+            {
+                "image": "node:12",
+                "commands": [
+                    {
+                        "name": "config-parse-error",
+                        "command": "echo 'Error: Cache disable/enable is set without the cache setting itself.'; exit 1"
+                    }
+                ],
+                "secrets": [],
+                "environment": {}
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            {
+                "name": "~pr"
+            },
+            {
+                "name": "~commit"
+            },
+            {
+                "name": "main"
+            },
+            {
+                "name": "~pr:/.*/"
+            }
+        ],
+        "edges": [
+            {
+                "src": "~pr",
+                "dest": "main"
+            },
+            {
+                "src": "~commit",
+                "dest": "main"
+            },
+            {
+                "src": "~pr:/.*/",
+                "dest": "main"
+            }
+        ]
+    },
+    "errors": [
+        "Error: Cache disable/enable is set without the cache setting itself."
+    ]
+}

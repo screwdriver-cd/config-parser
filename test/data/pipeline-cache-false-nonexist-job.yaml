@@ -1,0 +1,9 @@
+jobs:
+    main:
+        image: node:4
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit
+        cache: false
