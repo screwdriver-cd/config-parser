@@ -4,7 +4,7 @@
     "jobs": {
         "main": [{
             "annotations": {
-                "screwdriver.cd/deepMergeStep": true
+                "screwdriver.cd/mergeSharedSteps": true
             },
             "image": "node:4",
             "commands": [
