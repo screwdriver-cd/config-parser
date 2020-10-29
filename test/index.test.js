@@ -298,7 +298,7 @@ describe('config parser', () => {
                     data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))
                 )));
 
-            it('flattens templates with shared and job stes ',
+            it('flattens templates with shared and job steps ',
                 () => parser(
                     loadData('basic-job-with-shared-and-template-override-steps.yaml'),
                     templateFactoryMock
