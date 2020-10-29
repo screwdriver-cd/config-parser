@@ -298,6 +298,14 @@ describe('config parser', () => {
                     data, JSON.parse(loadData('basic-job-with-template-override-steps.json'))
                 )));
 
+            it('flattens templates with shared and job steps ',
+                () => parser(
+                    loadData('basic-job-with-shared-and-template-override-steps.yaml'),
+                    templateFactoryMock
+                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                    'basic-job-with-shared-and-template-override-steps.json'
+                )))));
+
             it('template-teardown is merged into steps', () => {
                 templateFactoryMock.getTemplate = sinon.stub().resolves(
                     JSON.parse(loadData('template-with-teardown.json'))
