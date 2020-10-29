@@ -5,7 +5,7 @@ shared:
 jobs:
   main:
     annotations:
-      screwdriver.cd/mergeStep: true
+      screwdriver.cd/mergeSharedSteps: true
     template: mytemplate@1.2.3
     steps:
       - test: echo 'my job is overriding this step'
