@@ -1,0 +1,51 @@
+{
+  "annotations": {},
+  "jobs": {
+      "main": [
+          {
+              "image": "node:12",
+              "commands": [
+                  {
+                      "name": "config-parse-error",
+                      "command": "echo 'Error: main \"slack.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]'; exit 1"
+                  }
+              ],
+              "secrets": [],
+              "environment": {}
+          }
+      ]
+  },
+  "workflowGraph": {
+      "nodes": [
+          {
+              "name": "~pr"
+          },
+          {
+              "name": "~commit"
+          },
+          {
+              "name": "main"
+          },
+          {
+              "name": "~pr:/.*/"
+          }
+      ],
+      "edges": [
+          {
+              "src": "~pr",
+              "dest": "main"
+          },
+          {
+              "src": "~commit",
+              "dest": "main"
+          },
+          {
+              "src": "~pr:/.*/",
+              "dest": "main"
+          }
+      ]
+  },
+  "errors": [
+     "Error: main \"slack.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]"
+  ]
+}

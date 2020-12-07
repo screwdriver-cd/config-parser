@@ -1,0 +1,21 @@
+shared:
+  settings:
+    slack:
+      channels:
+        - test
+      statuses:
+        - UNDEFINED
+    email:
+      addresses:
+        - foo@bar.com
+      statuses:
+        - UNDEFINED
+
+jobs:
+    main:
+        image: node:12
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit

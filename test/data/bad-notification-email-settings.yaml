@@ -1,0 +1,14 @@
+jobs:
+    main:
+        image: node:12
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit
+        settings:
+          email:
+            addresses:
+              - bar@foo.com
+            statuses:
+              - UNDEFINED

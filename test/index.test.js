@@ -581,6 +581,58 @@ describe('config parser', () => {
                 assert.match(data.jobs.main[0].commands[0].command,
                     /Jobs: should not have circular dependency in jobs/);
             }));
+
+        it('returns an error if wrong notification slack setting',
+            () => parser(
+                loadData('bad-notification-slack-settings.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('bad-notification-slack-settings.json')
+                ));
+            }));
+
+        it('returns an error if wrong notification email setting',
+            () => parser(
+                loadData('bad-notification-email-settings.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('bad-notification-email-settings.json')
+                ));
+            }));
+
+        it('returns an error if wrong notification slack and email setting',
+            () => parser(
+                loadData('bad-notification-slack-email-settings.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('bad-notification-slack-email-settings.json')
+                ));
+            }));
+
+        it('returns an error if wrong notification shared setting',
+            () => parser(
+                loadData('bad-notification-shared-settings.yaml'),
+                templateFactoryMock,
+                buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            ).then((data) => {
+                assert.deepEqual(data, JSON.parse(
+                    loadData('bad-notification-shared-settings.json')
+                ));
+            }));
     });
 
     describe('warnAnnotations', () => {
