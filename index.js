@@ -94,6 +94,45 @@ function validateReservedAnnotation(doc) {
 }
 
 /**
+ * Check that the version is specify
+ * @method validateTemplateVersion
+ * @param  {Object}           doc               Document that went through structural parsing
+ * @param  {TemplateFactory}  templateFactory   Template Factory to get templates
+ * @return {Array}                              List of warnings
+ */
+function validateTemplateVersion(doc, templateFactory) {
+    let warnings = [];
+
+    let template = Hoek.reach(doc.shared, 'template');
+
+    if (template !== undefined) {
+        const { isVersion, isTag } = templateFactory.getFullNameAndVersion(template);
+
+        if (!isVersion && !isTag) {
+            warnings = warnings.concat(
+                `${template} template in shared settings should be explicitly versioned`
+            );
+        }
+    }
+
+    Object.keys(doc.jobs).forEach((jobName) => {
+        template = Hoek.reach(doc.jobs[jobName], 'template');
+
+        if (template !== undefined) {
+            const { isVersion, isTag } = templateFactory.getFullNameAndVersion(template);
+
+            if (!isVersion && !isTag) {
+                warnings = warnings.concat(
+                    `${template} template in ${jobName} job should be explicitly versioned`
+                );
+            }
+        }
+    });
+
+    return warnings;
+}
+
+/**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
  * @param   {String}               yaml                Contents of screwdriver.yaml
@@ -106,20 +145,24 @@ function validateReservedAnnotation(doc) {
 module.exports = function configParser(
     yaml, templateFactory, buildClusterFactory, triggerFactory, pipelineId
 ) {
-    let warnAnnotations = [];
+    let warnMessages = [];
 
     // Convert from YAML to JSON
     return parseYaml(yaml)
         // Basic validation
         .then(phaseValidateStructure)
         // Flatten structures
-        .then(parsedDoc => phaseFlatten(parsedDoc, templateFactory))
+        .then((parsedDoc) => {
+            warnMessages = warnMessages.concat(validateTemplateVersion(parsedDoc, templateFactory));
+
+            return phaseFlatten(parsedDoc, templateFactory);
+        })
         // Functionality validation
         .then(flattenedDoc => phaseValidateFunctionality(flattenedDoc,
             buildClusterFactory, triggerFactory, pipelineId))
-        // Check warnAnnotations
+        // Check warnMessages
         .then((doc) => {
-            warnAnnotations = warnAnnotations.concat(validateReservedAnnotation(doc));
+            warnMessages = warnMessages.concat(validateReservedAnnotation(doc));
 
             return doc;
         })
@@ -136,8 +179,8 @@ module.exports = function configParser(
                 subscribe: Hoek.reach(doc, 'subscribe', { default: {} })
             };
 
-            if (warnAnnotations.length > 0) {
-                res.warnAnnotations = warnAnnotations;
+            if (warnMessages.length > 0) {
+                res.warnMessages = warnMessages;
             }
 
             if (Hoek.deepEqual(res.childPipelines, {})) {

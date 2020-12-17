@@ -1,0 +1,6 @@
+shared:
+    template: foo/bar
+
+jobs:
+    main:
+        requires: []
