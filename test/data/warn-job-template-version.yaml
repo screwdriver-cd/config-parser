@@ -1,0 +1,5 @@
+jobs:
+    main:
+        template: foo/bar
+    sub:
+        template: foo/baz

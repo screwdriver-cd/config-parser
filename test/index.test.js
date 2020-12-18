@@ -237,7 +237,8 @@ describe('config parser', () => {
 
         describe('templates', () => {
             const templateFactoryMock = {
-                getTemplate: sinon.stub()
+                getTemplate: sinon.stub(),
+                getFullNameAndVersion: sinon.stub()
             };
             let firstTemplate;
             let secondTemplate;
@@ -253,6 +254,7 @@ describe('config parser', () => {
                 defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                 imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
                 restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
+                templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2')
@@ -635,12 +637,24 @@ describe('config parser', () => {
             }));
     });
 
-    describe('warnAnnotations', () => {
+    describe('warnMessages', () => {
+        const templateFactoryMock = {
+            getTemplate: sinon.stub(),
+            getFullNameAndVersion: sinon.stub()
+        };
+
+        beforeEach(() => {
+            const myTemplate = JSON.parse(loadData('template.json'));
+
+            templateFactoryMock.getFullNameAndVersion.returns({ isVersion: false, isTag: false });
+            templateFactoryMock.getTemplate.resolves(myTemplate);
+        });
+
         it('warning it is not pipeline-level annotation',
             () => parser(loadData('warn-pipeline-level-annotation.yaml'))
                 .then((data) => {
                     /* eslint-disable max-len */
-                    assert.match(data.warnAnnotations[0],
+                    assert.match(data.warnMessages[0],
                         /screwdriver.cd\/ram is not an annotation that is reserved for Pipeline-Level/);
                     /* eslint-enable max-len */
                 }));
@@ -648,10 +662,28 @@ describe('config parser', () => {
             () => parser(loadData('warn-job-level-annotation.yaml'))
                 .then((data) => {
                     /* eslint-disable max-len */
-                    assert.match(data.warnAnnotations[0],
+                    assert.match(data.warnMessages[0],
                         /screwdriver.cd\/(chainPR|restrictPR) is not an annotation that is reserved for Job-Level/);
-                    assert.match(data.warnAnnotations[1],
+                    assert.match(data.warnMessages[1],
                         /screwdriver.cd\/(chainPR|restrictPR) is not an annotation that is reserved for Job-Level/);
+                    /* eslint-enable max-len */
+                }));
+        it('warning template version is not specify in shared settings',
+            () => parser(loadData('warn-shared-template-version.yaml'), templateFactoryMock)
+                .then((data) => {
+                    /* eslint-disable max-len */
+                    assert.match(data.warnMessages[0],
+                        /foo\/bar template in shared settings should be explicitly versioned/);
+                    /* eslint-enable max-len */
+                }));
+        it('warning template version is not specify in job settings',
+            () => parser(loadData('warn-job-template-version.yaml'), templateFactoryMock)
+                .then((data) => {
+                    /* eslint-disable max-len */
+                    assert.match(data.warnMessages[0],
+                        /foo\/bar template in main job should be explicitly versioned/);
+                    assert.match(data.warnMessages[1],
+                        /foo\/baz template in sub job should be explicitly versioned/);
                     /* eslint-enable max-len */
                 }));
     });
