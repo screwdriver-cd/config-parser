@@ -94,7 +94,7 @@ function validateReservedAnnotation(doc) {
 }
 
 /**
- * Check that the version is specify
+ * Check that the version is specified
  * @method validateTemplateVersion
  * @param  {Object}           doc               Document that went through structural parsing
  * @param  {TemplateFactory}  templateFactory   Template Factory to get templates
