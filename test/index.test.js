@@ -178,6 +178,14 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('basic-shared-project.json')));
                 }));
 
+        it('replaces settings if empty object',
+            () => parser(loadData('basic-shared-project-empty-settings.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data, JSON.parse(
+                        loadData('basic-shared-project-empty-settings.json')
+                    ));
+                }));
+
         it('flattens complex environments', () => parser(loadData('complex-environment.yaml'))
             .then((data) => {
                 assert.deepEqual(data, JSON.parse(loadData('complex-environment.json')));

@@ -1,0 +1,194 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
+                "environment": {
+                    "FOO": "bar",
+                    "BAR": "foo",
+                    "DIRECTORY": "c"
+                },
+                "secrets": [
+                    "GIT_KEY"
+                ],
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
+            },
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
+                "environment": {
+                    "FOO": "bar",
+                    "BAR": "foo",
+                    "DIRECTORY": "d"
+                },
+                "secrets": [
+                    "GIT_KEY"
+                ],
+                "settings": {},
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
+            }
+        ],
+        "foobar": [
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": "1",
+                    "DIRECTORY": "a"
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ],
+                "settings": {
+                    "email": "foo@example.com",
+                    "hipchat": "room_a"
+                },
+                "requires": [
+                    "main"
+                ]
+            },
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": "1",
+                    "DIRECTORY": "b"
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ],
+                "settings": {
+                    "email": "foo@example.com",
+                    "hipchat": "room_a"
+                },
+                "requires": [
+                    "main"
+                ]
+            },
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": "2",
+                    "DIRECTORY": "a"
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ],
+                "settings": {
+                    "email": "foo@example.com",
+                    "hipchat": "room_a"
+                },
+                "requires": [
+                    "main"
+                ]
+            },
+            {
+                "annotations": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "step-1",
+                        "command": "hostname"
+                    }
+                ],
+                "environment": {
+                    "FOO": "ban",
+                    "BAZ": "foo",
+                    "VERSION": "2",
+                    "DIRECTORY": "b"
+                },
+                "secrets": [
+                    "GIT_KEY",
+                    "NPM_TOKEN"
+                ],
+                "settings": {
+                    "email": "foo@example.com",
+                    "hipchat": "room_a"
+                },
+                "requires": [
+                    "main"
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" },
+            { "name": "foobar" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "foobar" }
+        ]
+    },
+    "subscribe": {}
+}
