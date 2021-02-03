@@ -1,0 +1,54 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "test": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "requires": ["~commit"],
+                "commands": [
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ]
+            }
+        ],
+        "echo": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["~commit"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "test" },
+            { "name": "echo" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "test" },
+            { "src": "~commit", "dest": "echo" }
+        ]
+    },
+    "subscribe": {},
+    "warnMessages": [
+      "\"order\" in echo job cannot be used without \"template\""
+    ]
+}

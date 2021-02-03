@@ -94,6 +94,32 @@ function validateReservedAnnotation(doc) {
 }
 
 /**
+ * Check that order is only used with template
+ * @method validateOrderAndTemplate
+ * @param  {Object}           doc               Document that went through structural parsing
+ * @return {Array}                              List of warnings
+ */
+function validateOrderAndTemplate(doc) {
+    let warnings = [];
+
+    let template = Hoek.reach(doc.shared, 'template');
+
+    Object.keys(doc.jobs).forEach((jobName) => {
+        const order = Hoek.reach(doc.jobs[jobName], 'order', { default: [] });
+
+        template = Hoek.reach(doc.jobs[jobName], 'template');
+
+        if (order.length > 0 && template === undefined) {
+            warnings = warnings.concat(
+                `"order" in ${jobName} job cannot be used without "template"`
+            );
+        }
+    });
+
+    return warnings;
+}
+
+/**
  * Check that the version is specified
  * @method validateTemplateVersion
  * @param  {Object}           doc               Document that went through structural parsing
@@ -154,6 +180,7 @@ module.exports = function configParser(
         // Flatten structures
         .then((parsedDoc) => {
             warnMessages = warnMessages.concat(validateTemplateVersion(parsedDoc, templateFactory));
+            warnMessages = warnMessages.concat(validateOrderAndTemplate(parsedDoc));
 
             return phaseFlatten(parsedDoc, templateFactory)
                 .then(({ warnings, flattenedDoc }) => {

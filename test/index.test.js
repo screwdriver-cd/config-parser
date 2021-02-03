@@ -237,6 +237,13 @@ describe('config parser', () => {
                     JSON.parse(loadData('pipeline-with-freeze-windows.json')));
             }));
 
+        it('flattens with warnings with order and no template',
+            () => parser(loadData('pipeline-with-order-no-template.yaml'))
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-order-no-template.json')));
+                }));
+
         it('includes scm URLs', () => parser(loadData('pipeline-with-childPipelines.yaml'))
             .then((data) => {
                 assert.deepEqual(data,

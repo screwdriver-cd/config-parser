@@ -13,7 +13,6 @@ jobs:
       - test
       - install
     steps:
-      - test: echo 'my job is overriding this step'
       - setup: npm audit fix
       - extra: echo 'not included'
     requires:
