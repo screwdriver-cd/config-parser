@@ -1,0 +1,61 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [{
+            "annotations": {
+                "screwdriver.cd/mergeSharedSteps": true
+            },
+            "image": "node:4",
+            "commands": [
+                {
+                    "name": "setup",
+                    "command": "npm audit fix"
+                },
+                {
+                    "name": "test",
+                    "command": "echo 'my job is overriding this step'"
+                },
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "teardown-always",
+                    "command": "echo 'done!'"
+                }
+            ],
+            "environment": {
+                "FOO": "from template",
+                "BAR": "foo",
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "secrets": [
+                "GIT_KEY"
+            ],
+            "settings": {
+                "email": "foo@example.com"
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ],
+            "templateId": 7754
+        }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" }
+        ]
+    },
+    "subscribe": {}
+}
