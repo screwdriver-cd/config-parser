@@ -155,7 +155,12 @@ module.exports = function configParser(
         .then((parsedDoc) => {
             warnMessages = warnMessages.concat(validateTemplateVersion(parsedDoc, templateFactory));
 
-            return phaseFlatten(parsedDoc, templateFactory);
+            return phaseFlatten(parsedDoc, templateFactory)
+                .then(({ warnings, flattenedDoc }) => {
+                    warnMessages = warnMessages.concat(warnings);
+
+                    return flattenedDoc;
+                });
         })
         // Functionality validation
         .then(flattenedDoc => phaseValidateFunctionality(flattenedDoc,

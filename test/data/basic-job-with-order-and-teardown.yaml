@@ -1,14 +1,23 @@
 shared:
   steps:
     - pretest: echo pre-test
+    - test: echo 'my job is overriding this step'
     - predummy: echo 'this step is not merged'
 jobs:
   main:
     annotations:
       screwdriver.cd/mergeSharedSteps: true
     template: mytemplate@1.2.3
+    order:
+      - setup
+      - test
+      - teardown-always
+      - install
     steps:
       - test: echo 'my job is overriding this step'
+      - setup: npm audit fix
+      - extra: echo 'not included'
+      - teardown-always: echo 'done!'
     requires:
       - ~pr
       - ~commit
