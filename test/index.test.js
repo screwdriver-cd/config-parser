@@ -246,11 +246,12 @@ describe('config parser', () => {
                         JSON.parse(loadData('pipeline-with-order-no-template.json')));
                 }));
 
-        it('includes scm URLs', () => parser({ yaml: loadData('pipeline-with-childPipelines.yaml') })
-            .then((data) => {
-                assert.deepEqual(data,
-                    JSON.parse(loadData('pipeline-with-childPipelines.json')));
-            }));
+        it('includes scm URLs',
+            () => parser({ yaml: loadData('pipeline-with-childPipelines.yaml') })
+                .then((data) => {
+                    assert.deepEqual(data,
+                        JSON.parse(loadData('pipeline-with-childPipelines.json')));
+                }));
 
         describe('templates', () => {
             const templateFactoryMock = {
@@ -331,26 +332,26 @@ describe('config parser', () => {
                 )))));
 
             it('flattens templates with order',
-                () => parser(
-                    loadData('basic-job-with-order.yaml'),
-                    templateFactoryMock
-                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                () => parser({
+                    yaml: loadData('basic-job-with-order.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => assert.deepEqual(data, JSON.parse(loadData(
                     'basic-job-with-order.json'
                 )))));
 
             it('flattens templates with order and teardown',
-                () => parser(
-                    loadData('basic-job-with-order-and-teardown.yaml'),
-                    templateFactoryMock
-                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                () => parser({
+                    yaml: loadData('basic-job-with-order-and-teardown.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => assert.deepEqual(data, JSON.parse(loadData(
                     'basic-job-with-order-and-teardown.json'
                 )))));
 
             it('flattens templates with warnings',
-                () => parser(
-                    loadData('basic-job-with-warnings.yaml'),
-                    templateFactoryMock
-                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                () => parser({
+                    yaml: loadData('basic-job-with-warnings.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => assert.deepEqual(data, JSON.parse(loadData(
                     'basic-job-with-warnings.json'
                 )))));
 
