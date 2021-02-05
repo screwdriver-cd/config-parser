@@ -11,7 +11,7 @@ jobs:
             channnels:
               - test
             statuses:
-              - UNDEFINED
+              - SUCCESS
           email:
             addresses:
               - bar@foo.com

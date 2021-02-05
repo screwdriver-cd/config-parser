@@ -1,0 +1,53 @@
+{
+  "annotations": {},
+  "jobs": {
+      "main": [
+          {
+              "requires": [
+                  "~pr",
+                  "~commit"
+              ],
+              "image": "node:12",
+              "commands": [
+                  {
+                      "name": "install",
+                      "command": "npm install"
+                  }
+              ],
+              "annotations": {},
+              "secrets": [],
+              "environment": {},
+              "settings": {}
+          }
+      ]
+  },
+  "parameters": {},
+  "subscribe": {},
+  "warnMessages": [
+      "main \"slack.channnels\" is not allowed; skipping",
+      "main \"email.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]; skipping"
+  ],
+  "workflowGraph": {
+      "nodes": [
+          {
+              "name": "~pr"
+          },
+          {
+              "name": "~commit"
+          },
+          {
+              "name": "main"
+          }
+      ],
+      "edges": [
+          {
+              "src": "~pr",
+              "dest": "main"
+          },
+          {
+              "src": "~commit",
+              "dest": "main"
+          }
+      ]
+  }
+}
