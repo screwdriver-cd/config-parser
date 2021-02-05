@@ -113,7 +113,7 @@ describe('config parser', () => {
         });
 
         describe('jobs', () => {
-            it('Do not return error if missing main job for new config',
+            it('does not return error if missing main job for new config',
                 () => parser({ yaml: loadData('missing-main-job-with-requires.yaml') })
                     .then((data) => {
                         assert.notOk(data.errors);
@@ -239,12 +239,18 @@ describe('config parser', () => {
                         JSON.parse(loadData('pipeline-with-freeze-windows.json')));
                 }));
 
-        it('includes scm URLs',
-            () => parser({ yaml: loadData('pipeline-with-childPipelines.yaml') })
+        it('flattens with warnings with order and no template',
+            () => parser({ yaml: loadData('pipeline-with-order-no-template.yaml') })
                 .then((data) => {
                     assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-childPipelines.json')));
+                        JSON.parse(loadData('pipeline-with-order-no-template.json')));
                 }));
+
+        it('includes scm URLs', () => parser({ yaml: loadData('pipeline-with-childPipelines.yaml') })
+            .then((data) => {
+                assert.deepEqual(data,
+                    JSON.parse(loadData('pipeline-with-childPipelines.json')));
+            }));
 
         describe('templates', () => {
             const templateFactoryMock = {
@@ -322,6 +328,30 @@ describe('config parser', () => {
                     templateFactory: templateFactoryMock
                 }).then(data => assert.deepEqual(data, JSON.parse(loadData(
                     'basic-job-with-shared-and-template-override-steps.json'
+                )))));
+
+            it('flattens templates with order',
+                () => parser(
+                    loadData('basic-job-with-order.yaml'),
+                    templateFactoryMock
+                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                    'basic-job-with-order.json'
+                )))));
+
+            it('flattens templates with order and teardown',
+                () => parser(
+                    loadData('basic-job-with-order-and-teardown.yaml'),
+                    templateFactoryMock
+                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                    'basic-job-with-order-and-teardown.json'
+                )))));
+
+            it('flattens templates with warnings',
+                () => parser(
+                    loadData('basic-job-with-warnings.yaml'),
+                    templateFactoryMock
+                ).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                    'basic-job-with-warnings.json'
                 )))));
 
             it('template-teardown is merged into steps', () => {
@@ -438,7 +468,7 @@ describe('config parser', () => {
                     /"environment" can only have 100 environment/);
             }));
 
-        it('do not count SD_TEMPLATE variables for max environment variables',
+        it('does not count SD_TEMPLATE variables for max environment variables',
             () => parser({
                 yaml: loadData('environment-with-SD-variable.yaml'),
                 templateFactory: templateFactoryMock,

@@ -1,0 +1,14 @@
+shared:
+    image: node:4
+jobs:
+    test:
+        steps:
+            - test: npm test
+        requires: ~commit
+    echo:
+        order: 
+            - echo-hello
+            - test
+        steps:
+            - echo-hello: echo hello
+        requires: ~commit
