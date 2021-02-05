@@ -135,16 +135,20 @@ function validateTemplateVersion(doc, templateFactory) {
 /**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
- * @param   {String}               yaml                Contents of screwdriver.yaml
- * @param   {TemplateFactory}      templateFactory     Template Factory to get templates
- * @param   {BuildClusterFactory}  buildClusterFactory Build cluster Factory to get build clusters
- * @param   {TriggerFactory}       triggerFactory      Trigger Factory to find external triggers
- * @param   {Number}               pipelineId          Id of the current pipeline
+ * @param   {Object}               config
+ * @param   {String}               config.yaml                Contents of screwdriver.yaml
+ * @param   {TemplateFactory}      config.templateFactory     Template Factory to get templates
+ * @param   {BuildClusterFactory}  config.buildClusterFactory Build cluster Factory to get build clusters
+ * @param   {TriggerFactory}       [config.triggerFactory]    Trigger Factory to find external triggers
+ * @param   {Number}               [config.pipelineId]        ID of the current pipeline
+ * @param   {Boolean}              [config.notificationsValidationErr]  Throw error when notifications validation fails (default true);
+ *                                                                      otherwise return warning
  * @returns {Promise}
  */
-module.exports = function configParser(
-    yaml, templateFactory, buildClusterFactory, triggerFactory, pipelineId
-) {
+module.exports = function configParser({
+    yaml, templateFactory, buildClusterFactory, triggerFactory, pipelineId,
+    notificationsValidationErr
+}) {
     let warnMessages = [];
 
     // Convert from YAML to JSON
@@ -163,11 +167,16 @@ module.exports = function configParser(
                 });
         })
         // Functionality validation
-        .then(flattenedDoc => phaseValidateFunctionality(flattenedDoc,
-            buildClusterFactory, triggerFactory, pipelineId))
+        .then(flattenedDoc => phaseValidateFunctionality({
+            flattenedDoc,
+            buildClusterFactory,
+            triggerFactory,
+            pipelineId,
+            notificationsValidationErr: notificationsValidationErr !== false
+        }))
         // Check warnMessages
-        .then((doc) => {
-            warnMessages = warnMessages.concat(validateReservedAnnotation(doc));
+        .then(({ doc, warnings }) => {
+            warnMessages = warnMessages.concat(warnings, validateReservedAnnotation(doc));
 
             return doc;
         })
