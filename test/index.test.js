@@ -121,6 +121,13 @@ describe('config parser', () => {
         });
 
         describe('steps', () => {
+            it('converts steps to the commands format successfully',
+                () => parser({ yaml: loadData('steps.yaml') })
+                    .then((data) => {
+                        assert.deepEqual(data,
+                            JSON.parse(loadData('steps.json')));
+                    }));
+
             it('returns an error if not bad named steps',
                 () => parser({ yaml: loadData('bad-step-name.yaml') })
                     .then((data) => {
@@ -264,6 +271,7 @@ describe('config parser', () => {
             let defaultTemplate;
             let imagesTemplate;
             let restrictedjobTemplate;
+            let lockedStepsTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
@@ -272,6 +280,7 @@ describe('config parser', () => {
                 defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                 imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
                 restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
+                lockedStepsTemplate = JSON.parse(loadData('templateWithLockedSteps.json'));
                 templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3')
                     .resolves(firstTemplate);
@@ -283,6 +292,8 @@ describe('config parser', () => {
                     .resolves(imagesTemplate);
                 templateFactoryMock.getTemplate.withArgs('restrictedjob@1')
                     .resolves(restrictedjobTemplate);
+                templateFactoryMock.getTemplate.withArgs('lockedSteps@1')
+                    .resolves(lockedStepsTemplate);
             });
 
             it('flattens templates successfully',
@@ -338,6 +349,29 @@ describe('config parser', () => {
                 }).then(data => assert.deepEqual(data, JSON.parse(loadData(
                     'basic-job-with-order.json'
                 )))));
+
+            it('flattens templates with order and locked steps',
+                () => parser({
+                    yaml: loadData('basic-job-with-template-locked-steps.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                    'basic-job-with-template-locked-steps.json'
+                )))));
+
+            it('returns errors if order is missing locked steps',
+                () => parser({
+                    yaml: loadData('basic-job-with-template-missing-locked-steps.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then((data) => {
+                    assert.strictEqual(data.jobs.main[0].commands[0].name,
+                        'config-parse-error');
+                    assert.match(data.jobs.main[0].commands[0].command,
+                        // eslint-disable-next-line max-len
+                        /Error: Order must contain template lockedSteps@1 locked steps: init,install'/);
+                    assert.match(data.errors[0],
+                        // eslint-disable-next-line max-len
+                        'Error: Order must contain template lockedSteps@1 locked steps: init,install');
+                }));
 
             it('flattens templates with order and teardown',
                 () => parser({

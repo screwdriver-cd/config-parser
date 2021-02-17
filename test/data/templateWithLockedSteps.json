@@ -1,0 +1,21 @@
+{
+    "id": 7754,
+    "name": "lockedSteps",
+    "version": "1.2.3",
+    "config": {
+        "image": "node:8",
+        "steps": [
+            { "init": {
+                    "command": "npm preinstall",
+                    "locked": true
+                }
+            },
+            { "install": {
+                    "command": "npm install",
+                    "locked": true
+                } },
+            { "test": "npm test" },
+            { "publish": "npm publish" }
+        ]
+    }
+}
