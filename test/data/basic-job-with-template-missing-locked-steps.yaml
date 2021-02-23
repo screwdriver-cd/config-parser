@@ -1,0 +1,14 @@
+jobs:
+  main:
+    template: lockedSteps@1
+    order:
+      - setup
+      - test
+      - init
+      - extra
+    steps:
+      - setup: npm audit fix
+      - extra: echo 'this should fail'
+    requires:
+      - ~pr
+      - ~commit

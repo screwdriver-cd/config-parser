@@ -1,0 +1,55 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [{
+            "annotations": {},
+            "image": "node:8",
+            "commands": [
+                {
+                    "name": "setup",
+                    "command": "npm audit fix"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                },
+                {
+                    "name": "init",
+                    "command": "npm preinstall",
+                    "locked": true
+                },
+                {
+                    "name": "install",
+                    "command": "npm install",
+                    "locked": true
+                }
+            ],
+            "environment": {
+                "SD_TEMPLATE_FULLNAME": "lockedSteps",
+                "SD_TEMPLATE_NAME": "lockedSteps",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "secrets": [],
+            "settings": {},
+            "requires": [
+                "~pr",
+                "~commit"
+            ],
+            "templateId": 7754
+        }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" }
+        ]
+    },
+    "subscribe": {}
+}

@@ -1,0 +1,44 @@
+{
+  "annotations": {},
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "echo First",
+            "name": "first"
+          },
+          {
+            "command": "echo Second",
+            "name": "step-2"
+          },
+          {
+            "command": "echo Last",
+            "name": "last"
+          }
+        ],
+        "environment": {},
+        "image": "node:8",
+        "secrets": [],
+        "settings": {}
+      }
+    ]
+  },
+  "parameters": {},
+  "subscribe": {},
+  "workflowGraph": {
+    "edges": [],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "main"
+      }
+    ]
+  }
+}

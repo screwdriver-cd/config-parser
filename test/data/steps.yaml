@@ -1,0 +1,8 @@
+jobs:
+    main:
+        image: node:8
+        steps:
+            - first: echo First
+            - echo Second
+            - last:
+                  command: echo Last
