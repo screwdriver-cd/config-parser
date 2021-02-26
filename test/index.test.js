@@ -246,13 +246,6 @@ describe('config parser', () => {
                         JSON.parse(loadData('pipeline-with-freeze-windows.json')));
                 }));
 
-        it('flattens with warnings with order and no template',
-            () => parser({ yaml: loadData('pipeline-with-order-no-template.yaml') })
-                .then((data) => {
-                    assert.deepEqual(data,
-                        JSON.parse(loadData('pipeline-with-order-no-template.json')));
-                }));
-
         it('includes scm URLs',
             () => parser({ yaml: loadData('pipeline-with-childPipelines.yaml') })
                 .then((data) => {
@@ -350,12 +343,27 @@ describe('config parser', () => {
                     'basic-job-with-order.json'
                 )))));
 
-            it('flattens templates with order and locked steps',
+            it('flattens with warnings with order and no template',
+                () => parser({ yaml: loadData('pipeline-with-order-no-template.yaml') })
+                    .then((data) => {
+                        assert.deepEqual(data,
+                            JSON.parse(loadData('pipeline-with-order-no-template.json')));
+                    }));
+
+            it('flattens templates with locked steps',
                 () => parser({
                     yaml: loadData('basic-job-with-template-locked-steps.yaml'),
                     templateFactory: templateFactoryMock
                 }).then(data => assert.deepEqual(data, JSON.parse(loadData(
                     'basic-job-with-template-locked-steps.json'
+                )))));
+
+            it('flattens templates with order and locked steps',
+                () => parser({
+                    yaml: loadData('basic-job-with-template-order-and-locked-steps.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => assert.deepEqual(data, JSON.parse(loadData(
+                    'basic-job-with-template-order-and-locked-steps.json'
                 )))));
 
             it('returns errors if order is missing locked steps',
