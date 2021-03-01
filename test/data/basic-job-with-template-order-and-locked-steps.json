@@ -7,6 +7,14 @@
             "image": "node:8",
             "commands": [
                 {
+                    "name": "setup",
+                    "command": "npm audit fix"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                },
+                {
                     "name": "init",
                     "command": "npm preinstall",
                     "locked": true
@@ -15,14 +23,6 @@
                     "name": "install",
                     "command": "npm install",
                     "locked": true
-                },
-                {
-                    "name": "test",
-                    "command": "npm test"
-                },
-                {
-                      "name": "publish",
-                      "command": "npm publish"
                 }
             ],
             "environment": {
@@ -41,7 +41,7 @@
         }]
     },
     "warnMessages": [
-        "Cannot override locked step install; using step definition from template lockedSteps@1"
+        "Cannot override locked step init; using step definition from template lockedSteps@1"
     ],
     "workflowGraph": {
         "nodes": [
