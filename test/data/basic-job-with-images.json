@@ -15,6 +15,7 @@
             "name": "hello"
           }
         ],
+        "description": "This is the main description",
         "environment": {
           "SD_TEMPLATE_FULLNAME": "ImagesTestNamespace/imagestemplate",
           "SD_TEMPLATE_NAME": "imagestemplate",
