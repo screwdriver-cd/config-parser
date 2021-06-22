@@ -11,6 +11,8 @@ jobs:
         requires:
             - ~pr
             - ~commit
+        annotations:
+            screwdriver.cd/cpu: HIGH
 
     publish:
         template: screwdriver-cd/semantic-release
