@@ -23,11 +23,12 @@ const phaseGeneratePermutations = require('./lib/phase/permutation');
 function parseYaml(yaml) {
     // If no yaml exists, throw error
     if (!yaml) {
-        return Promise.reject(new Error('screwdriver.yaml does not exist. Please '
-            + 'create a screwdriver.yaml and try to rerun your build.'));
+        return Promise.reject(
+            new Error('screwdriver.yaml does not exist. Please create a screwdriver.yaml and try to rerun your build.')
+        );
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         const documents = YamlParser.safeLoadAll(yaml);
 
         // If only one document, return it
@@ -39,8 +40,9 @@ function parseYaml(yaml) {
         const doc = documents.find(yamlDoc => yamlDoc && yamlDoc.version === 4);
 
         if (!doc) {
-            throw new YamlParser.YAMLException('Configuration is too ambigious - '
-                + 'contains multiple documents without a version hint');
+            throw new YamlParser.YAMLException(
+                'Configuration is too ambigious - contains multiple documents without a version hint'
+            );
         }
 
         return resolve(doc);
@@ -60,31 +62,33 @@ function validateReservedAnnotation(doc) {
         const pipelineAnnotations = Hoek.reach(doc, 'annotations', { default: {} });
 
         warnings = warnings.concat(
-            Object.keys(pipelineAnnotations).filter((key) => {
-                if (key.startsWith('screwdriver.cd/')) {
-                    return RESERVED_PIPELINE_ANNOTATIONS.indexOf(key) === -1;
-                }
+            Object.keys(pipelineAnnotations)
+                .filter(key => {
+                    if (key.startsWith('screwdriver.cd/')) {
+                        return RESERVED_PIPELINE_ANNOTATIONS.indexOf(key) === -1;
+                    }
 
-                return false;
-            })
+                    return false;
+                })
                 .map(value => `${value} is not an annotation that is reserved for Pipeline-Level`)
         );
     }
 
     if (RESERVED_JOB_ANNOTATIONS) {
-        Object.keys(doc.jobs).forEach((jobName) => {
+        Object.keys(doc.jobs).forEach(jobName => {
             const jobAnnotations = Hoek.reach(doc.jobs[jobName], 'annotations', {
                 default: {}
             });
 
             warnings = warnings.concat(
-                Object.keys(jobAnnotations).filter((key) => {
-                    if (key.startsWith('screwdriver.cd/')) {
-                        return RESERVED_JOB_ANNOTATIONS.indexOf(key) === -1;
-                    }
+                Object.keys(jobAnnotations)
+                    .filter(key => {
+                        if (key.startsWith('screwdriver.cd/')) {
+                            return RESERVED_JOB_ANNOTATIONS.indexOf(key) === -1;
+                        }
 
-                    return false;
-                })
+                        return false;
+                    })
                     .map(value => `${value} is not an annotation that is reserved for Job-Level`)
             );
         });
@@ -109,22 +113,18 @@ function validateTemplateVersion(doc, templateFactory) {
         const { isVersion, isTag } = templateFactory.getFullNameAndVersion(template);
 
         if (!isVersion && !isTag) {
-            warnings = warnings.concat(
-                `${template} template in shared settings should be explicitly versioned`
-            );
+            warnings = warnings.concat(`${template} template in shared settings should be explicitly versioned`);
         }
     }
 
-    Object.keys(doc.jobs).forEach((jobName) => {
+    Object.keys(doc.jobs).forEach(jobName => {
         template = Hoek.reach(doc.jobs[jobName], 'template');
 
         if (template !== undefined) {
             const { isVersion, isTag } = templateFactory.getFullNameAndVersion(template);
 
             if (!isVersion && !isTag) {
-                warnings = warnings.concat(
-                    `${template} template in ${jobName} job should be explicitly versioned`
-                );
+                warnings = warnings.concat(`${template} template in ${jobName} job should be explicitly versioned`);
             }
         }
     });
@@ -146,89 +146,95 @@ function validateTemplateVersion(doc, templateFactory) {
  * @returns {Promise}
  */
 module.exports = function configParser({
-    yaml, templateFactory, buildClusterFactory, triggerFactory, pipelineId,
+    yaml,
+    templateFactory,
+    buildClusterFactory,
+    triggerFactory,
+    pipelineId,
     notificationsValidationErr
 }) {
     let warnMessages = [];
 
     // Convert from YAML to JSON
-    return parseYaml(yaml)
-        // Basic validation
-        .then(phaseValidateStructure)
-        // Flatten structures
-        .then((parsedDoc) => {
-            warnMessages = warnMessages.concat(validateTemplateVersion(parsedDoc, templateFactory));
+    return (
+        parseYaml(yaml)
+            // Basic validation
+            .then(phaseValidateStructure)
+            // Flatten structures
+            .then(parsedDoc => {
+                warnMessages = warnMessages.concat(validateTemplateVersion(parsedDoc, templateFactory));
 
-            return phaseFlatten(parsedDoc, templateFactory)
-                .then(({ warnings, flattenedDoc }) => {
+                return phaseFlatten(parsedDoc, templateFactory).then(({ warnings, flattenedDoc }) => {
                     warnMessages = warnMessages.concat(warnings);
 
                     return flattenedDoc;
                 });
-        })
-        // Functionality validation
-        .then(flattenedDoc => phaseValidateFunctionality({
-            flattenedDoc,
-            buildClusterFactory,
-            triggerFactory,
-            pipelineId,
-            notificationsValidationErr: notificationsValidationErr !== false
-        }))
-        // Check warnMessages
-        .then(({ doc, warnings }) => {
-            warnMessages = warnMessages.concat(warnings, validateReservedAnnotation(doc));
+            })
+            // Functionality validation
+            .then(flattenedDoc =>
+                phaseValidateFunctionality({
+                    flattenedDoc,
+                    buildClusterFactory,
+                    triggerFactory,
+                    pipelineId,
+                    notificationsValidationErr: notificationsValidationErr !== false
+                })
+            )
+            // Check warnMessages
+            .then(({ doc, warnings }) => {
+                warnMessages = warnMessages.concat(warnings, validateReservedAnnotation(doc));
 
-            return doc;
-        })
-        // Generate Permutations
-        .then(phaseGeneratePermutations)
-        // Output in the right format
-        .then((doc) => {
-            const res = {
-                annotations: Hoek.reach(doc, 'annotations', { default: {} }),
-                jobs: Hoek.reach(doc, 'jobs'),
-                childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
-                workflowGraph: Hoek.reach(doc, 'workflowGraph'),
-                parameters: Hoek.reach(doc, 'parameters'),
-                subscribe: Hoek.reach(doc, 'subscribe', { default: {} })
-            };
+                return doc;
+            })
+            // Generate Permutations
+            .then(phaseGeneratePermutations)
+            // Output in the right format
+            .then(doc => {
+                const res = {
+                    annotations: Hoek.reach(doc, 'annotations', { default: {} }),
+                    jobs: Hoek.reach(doc, 'jobs'),
+                    childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
+                    workflowGraph: Hoek.reach(doc, 'workflowGraph'),
+                    parameters: Hoek.reach(doc, 'parameters'),
+                    subscribe: Hoek.reach(doc, 'subscribe', { default: {} })
+                };
 
-            if (warnMessages.length > 0) {
-                res.warnMessages = warnMessages;
-            }
+                if (warnMessages.length > 0) {
+                    res.warnMessages = warnMessages;
+                }
 
-            if (Hoek.deepEqual(res.childPipelines, {})) {
-                delete res.childPipelines;
-            }
+                if (Hoek.deepEqual(res.childPipelines, {})) {
+                    delete res.childPipelines;
+                }
 
-            return res;
-        })
-        .catch(err => ({
-            annotations: {},
-            jobs: {
-                main: [{
-                    image: 'node:12',
-                    commands: [{
-                        name: 'config-parse-error',
-                        command: `echo ${shellescape([err.toString()])}; exit 1`
-                    }],
-                    secrets: [],
-                    environment: {}
-                }]
-            },
-            workflowGraph: {
-                nodes: [
-                    { name: '~pr' },
-                    { name: '~commit' },
-                    { name: 'main' },
-                    { name: '~pr:/.*/' }
-                ],
-                edges: [
-                    { src: '~pr', dest: 'main' },
-                    { src: '~commit', dest: 'main' },
-                    { src: '~pr:/.*/', dest: 'main' }
-                ]
-            },
-            errors: [err.toString()]
-        }));
+                return res;
+            })
+            .catch(err => ({
+                annotations: {},
+                jobs: {
+                    main: [
+                        {
+                            image: 'node:12',
+                            commands: [
+                                {
+                                    name: 'config-parse-error',
+                                    command: `echo ${shellescape([err.toString()])}; exit 1`
+                                }
+                            ],
+                            secrets: [],
+                            environment: {}
+                        }
+                    ]
+                },
+                workflowGraph: {
+                    nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: '~pr:/.*/' }],
+                    edges: [
+                        { src: '~pr', dest: 'main' },
+                        { src: '~commit', dest: 'main' },
+                        { src: '~pr:/.*/', dest: 'main' }
+                    ]
+                },
+                errors: [err.toString()]
+            }))
+    );
 };
