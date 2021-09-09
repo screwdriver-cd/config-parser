@@ -233,6 +233,7 @@ describe('config parser', () => {
             let imagesTemplate;
             let restrictedjobTemplate;
             let lockedStepsTemplate;
+            let jobParametersTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
@@ -242,6 +243,7 @@ describe('config parser', () => {
                 imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
                 restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
                 lockedStepsTemplate = JSON.parse(loadData('templateWithLockedSteps.json'));
+                jobParametersTemplate = JSON.parse(loadData('templateWithParameters.json'));
                 templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(secondTemplate);
@@ -251,6 +253,9 @@ describe('config parser', () => {
                     .resolves(imagesTemplate);
                 templateFactoryMock.getTemplate.withArgs('restrictedjob@1').resolves(restrictedjobTemplate);
                 templateFactoryMock.getTemplate.withArgs('lockedSteps@1').resolves(lockedStepsTemplate);
+                templateFactoryMock.getTemplate
+                    .withArgs('JobParametersTestNamespace/jobparameterstemplate@2')
+                    .resolves(jobParametersTemplate);
             });
 
             it('flattens templates successfully', () =>
@@ -402,7 +407,9 @@ describe('config parser', () => {
                 parser({
                     yaml: loadData('basic-job-with-images.yaml'),
                     templateFactory: templateFactoryMock
-                }).then(data => assert.deepEqual(data, JSON.parse(loadData('basic-job-with-images.json')))));
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('basic-job-with-images.json')));
+                }));
 
             it('returns error if template does not exist', () => {
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(null);
@@ -415,6 +422,14 @@ describe('config parser', () => {
                     assert.match(data.errors[0], /Template mytemplate@1.2.3 does not exist/);
                 });
             });
+
+            it('flattens templates with parameters', () =>
+                parser({
+                    yaml: loadData('basic-job-with-parameters.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('basic-job-with-parameters.json')));
+                }));
         });
     });
 

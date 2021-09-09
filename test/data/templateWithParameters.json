@@ -1,0 +1,16 @@
+{
+  "id": 9,
+  "namespace": "JobParametersTestNamespace",
+  "name": "jobparameterstemplate",
+  "version": "2",
+  "description": "test template",
+  "maintainer": "foo@bar.com",
+  "labels": [],
+  "config": {
+    "image": "node:4",
+    "steps": [
+      { "install": "npm install" },
+      { "hello": "echo hello world" }
+    ]
+  }
+}
