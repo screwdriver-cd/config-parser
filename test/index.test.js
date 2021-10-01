@@ -234,6 +234,7 @@ describe('config parser', () => {
             let restrictedjobTemplate;
             let lockedStepsTemplate;
             let jobParametersTemplate;
+            let providerTemplate;
 
             beforeEach(() => {
                 firstTemplate = JSON.parse(loadData('template.json'));
@@ -244,6 +245,7 @@ describe('config parser', () => {
                 restrictedjobTemplate = JSON.parse(loadData('templateWithRestrictedJobName.json'));
                 lockedStepsTemplate = JSON.parse(loadData('templateWithLockedSteps.json'));
                 jobParametersTemplate = JSON.parse(loadData('templateWithParameters.json'));
+                providerTemplate = JSON.parse(loadData('templateWithProvider.json'));
                 templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                 templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(firstTemplate);
                 templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(secondTemplate);
@@ -256,6 +258,9 @@ describe('config parser', () => {
                 templateFactoryMock.getTemplate
                     .withArgs('JobParametersTestNamespace/jobparameterstemplate@2')
                     .resolves(jobParametersTemplate);
+                templateFactoryMock.getTemplate
+                    .withArgs('JobProviderTestNamespace/jobprovidertemplate@2')
+                    .resolves(providerTemplate);
             });
 
             it('flattens templates successfully', () =>
@@ -429,6 +434,14 @@ describe('config parser', () => {
                     templateFactory: templateFactoryMock
                 }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-parameters.json')));
+                }));
+
+            it('flattens templates with provider', () =>
+                parser({
+                    yaml: loadData('basic-job-with-provider.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('basic-job-with-provider.json')));
                 }));
         });
     });

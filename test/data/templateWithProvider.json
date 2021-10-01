@@ -1,0 +1,29 @@
+{
+  "id": 9,
+  "namespace": "JobProviderTestNamespace",
+  "name": "jobprovidertemplate",
+  "version": "2",
+  "description": "test template",
+  "maintainer": "foo@bar.com",
+  "labels": [],
+  "config": {
+    "image": "node:4",
+    "steps": [
+      { "install": "npm install" },
+      { "hello": "echo hello world" }
+    ],
+    "provider": {
+      "name": "aws",
+      "region": "us-west-2",
+      "accountId": 111111111111,
+      "vpc": {
+          "vpcId": "vpc-1a2b3c4d",
+          "securityGroupIds": ["sg-1234567", "sg-4567890"],
+          "subnetIds": ["subnet-1234567", "subnet-4567890"]
+      },
+      "role": "arn:aws:iam::111111111111:role/role",
+      "executor": "eks",
+      "clusterName": "sd-build-eks"
+    }
+  }
+}

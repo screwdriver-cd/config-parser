@@ -1,0 +1,4 @@
+jobs:
+  main:
+    template: JobProviderTestNamespace/jobprovidertemplate@2
+    description: "This is the main description"
