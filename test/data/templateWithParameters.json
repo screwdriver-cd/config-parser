@@ -11,6 +11,9 @@
     "steps": [
       { "install": "npm install" },
       { "hello": "echo hello world" }
-    ]
+    ],
+    "parameters": {
+      "music": [ "jazz", "rock" ]
+    }
   }
 }

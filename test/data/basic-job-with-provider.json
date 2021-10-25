@@ -1,0 +1,60 @@
+{
+  "annotations": {},
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm install",
+            "name": "install"
+          },
+          {
+            "command": "echo hello world",
+            "name": "hello"
+          }
+        ],
+        "description": "This is the main description",
+        "environment": {
+          "SD_TEMPLATE_FULLNAME": "JobProviderTestNamespace/jobprovidertemplate",
+          "SD_TEMPLATE_NAME": "jobprovidertemplate",
+          "SD_TEMPLATE_NAMESPACE": "JobProviderTestNamespace",
+          "SD_TEMPLATE_VERSION": "2"
+        },
+        "image": "node:4",
+        "secrets": [],
+        "settings": {},
+        "templateId": 9,
+        "provider": {
+          "name": "aws",
+          "region": "us-west-2",
+          "accountId": 111111111111,
+          "vpc": {
+              "vpcId": "vpc-1a2b3c4d",
+              "securityGroupIds": ["sg-1234567", "sg-4567890"],
+              "subnetIds": ["subnet-1234567", "subnet-4567890"]
+          },
+          "role": "arn:aws:iam::111111111111:role/role",
+          "executor": "eks",
+          "clusterName": "sd-build-eks"
+        }
+      }
+    ]
+  },
+  "workflowGraph": {
+    "edges": [],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "main"
+      }
+    ]
+  },
+  "subscribe": {},
+  "parameters": {}
+}
