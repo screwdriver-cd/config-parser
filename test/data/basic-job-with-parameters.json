@@ -29,7 +29,8 @@
         "settings": {},
         "templateId": 9,
         "parameters": {
-          "color": [ "red", "blue" ]
+          "color": [ "red", "blue" ],
+          "sports": [ "baseball", "basketball" ]
         }
       }
     ]
