@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:screwdriver-cd/config-parser.git"
+    "url": "git+https://github.com/screwdriver-cd/config-parser.git"
   },
   "homepage": "https://github.com/screwdriver-cd/config-parser",
   "bugs": "https://github.com/screwdriver-cd/config-parser/issues",
