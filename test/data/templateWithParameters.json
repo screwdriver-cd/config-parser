@@ -7,13 +7,15 @@
   "maintainer": "foo@bar.com",
   "labels": [],
   "config": {
+    "parameters": {
+      "music": [ "country", "hip hop" ],
+      "color": [ "black", "white" ],
+      "sports": [ "baseball", "basketball" ]
+    },
     "image": "node:4",
     "steps": [
       { "install": "npm install" },
       { "hello": "echo hello world" }
-    ],
-    "parameters": {
-      "music": [ "jazz", "rock" ]
-    }
+    ]
   }
 }
