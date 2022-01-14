@@ -1,0 +1,47 @@
+{
+  "annotations": {},
+  "parameters": {
+    "music": [ "jazz", "rock" ]
+  },
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm install",
+            "name": "install"
+          }
+        ],
+        "description": "This is the main description",
+        "environment": {},
+        "image": "node:12",
+        "secrets": [],
+        "settings": {},
+        "parameters": {
+          "car": "Audi",
+          "color": [ "red", "blue" ],
+          "sports": {
+            "description": "favorite sports",
+            "value": ["football", "basketball"]
+          }
+        }
+      }
+    ]
+  },
+  "workflowGraph": {
+    "edges": [],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "main"
+      }
+    ]
+  },
+  "subscribe": {}
+}

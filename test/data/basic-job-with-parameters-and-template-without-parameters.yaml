@@ -1,0 +1,9 @@
+parameters:
+  music: [jazz, rock]
+
+jobs:
+  main:
+    template: yourtemplate@2
+    description: "This is the main description"
+    parameters:
+      color: [red, blue]
