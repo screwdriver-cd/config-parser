@@ -1,0 +1,15 @@
+parameters:
+  music: [jazz, rock]
+
+jobs:
+  main:
+    image: "node:12"
+    description: "This is the main description"
+    parameters:
+      color: [red, blue]
+      sports:
+        "value": ["football", "basketball"]
+        "description": "favorite sports"
+      car: "Audi"
+    steps:
+      - install: npm install

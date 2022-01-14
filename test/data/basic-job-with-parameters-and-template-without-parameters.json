@@ -1,0 +1,48 @@
+{
+  "annotations": {},
+  "parameters": {
+    "music": [ "jazz", "rock" ]
+  },
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "commands": [
+          {
+            "command": "npm publish",
+            "name": "publish"
+          }
+        ],
+        "description": "This is the main description",
+        "environment": {
+          "SD_TEMPLATE_FULLNAME": "yourtemplate",
+          "SD_TEMPLATE_NAME": "yourtemplate",
+          "SD_TEMPLATE_NAMESPACE": "",
+          "SD_TEMPLATE_VERSION": "2"
+        },
+        "image": "node:4",
+        "secrets": [],
+        "settings": {},
+        "templateId": 1234,
+        "parameters": {
+          "color": [ "red", "blue" ]
+        }
+      }
+    ]
+  },
+  "workflowGraph": {
+    "edges": [],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "main"
+      }
+    ]
+  },
+  "subscribe": {}
+}

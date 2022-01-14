@@ -221,6 +221,13 @@ describe('config parser', () => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-childPipelines.json')));
             }));
 
+        it('include job parameters', () =>
+            parser({
+                yaml: loadData('basic-job-with-parameters-and-without-template.yaml')
+            }).then(data => {
+                assert.deepEqual(data, JSON.parse(loadData('basic-job-with-parameters-and-without-template.json')));
+            }));
+
         describe('templates', () => {
             const templateFactoryMock = {
                 getTemplate: sinon.stub(),
@@ -428,12 +435,26 @@ describe('config parser', () => {
                 });
             });
 
-            it('flattens templates with parameters', () =>
+            it('flattens job parameters with templates not containing parameters', () =>
                 parser({
-                    yaml: loadData('basic-job-with-parameters.yaml'),
+                    yaml: loadData('basic-job-with-parameters-and-template-without-parameters.yaml'),
                     templateFactory: templateFactoryMock
                 }).then(data => {
-                    assert.deepEqual(data, JSON.parse(loadData('basic-job-with-parameters.json')));
+                    assert.deepEqual(
+                        data,
+                        JSON.parse(loadData('basic-job-with-parameters-and-template-without-parameters.json'))
+                    );
+                }));
+
+            it('flattens job parameters with templates containing parameters', () =>
+                parser({
+                    yaml: loadData('basic-job-with-parameters-and-template-with-parameters.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => {
+                    assert.deepEqual(
+                        data,
+                        JSON.parse(loadData('basic-job-with-parameters-and-template-with-parameters.json'))
+                    );
                 }));
 
             it('flattens templates with provider', () =>
