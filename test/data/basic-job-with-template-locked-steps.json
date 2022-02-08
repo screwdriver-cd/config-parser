@@ -21,8 +21,8 @@
                     "command": "npm test"
                 },
                 {
-                      "name": "publish",
-                      "command": "npm publish"
+                    "name": "publish",
+                    "command": "npm publish"
                 }
             ],
             "environment": {

@@ -4,5 +4,5 @@ jobs:
         description: "This is the publish description"
         steps:
             - publish: "npm publish"
-            - publish: "echo duplciate step"
+            - publish: "echo duplicate step"
             - teardown-mystep: "echo bye"

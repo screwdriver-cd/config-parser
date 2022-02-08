@@ -6,3 +6,12 @@ jobs:
             - echo Second
             - last:
                   command: echo Last
+            - retry:
+                  command: echo retry
+                  retry:
+                      max: 1
+                      interval: 0
+                      attempt: 0
+            - retryString:
+                  command: echo retry
+                  retry: true
