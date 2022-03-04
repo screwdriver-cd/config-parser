@@ -16,6 +16,24 @@
           {
             "command": "echo Last",
             "name": "last"
+          },
+          {
+            "command": "echo retry",
+            "name": "retry",
+            "retry": {
+              "attempt": 0,
+              "interval": 0,
+              "max": 1
+            }
+          },
+          {
+            "command": "echo retry",
+            "name": "retryString",
+            "retry": {
+              "attempt": 0,
+              "interval": 0,
+              "max": 1
+            }
           }
         ],
         "environment": {},
