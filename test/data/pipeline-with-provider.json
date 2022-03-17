@@ -1,0 +1,75 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "test": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "provider": "git@github.com:tkyi/mytest.git#master:provider.yaml",
+                "requires": ["~commit"],
+                "commands": [
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    }
+                ]
+            }
+        ],
+        "echo": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["~commit"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ],
+                "provider": {
+                    "accountId": 99999999999,
+                    "buildRegion": "",
+                    "computeType": "BUILD_GENERAL1_SMALL",
+                    "environment": "LINUX_CONTAINER",
+                    "executor": "sls",
+                    "executorLogs": false,
+                    "launcherImage": "screwdrivercd/launcher:v6.0.149",
+                    "launcherVersion": "v6.0.149",
+                    "name": "aws",
+                    "privilegedMode": false,
+                    "region": "us-east-2",
+                    "role": "arn:aws:iam::123456789012:role/screwdriver-integration-role",
+                    "vpc": {
+                      "securityGroupIds": [
+                        "sg-0123abc"
+                      ],
+                      "subnetIds": [
+                        "subnet-0123abc"
+                      ],
+                      "vpcId": "vpc-0123abc"
+                    }
+                }
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "test" },
+            { "name": "echo" }
+        ],
+        "edges": [
+            { "src": "~commit", "dest": "test" },
+            { "src": "~commit", "dest": "echo" }
+        ]
+    },
+    "subscribe": {}
+}

@@ -216,6 +216,11 @@ describe('config parser', () => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-freeze-windows.json')));
             }));
 
+        it('flattens provider', () =>
+            parser({ yaml: loadData('pipeline-with-provider.yaml') }).then(data => {
+                assert.deepEqual(data, JSON.parse(loadData('pipeline-with-provider.json')));
+            }));
+
         it('includes scm URLs', () =>
             parser({ yaml: loadData('pipeline-with-childPipelines.yaml') }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-childPipelines.json')));
