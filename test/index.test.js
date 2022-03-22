@@ -221,6 +221,11 @@ describe('config parser', () => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-provider.json')));
             }));
 
+        it('flattens blockedBySameJob', () =>
+            parser({ yaml: loadData('pipeline-with-blockedBySameJob.yaml') }).then(data => {
+                assert.deepEqual(data, JSON.parse(loadData('pipeline-with-blockedBySameJob.json')));
+            }));
+
         it('includes scm URLs', () =>
             parser({ yaml: loadData('pipeline-with-childPipelines.yaml') }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-childPipelines.json')));

@@ -1,0 +1,13 @@
+shared:
+    image: node:4
+jobs:
+    test:
+        steps:
+            - test: npm test
+        requires: ~commit
+    echo:
+        steps:
+            - echo-hello: echo hello
+        requires: ~commit
+        blockedBySameJob: false
+        blockedBySameJobWaitTime: 6
