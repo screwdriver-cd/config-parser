@@ -51,12 +51,12 @@
     "sinon": "^9.0.0"
   },
   "dependencies": {
-    "@hapi/hoek": "^9.2.1",
+    "@hapi/hoek": "^9.3.0",
     "clone": "^2.1.2",
     "joi": "^17.4.2",
     "js-yaml": "^3.14.1",
     "keymbinatorial": "^1.2.0",
-    "screwdriver-data-schema": "^21.23.0",
+    "screwdriver-data-schema": "^21.23.1",
     "screwdriver-notifications-email": "^2.2.0",
     "screwdriver-notifications-slack": "^3.2.1",
     "screwdriver-workflow-parser": "^3.2.1",
