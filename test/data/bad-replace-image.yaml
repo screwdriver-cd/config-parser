@@ -1,0 +1,7 @@
+jobs:
+    main:
+        image: node:{{TAG}}
+        environment:
+            TAG: (12)
+        steps:
+            - test: echo 'a'

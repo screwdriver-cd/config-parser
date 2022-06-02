@@ -1,0 +1,3 @@
+jobs:
+    main:
+        image: node:(12)

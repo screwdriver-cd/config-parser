@@ -105,6 +105,14 @@ describe('config parser', () => {
                 parser({ yaml: loadData('missing-main-job-with-requires.yaml') }).then(data => {
                     assert.notOk(data.errors);
                 }));
+
+            it('returns an error if bad image name', () =>
+                parser({ yaml: loadData('bad-job-with-image.yaml') }).then(data => {
+                    assert.match(
+                        data.errors[0],
+                        /ValidationError: "jobs.main.image" with value "node:\(12\)" fails to match the required pattern:/
+                    );
+                }));
         });
 
         describe('steps', () => {
@@ -815,5 +823,20 @@ describe('config parser', () => {
             parser({ yaml: loadData('pipeline-with-requires-external.yaml') }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-requires-external.json')));
             }));
+
+        describe('replace image name', () => {
+            it('replace correct image name', () =>
+                parser({ yaml: loadData('replace-image.yaml') }).then(data => {
+                    assert.strictEqual(data.jobs.main[0].image, 'node:12');
+                }));
+
+            it('returns an error if replace bad image name', () =>
+                parser({ yaml: loadData('bad-replace-image.yaml') }).then(data => {
+                    assert.match(
+                        data.errors[0],
+                        /ValidationError: "jobs.main.image" with value "node:\(12\)" fails to match the required pattern:/
+                    );
+                }));
+        });
     });
 });
