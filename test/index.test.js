@@ -165,6 +165,18 @@ describe('config parser', () => {
                 }));
         });
 
+        describe('stages', () => {
+            it('returns a yaml with stages in correct format', () =>
+                parser({ yaml: loadData('pipeline-with-stages.yaml') }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages.json')));
+                }));
+
+            it('returns an error if bad stages', () =>
+                parser({ yaml: loadData('bad-stages.yaml') }).then(data => {
+                    assert.match(data.jobs.main[0].commands[0].command, /"stages.description" must be of type object./);
+                }));
+        });
+
         describe('subscribe', () => {
             it('fetches subscribe from the config and adds to parsed doc', () =>
                 parser({ yaml: loadData('pipeline-with-subscribed-scms.yaml') }).then(data => {
