@@ -207,6 +207,12 @@ module.exports = function configParser({
                     delete res.childPipelines;
                 }
 
+                const stages = Hoek.reach(doc, 'stages', { default: {} });
+
+                if (!Hoek.deepEqual(stages, {})) {
+                    res.stages = stages;
+                }
+
                 return res;
             })
             .catch(err => ({

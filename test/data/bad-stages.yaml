@@ -1,0 +1,12 @@
+stages:
+      description: For canary deployment
+      jobs: [main, publish]
+      color: '#FFFF00'
+jobs:
+    main:
+        template: mynamespace/mytemplate@1.2.3
+        environment:
+            FOO: 'overwritten by job'
+        requires:
+            - ~pr
+            - ~commit
