@@ -26,7 +26,7 @@
                 ]
             }
         ],
-        "foobar": [
+        "publish": [
             {
                 "annotations": {},
                 "secrets": [],
@@ -60,7 +60,6 @@
     },
     "stages": {
         "canary": {
-            "color": "#FFFF00",
             "description": "For canary deployment",
             "jobs": ["main", "publish"]
         }
@@ -70,12 +69,12 @@
             { "name": "~pr" },
             { "name": "~commit" },
             { "name": "main" },
-            { "name": "foobar" },
+            { "name": "publish" },
             { "name": "baz" }
         ],
         "edges": [
             { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "foobar" }
+            { "src": "main", "dest": "publish" }
         ]
     },
     "subscribe": {}

@@ -20,6 +20,11 @@ function loadData(name) {
 }
 
 describe('config parser', () => {
+    const templateFactoryMock = {
+        getTemplate: sinon.stub().resolves(JSON.parse(loadData('template.json'))),
+        getFullNameAndVersion: sinon.stub().returns({ isVersion: false, isTag: false })
+    };
+
     describe('yaml parser', () => {
         it('returns an error if yaml does not exist', () => {
             const YAMLMISSING = /screwdriver.yaml does not exist/;
@@ -175,6 +180,27 @@ describe('config parser', () => {
                 parser({ yaml: loadData('bad-stages.yaml') }).then(data => {
                     assert.match(data.jobs.main[0].commands[0].command, /"stages.description" must be of type object./);
                 }));
+
+            it('returns an error if duplicate job in stages', () =>
+                parser({ yaml: loadData('bad-stages-duplicate-job.yaml'), templateFactory: templateFactoryMock }).then(
+                    data => {
+                        assert.match(
+                            data.errors[0],
+                            /YAMLException: Cannot have duplicate job in multiple stages: main/
+                        );
+                    }
+                ));
+
+            it('returns an error if nonexistent job in stages', () =>
+                parser({
+                    yaml: loadData('bad-stages-nonexistent-job.yaml'),
+                    templateFactory: templateFactoryMock
+                }).then(data => {
+                    assert.match(
+                        data.errors[0],
+                        /YAMLException: Cannot have nonexistent job in stages: publish,deploy/
+                    );
+                }));
         });
 
         describe('subscribe', () => {
@@ -254,10 +280,6 @@ describe('config parser', () => {
             }));
 
         describe('templates', () => {
-            const templateFactoryMock = {
-                getTemplate: sinon.stub(),
-                getFullNameAndVersion: sinon.stub()
-            };
             let firstTemplate;
             let secondTemplate;
             let namespaceTemplate;
@@ -493,9 +515,6 @@ describe('config parser', () => {
     });
 
     describe('functional', () => {
-        const templateFactoryMock = {
-            getTemplate: sinon.stub().resolves(JSON.parse(loadData('template.json')))
-        };
         const buildClusterFactoryMock = {
             list: sinon.stub().resolves([
                 {
@@ -762,11 +781,6 @@ describe('config parser', () => {
     });
 
     describe('warnMessages', () => {
-        const templateFactoryMock = {
-            getTemplate: sinon.stub(),
-            getFullNameAndVersion: sinon.stub()
-        };
-
         beforeEach(() => {
             const myTemplate = JSON.parse(loadData('template.json'));
 

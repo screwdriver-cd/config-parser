@@ -1,0 +1,23 @@
+stages:
+    canary:
+        description: For canary deployment
+        jobs: [main, publish]
+    testing:
+        description: For canary deployment
+        jobs: [main, deploy]
+jobs:
+    main:
+        template: mynamespace/mytemplate@1.2.3
+        environment:
+            FOO: 'overwritten by job'
+        requires:
+            - ~pr
+            - ~commit
+    publish:
+        image: node:12
+        steps:
+            - install: npm install
+    deploy:
+        image: node:12
+        steps:
+            - install: npm install

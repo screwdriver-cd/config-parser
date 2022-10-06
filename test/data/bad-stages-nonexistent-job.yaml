@@ -1,6 +1,10 @@
 stages:
+  canary:
       description: For canary deployment
-      jobs: [main]
+      jobs: [main, publish]
+  testing:
+      description: For canary deployment
+      jobs: [deploy]
 jobs:
     main:
         template: mynamespace/mytemplate@1.2.3

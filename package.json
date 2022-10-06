@@ -53,12 +53,12 @@
   "dependencies": {
     "@hapi/hoek": "^9.2.1",
     "clone": "^2.1.2",
-    "joi": "^17.4.2",
+    "joi": "^17.6.2",
     "js-yaml": "^3.14.1",
     "keymbinatorial": "^1.2.0",
-    "screwdriver-data-schema": "^21.23.0",
-    "screwdriver-notifications-email": "^2.2.0",
-    "screwdriver-notifications-slack": "^3.2.1",
+    "screwdriver-data-schema": "^21.28.3",
+    "screwdriver-notifications-email": "^2.3.1",
+    "screwdriver-notifications-slack": "^3.3.0",
     "screwdriver-workflow-parser": "^3.2.1",
     "shell-escape": "^0.2.0",
     "tinytim": "^0.1.1"
