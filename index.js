@@ -133,6 +133,38 @@ function validateTemplateVersion(doc, templateFactory) {
 }
 
 /**
+ * Check there are no duplicate jobs in stages and all jobs listed exist
+ * @method verifyStages
+ * @param  {Object} stages Stages
+ * @param  {Object} jobs   Jobs
+ */
+function verifyStages(stages, jobs) {
+    // Get list of job names in jobs
+    const jobNames = Object.keys(jobs);
+
+    // Get list of job names in stages
+    let stageJobNames = [];
+
+    Object.values(stages).forEach(stage => {
+        stageJobNames = stageJobNames.concat(stage.jobs);
+    });
+
+    // If job name is repeated in stages, throw error
+    const duplicateJobsInStage = stageJobNames.filter((s => v => s.has(v) || !s.add(v))(new Set()));
+
+    if (duplicateJobsInStage.length > 0) {
+        throw new YamlParser.YAMLException(`Cannot have duplicate job in multiple stages: ${duplicateJobsInStage}`);
+    }
+
+    // If job name does not exist, throw error
+    const nonexistentJobsInStage = stageJobNames.filter(jobName => !jobNames.includes(jobName));
+
+    if (nonexistentJobsInStage.length > 0) {
+        throw new YamlParser.YAMLException(`Cannot have nonexistent job in stages: ${nonexistentJobsInStage}`);
+    }
+}
+
+/**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
  * @param   {Object}               config
@@ -190,9 +222,10 @@ module.exports = function configParser({
             .then(phaseGeneratePermutations)
             // Output in the right format
             .then(doc => {
+                const jobs = Hoek.reach(doc, 'jobs');
                 const res = {
                     annotations: Hoek.reach(doc, 'annotations', { default: {} }),
-                    jobs: Hoek.reach(doc, 'jobs'),
+                    jobs,
                     childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
                     workflowGraph: Hoek.reach(doc, 'workflowGraph'),
                     parameters: Hoek.reach(doc, 'parameters'),
@@ -210,6 +243,8 @@ module.exports = function configParser({
                 const stages = Hoek.reach(doc, 'stages', { default: {} });
 
                 if (!Hoek.deepEqual(stages, {})) {
+                    verifyStages(stages, jobs);
+
                     res.stages = stages;
                 }
 
