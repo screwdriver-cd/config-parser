@@ -1,0 +1,55 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "image": "node:12",
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    }
+                ],
+                "environment": {
+                },
+                "secrets": [],
+                "settings": {
+                    "email": {
+                        "addresses": [
+                            "bar@foo.com"
+                        ],
+                        "statuses": [
+                            "SUCCESS"
+                        ]
+                    },
+                    "slack": {
+                        "channels": [
+                            "test"
+                        ],
+                        "statuses": [
+                            "SUCCESS"
+                        ]
+                    }
+                },
+                "requires": [
+                    "~pr",
+                    "~commit"
+                ]
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" }
+        ]
+    },
+    "subscribe": {}
+}

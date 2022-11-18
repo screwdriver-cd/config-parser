@@ -1,0 +1,19 @@
+jobs:
+    main:
+        image: node:12
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit
+        settings:
+          slack:
+            channels:
+              - test
+            statuses:
+              - SUCCESS
+          email:
+            addresses:
+              - bar@foo.com
+            statuses:
+              - SUCCESS
