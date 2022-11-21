@@ -25,7 +25,7 @@
   "subscribe": {},
   "warnMessages": [
       "main \"slack.channnels\" is not allowed; skipping",
-      "main \"email\" does not match any of the allowed types; skipping"
+      "main \"email.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]; skipping"
   ],
   "workflowGraph": {
       "nodes": [
