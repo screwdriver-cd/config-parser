@@ -29,11 +29,13 @@ function parseYaml(yaml) {
     }
 
     return new Promise(resolve => {
-        const documents = YamlParser.safeLoadAll(yaml);
+        const documents = YamlParser.loadAll(yaml);
 
         // If only one document, return it
         if (documents.length === 1) {
-            return resolve(documents[0]);
+            resolve(documents[0]);
+
+            return;
         }
 
         // If more than one document, look for "version: 4"
@@ -45,7 +47,7 @@ function parseYaml(yaml) {
             );
         }
 
-        return resolve(doc);
+        resolve(doc);
     });
 }
 
@@ -150,7 +152,12 @@ function verifyStages(stages, jobs) {
     });
 
     // If job name is repeated in stages, throw error
-    const duplicateJobsInStage = stageJobNames.filter((s => v => s.has(v) || !s.add(v))(new Set()));
+    const duplicateJobsInStage = stageJobNames.filter(
+        (
+            s => v =>
+                s.has(v) || !s.add(v)
+        )(new Set())
+    );
 
     if (duplicateJobsInStage.length > 0) {
         throw new YamlParser.YAMLException(`Cannot have duplicate job in multiple stages: ${duplicateJobsInStage}`);

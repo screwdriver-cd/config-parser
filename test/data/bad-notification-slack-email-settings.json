@@ -46,6 +46,6 @@
       ]
   },
   "errors": [
-      "Error: main \"slack.channnels\" is not allowed\nmain \"email.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]"
+    "Error: main \"slack.channnels\" is not allowed\nmain \"email.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]"
   ]
 }

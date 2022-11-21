@@ -46,6 +46,6 @@
       ]
   },
   "errors": [
-     "Error: main \"slack.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]\nmain \"email.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]"
+    "Error: main \"slack.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]\nmain \"email.statuses[0]\" must be one of [ABORTED, CREATED, FAILURE, QUEUED, RUNNING, SUCCESS, BLOCKED, UNSTABLE, COLLAPSED, FROZEN]"
   ]
 }

@@ -723,6 +723,17 @@ describe('config parser', () => {
                 );
             }));
 
+        it('reads notification annotations', () =>
+            parser({
+                yaml: loadData('notification-settings.yaml'),
+                templateFactory: templateFactoryMock,
+                buildClusterFactory: buildClusterFactoryMock,
+                triggerFactory,
+                pipelineId
+            }).then(data => {
+                assert.deepEqual(data, JSON.parse(loadData('notification-settings.json')));
+            }));
+
         it('returns an error if wrong notification slack setting', () =>
             parser({
                 yaml: loadData('bad-notification-slack-settings.yaml'),
