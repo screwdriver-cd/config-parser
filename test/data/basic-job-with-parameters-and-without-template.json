@@ -15,7 +15,7 @@
         ],
         "description": "This is the main description",
         "environment": {},
-        "image": "node:12",
+        "image": "node:18",
         "secrets": [],
         "settings": {},
         "parameters": {
