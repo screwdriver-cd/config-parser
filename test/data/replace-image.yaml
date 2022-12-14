@@ -2,6 +2,6 @@ jobs:
     main:
         image: node:{{TAG}}
         environment:
-            TAG: 12
+            TAG: 18
         steps:
             - test: echo 'a'

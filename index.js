@@ -262,7 +262,7 @@ module.exports = function configParser({
                 jobs: {
                     main: [
                         {
-                            image: 'node:12',
+                            image: 'node:18',
                             commands: [
                                 {
                                     name: 'config-parse-error',

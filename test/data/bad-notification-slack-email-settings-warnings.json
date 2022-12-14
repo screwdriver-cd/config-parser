@@ -7,7 +7,7 @@
                   "~pr",
                   "~commit"
               ],
-              "image": "node:12",
+              "image": "node:18",
               "commands": [
                   {
                       "name": "install",

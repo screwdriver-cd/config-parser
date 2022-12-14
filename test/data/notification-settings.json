@@ -5,7 +5,7 @@
         "main": [
             {
                 "annotations": {},
-                "image": "node:12",
+                "image": "node:18",
                 "commands": [
                     {
                         "name": "install",

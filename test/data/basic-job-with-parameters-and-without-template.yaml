@@ -3,7 +3,7 @@ parameters:
 
 jobs:
   main:
-    image: "node:12"
+    image: "node:18"
     description: "This is the main description"
     parameters:
       color: [red, blue]
