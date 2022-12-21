@@ -1,0 +1,29 @@
+stages:
+    canary:
+        setup:
+            image: node:18
+            steps:
+                - announce: post banner
+        description: For canary deployment
+        jobs: [main, publish]
+        teardown:
+            image: node:18
+            steps:
+                - publish: post blog
+
+shared:
+    image: node:4
+jobs:
+    main:
+        steps:
+            - install: npm install
+            - test: npm test
+            - publish: npm publish
+        requires: ~commit
+    publish:
+        steps:
+            - echo-hello: echo hello
+        requires: main
+    baz:
+        steps:
+            - echo-world: echo world

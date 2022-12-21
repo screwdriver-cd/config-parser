@@ -176,6 +176,11 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages.json')));
                 }));
 
+            it('returns a yaml with stages in correct format with setup and teardown jobs', () =>
+                parser({ yaml: loadData('pipeline-with-stages-and-setup-teardown-jobs.yaml') }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-setup-teardown-jobs.json')));
+                }));
+
             it('returns an error if bad stages', () =>
                 parser({ yaml: loadData('bad-stages.yaml') }).then(data => {
                     assert.match(data.jobs.main[0].commands[0].command, /"stages.description" must be of type object./);
