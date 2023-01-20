@@ -553,7 +553,7 @@ describe('config parser', () => {
                 triggerFactory,
                 pipelineId
             }).then(data => {
-                assert.match(data.jobs.main[0].commands[0].command, /"environment" can only have 100 environment/);
+                assert.match(data.jobs.main[0].commands[0].command, /"environment" can only have 120 environment/);
             }));
 
         it('does not count SD_TEMPLATE variables for max environment variables', () =>
