@@ -1,21 +1,41 @@
 stages:
-    canary:
+    other:
+        requires: announce
         description: For canary deployment
-        jobs: [main, publish]
+        jobs:
+            - main
+            - publish
+    deploy:
+        jobs:
+            - C
+            - D
 
 shared:
-    image: node:4
+    image: node:18
+    steps:
+        - step: do something
 jobs:
+    foo:
+        steps:
+            - start: set banner
+        requires: ~commit
+    A:
+        requires: foo
+    B:
+        requires:
+            - foo
+            - "~stage@other:teardown"
+    C:
+        requires: "~stage@deploy:setup"
+    D:
+        requires: ~C
     main:
         steps:
             - install: npm install
             - test: npm test
             - publish: npm publish
-        requires: ~commit
+        requires: "~stage@other:setup"
     publish:
         steps:
             - echo-hello: echo hello
         requires: main
-    baz:
-        steps:
-            - echo-world: echo world

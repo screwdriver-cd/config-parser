@@ -1,5 +1,5 @@
 shared:
-    image: node:6
+    image: node:18
     sourcePaths: testFile.js
 jobs:
     component:

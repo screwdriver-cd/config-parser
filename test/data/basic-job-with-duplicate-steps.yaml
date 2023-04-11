@@ -1,6 +1,6 @@
 jobs:
   main:
-        image: node:6
+        image: node:18
         description: "This is the publish description"
         steps:
             - publish: "npm publish"

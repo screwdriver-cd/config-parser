@@ -8,8 +8,7 @@
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "image": "node:4",
-                "requires": ["~commit"],
+                "image": "node:18",
                 "commands": [
                     {
                         "name": "install",
@@ -23,7 +22,11 @@
                         "name": "publish",
                         "command": "npm publish"
                     }
-                ]
+                ],
+                "stage": {
+                    "name": "other",
+                    "startFrom": true
+                }
             }
         ],
         "publish": [
@@ -33,48 +36,142 @@
                 "settings": {},
                 "environment": {},
                 "requires": ["main"],
-                "image": "node:4",
+                "image": "node:18",
                 "commands": [
                     {
                         "name": "echo-hello",
                         "command": "echo hello"
                     }
-                ]
+                ],
+                "stage": {
+                    "name": "other"
+                }
             }
         ],
-        "baz": [
+        "foo": [
             {
                 "annotations": {},
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "image": "node:4",
+                "image": "node:18",
                 "commands": [
                     {
-                        "name": "echo-world",
-                        "command": "echo world"
+                        "name": "start",
+                        "command": "set banner"
                     }
+                ],
+                "requires": [
+                    "~commit"
                 ]
+            }
+        ],
+        "A": [
+            {
+              "annotations": {},
+              "commands": [
+                {
+                  "command": "do something",
+                  "name": "step"
+                }
+              ],
+              "environment": {},
+              "image": "node:18",
+              "requires": [
+                "foo"
+              ],
+              "secrets": [],
+              "settings": {}
+            }
+        ],
+        "B": [
+            {
+              "annotations": {},
+              "commands": [
+                {
+                  "command": "do something",
+                  "name": "step"
+                }
+              ],
+              "environment": {},
+              "image": "node:18",
+              "requires": [
+                "foo",
+                "~stage@other:teardown"
+              ],
+              "secrets": [],
+              "settings": {}
+            }
+        ],
+        "C": [
+            {
+              "annotations": {},
+              "commands": [
+                {
+                  "command": "do something",
+                  "name": "step"
+                }
+              ],
+              "environment": {},
+              "image": "node:18",
+              "secrets": [],
+              "settings": {},
+              "stage": {
+                "name": "deploy",
+                "startFrom": true
+              }
+            }
+        ],
+        "D": [
+            {
+              "annotations": {},
+              "commands": [
+                {
+                  "command": "do something",
+                  "name": "step"
+                }
+              ],
+              "environment": {},
+              "image": "node:18",
+              "requires": [
+                "~C"
+              ],
+              "secrets": [],
+              "settings": {},
+              "stage": {
+                "name": "deploy"
+              }
             }
         ]
     },
     "stages": {
-        "canary": {
+        "other": {
             "description": "For canary deployment",
-            "jobs": ["main", "publish"]
+            "jobs": ["main", "publish"],
+            "requires": "announce",
+            "startFrom": "main"
+        },
+        "deploy": {
+            "jobs": ["C", "D"],
+            "startFrom": "C"
         }
     },
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },
             { "name": "~commit" },
-            { "name": "main" },
-            { "name": "publish" },
-            { "name": "baz" }
+            { "name": "foo" },
+            { "name": "A" },
+            { "name": "B" },
+            { "name": "~stage@other" },
+            { "name": "~stage@deploy" }
         ],
         "edges": [
-            { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "publish" }
+            { "src": "~commit", "dest": "foo" },
+            { "src": "foo", "dest": "A" },
+            { "src": "stage@other", "dest": "B" },
+            { "src": "foo", "dest": "B" },
+            { "src": "announce", "dest": "stage@other" }
         ]
     },
     "subscribe": {}

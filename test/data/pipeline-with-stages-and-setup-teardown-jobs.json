@@ -9,7 +9,6 @@
                 "settings": {},
                 "environment": {},
                 "image": "node:4",
-                "requires": ["~commit"],
                 "commands": [
                     {
                         "name": "install",
@@ -23,7 +22,11 @@
                         "name": "publish",
                         "command": "npm publish"
                     }
-                ]
+                ],
+                "stage": {
+                    "name": "canary",
+                    "startFrom": true
+                }
             }
         ],
         "publish": [
@@ -39,7 +42,10 @@
                         "name": "echo-hello",
                         "command": "echo hello"
                     }
-                ]
+                ],
+                "stage": {
+                    "name": "canary"
+                }
             }
         ],
         "baz": [
@@ -54,10 +60,13 @@
                         "name": "echo-world",
                         "command": "echo world"
                     }
+                ],
+                "requires": [
+                    "~commit"
                 ]
             }
         ],
-        "sd-stage-setup-canary": [
+        "~stage@canary:setup": [
             {
                 "annotations": {},
                 "secrets": [],
@@ -69,10 +78,13 @@
                         "name": "announce",
                         "command": "post banner"
                     }
-                ]
+                ],
+                "stage": {
+                    "name": "canary"
+                }
             }
         ],
-        "sd-stage-teardown-canary": [
+        "~stage@canary:teardown": [
             {
                 "annotations": {},
                 "secrets": [],
@@ -84,29 +96,31 @@
                         "name": "publish",
                         "command": "post blog"
                     }
-                ]
+                ],
+                "stage": {
+                    "name": "canary"
+                }
             }
         ]
     },
     "stages": {
         "canary": {
             "description": "For canary deployment",
-            "jobs": ["main", "publish"]
+            "jobs": ["main", "publish"],
+            "requires": "baz",
+            "startFrom": "main"
         }
     },
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },
             { "name": "~commit" },
-            { "name": "main" },
-            { "name": "publish" },
             { "name": "baz" },
-            { "name": "sd-stage-setup-canary" },
-            { "name": "sd-stage-teardown-canary" }
+            { "name": "~stage@canary" }
         ],
         "edges": [
-            { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "publish" }
+            { "src": "~commit", "dest": "baz" },
+            { "src": "baz", "dest": "stage@canary" }
         ]
     },
     "subscribe": {}

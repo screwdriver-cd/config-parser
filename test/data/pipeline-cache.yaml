@@ -13,7 +13,7 @@ jobs:
             - ~pr
             - ~commit
     test:   # no job cache
-        image: node:6
+        image: node:18
         steps:
             - test: npm test
         requires:

@@ -24,6 +24,10 @@ describe('config parser', () => {
         getTemplate: sinon.stub().resolves(JSON.parse(loadData('template.json'))),
         getFullNameAndVersion: sinon.stub().returns({ isVersion: false, isTag: false })
     };
+    const triggerFactory = {
+        getDestFromSrc: sinon.stub().resolves([]),
+        getSrcFromDest: sinon.stub().resolves([])
+    };
 
     describe('yaml parser', () => {
         it('returns an error if yaml does not exist', () => {
@@ -68,8 +72,8 @@ describe('config parser', () => {
             }));
 
         it('does not return an error if job has no step names', () =>
-            parser({ yaml: loadData('basic-job-with-no-step-names.yaml') }).then(data => {
-                assert.strictEqual(data.jobs.main[0].image, 'node:6');
+            parser({ yaml: loadData('basic-job-with-no-step-names.yaml'), triggerFactory }).then(data => {
+                assert.strictEqual(data.jobs.main[0].image, 'node:18');
                 assert.deepEqual(data.jobs.main[0].secrets, []);
                 assert.deepEqual(data.jobs.main[0].environment, {});
                 assert.notOk(data.errors);
@@ -107,7 +111,7 @@ describe('config parser', () => {
 
         describe('jobs', () => {
             it('does not return error if missing main job for new config', () =>
-                parser({ yaml: loadData('missing-main-job-with-requires.yaml') }).then(data => {
+                parser({ yaml: loadData('missing-main-job-with-requires.yaml'), triggerFactory }).then(data => {
                     assert.notOk(data.errors);
                 }));
 
@@ -122,7 +126,7 @@ describe('config parser', () => {
 
         describe('steps', () => {
             it('converts steps to the commands format successfully', () =>
-                parser({ yaml: loadData('steps.yaml') }).then(data => {
+                parser({ yaml: loadData('steps.yaml'), triggerFactory }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('steps.json')));
                 }));
 
@@ -172,34 +176,46 @@ describe('config parser', () => {
 
         describe('stages', () => {
             it('returns a yaml with stages in correct format', () =>
-                parser({ yaml: loadData('pipeline-with-stages.yaml') }).then(data => {
+                parser({
+                    yaml: loadData('pipeline-with-stages.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineId
+                }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages.json')));
                 }));
 
             it('returns a yaml with stages in correct format with setup and teardown jobs', () =>
-                parser({ yaml: loadData('pipeline-with-stages-and-setup-teardown-jobs.yaml') }).then(data => {
+                parser({
+                    yaml: loadData('pipeline-with-stages-and-setup-teardown-jobs.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineId
+                }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-setup-teardown-jobs.json')));
                 }));
 
             it('returns an error if bad stages', () =>
-                parser({ yaml: loadData('bad-stages.yaml') }).then(data => {
+                parser({ yaml: loadData('bad-stages.yaml'), triggerFactory, pipelineId }).then(data => {
                     assert.match(data.jobs.main[0].commands[0].command, /"stages.description" must be of type object./);
                 }));
 
             it('returns an error if duplicate job in stages', () =>
-                parser({ yaml: loadData('bad-stages-duplicate-job.yaml'), templateFactory: templateFactoryMock }).then(
-                    data => {
-                        assert.match(
-                            data.errors[0],
-                            /YAMLException: Cannot have duplicate job in multiple stages: main/
-                        );
-                    }
-                ));
+                parser({
+                    yaml: loadData('bad-stages-duplicate-job.yaml'),
+                    triggerFactory,
+                    pipelineId,
+                    templateFactory: templateFactoryMock
+                }).then(data => {
+                    assert.match(data.errors[0], /YAMLException: Cannot have duplicate job in multiple stages: main/);
+                }));
 
             it('returns an error if nonexistent job in stages', () =>
                 parser({
                     yaml: loadData('bad-stages-nonexistent-job.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineId
                 }).then(data => {
                     assert.match(
                         data.errors[0],
@@ -210,7 +226,7 @@ describe('config parser', () => {
 
         describe('subscribe', () => {
             it('fetches subscribe from the config and adds to parsed doc', () =>
-                parser({ yaml: loadData('pipeline-with-subscribed-scms.yaml') }).then(data => {
+                parser({ yaml: loadData('pipeline-with-subscribed-scms.yaml'), triggerFactory }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-subscribed-scms.json')));
                 }));
         });
@@ -218,68 +234,69 @@ describe('config parser', () => {
 
     describe('flatten', () => {
         it('replaces steps, matrix, image, but merges environment', () =>
-            parser({ yaml: loadData('basic-shared-project.yaml') }).then(data => {
+            parser({ yaml: loadData('basic-shared-project.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('basic-shared-project.json')));
             }));
 
         it('replaces settings if empty object', () =>
-            parser({ yaml: loadData('basic-shared-project-empty-settings.yaml') }).then(data => {
+            parser({ yaml: loadData('basic-shared-project-empty-settings.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('basic-shared-project-empty-settings.json')));
             }));
 
         it('flattens complex environments', () =>
-            parser({ yaml: loadData('complex-environment.yaml') }).then(data => {
+            parser({ yaml: loadData('complex-environment.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('complex-environment.json')));
             }));
 
         it('flattens shared annotations to each job', () =>
-            parser({ yaml: loadData('shared-annotations.yaml') }).then(data => {
+            parser({ yaml: loadData('shared-annotations.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('shared-annotations.json')));
             }));
 
         it('includes pipeline- and job-level annotations', () =>
-            parser({ yaml: loadData('pipeline-and-job-annotations.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-and-job-annotations.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-and-job-annotations.json')));
             }));
 
         it('job-level annotations override shared-level annotations', () =>
-            parser({ yaml: loadData('shared-job-annotations.yaml') }).then(data => {
+            parser({ yaml: loadData('shared-job-annotations.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('shared-job-annotations.json')));
             }));
 
         it('job-level sourcePaths override shared-level sourcePaths', () =>
-            parser({ yaml: loadData('pipeline-with-sourcePaths.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-sourcePaths.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-sourcePaths.json')));
             }));
 
         it('flattens when sourcePaths are string', () =>
-            parser({ yaml: loadData('pipeline-with-sourcePaths-string.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-sourcePaths-string.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-sourcePaths-string.json')));
             }));
 
         it('flattens blockedBy', () =>
-            parser({ yaml: loadData('pipeline-with-blocked-by.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-blocked-by.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-blocked-by.json')));
             }));
 
         it('flattens freezeWindows', () =>
-            parser({ yaml: loadData('pipeline-with-freeze-windows.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-freeze-windows.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-freeze-windows.json')));
             }));
 
         it('flattens provider', () =>
-            parser({ yaml: loadData('pipeline-with-provider.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-provider.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-provider.json')));
             }));
 
         it('includes scm URLs', () =>
-            parser({ yaml: loadData('pipeline-with-childPipelines.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-childPipelines.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-childPipelines.json')));
             }));
 
         it('include job parameters', () =>
             parser({
-                yaml: loadData('basic-job-with-parameters-and-without-template.yaml')
+                yaml: loadData('basic-job-with-parameters-and-without-template.yaml'),
+                triggerFactory
             }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('basic-job-with-parameters-and-without-template.json')));
             }));
@@ -325,7 +342,8 @@ describe('config parser', () => {
             it('flattens templates successfully', () =>
                 parser({
                     yaml: loadData('basic-job-with-template.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template.json')))));
 
             it('flattens templates successfully when template namespace exists', () => {
@@ -333,7 +351,8 @@ describe('config parser', () => {
 
                 return parser({
                     yaml: loadData('basic-job-with-template-with-namespace.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template-with-namespace.json')))
                 );
@@ -342,7 +361,8 @@ describe('config parser', () => {
             it('flattens templates with wrapped steps ', () =>
                 parser({
                     yaml: loadData('basic-job-with-template-wrapped-steps.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template-wrapped-steps.json')))
                 ));
@@ -350,7 +370,8 @@ describe('config parser', () => {
             it('flattens templates with job steps ', () =>
                 parser({
                     yaml: loadData('basic-job-with-template-override-steps.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template-override-steps.json')))
                 ));
@@ -358,7 +379,8 @@ describe('config parser', () => {
             it('flattens templates with shared and job steps ', () =>
                 parser({
                     yaml: loadData('basic-job-with-shared-and-template-override-steps.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(
                         data,
@@ -369,18 +391,20 @@ describe('config parser', () => {
             it('flattens templates with order', () =>
                 parser({
                     yaml: loadData('basic-job-with-order.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => assert.deepEqual(data, JSON.parse(loadData('basic-job-with-order.json')))));
 
             it('flattens with warnings with order and no template', () =>
-                parser({ yaml: loadData('pipeline-with-order-no-template.yaml') }).then(data => {
+                parser({ yaml: loadData('pipeline-with-order-no-template.yaml'), triggerFactory }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-order-no-template.json')));
                 }));
 
             it('flattens templates with locked steps', () =>
                 parser({
                     yaml: loadData('basic-job-with-template-locked-steps.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template-locked-steps.json')))
                 ));
@@ -388,7 +412,8 @@ describe('config parser', () => {
             it('flattens templates with order and locked steps', () =>
                 parser({
                     yaml: loadData('basic-job-with-template-order-and-locked-steps.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template-order-and-locked-steps.json')))
                 ));
@@ -414,7 +439,8 @@ describe('config parser', () => {
             it('flattens templates with order and teardown', () =>
                 parser({
                     yaml: loadData('basic-job-with-order-and-teardown.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-order-and-teardown.json')))
                 ));
@@ -422,7 +448,8 @@ describe('config parser', () => {
             it('flattens templates with warnings', () =>
                 parser({
                     yaml: loadData('basic-job-with-warnings.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => assert.deepEqual(data, JSON.parse(loadData('basic-job-with-warnings.json')))));
 
             it('template-teardown is merged into steps', () => {
@@ -432,7 +459,8 @@ describe('config parser', () => {
 
                 return parser({
                     yaml: loadData('basic-job-with-template-override-steps.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(
                         data,
@@ -448,7 +476,8 @@ describe('config parser', () => {
 
                 return parser({
                     yaml: loadData('basic-job-with-template-override-steps-teardown.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data =>
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template-override-steps-teardown.json')))
                 );
@@ -470,7 +499,8 @@ describe('config parser', () => {
             it('flattens templates with images', () =>
                 parser({
                     yaml: loadData('basic-job-with-images.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-images.json')));
                 }));
@@ -490,7 +520,8 @@ describe('config parser', () => {
             it('flattens job parameters with templates not containing parameters', () =>
                 parser({
                     yaml: loadData('basic-job-with-parameters-and-template-without-parameters.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => {
                     assert.deepEqual(
                         data,
@@ -501,7 +532,8 @@ describe('config parser', () => {
             it('flattens job parameters with templates containing parameters', () =>
                 parser({
                     yaml: loadData('basic-job-with-parameters-and-template-with-parameters.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => {
                     assert.deepEqual(
                         data,
@@ -512,7 +544,8 @@ describe('config parser', () => {
             it('flattens templates with provider', () =>
                 parser({
                     yaml: loadData('basic-job-with-provider.yaml'),
-                    templateFactory: templateFactoryMock
+                    templateFactory: templateFactoryMock,
+                    triggerFactory
                 }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-provider.json')));
                 }));
@@ -533,10 +566,6 @@ describe('config parser', () => {
                     weightage: 100
                 }
             ])
-        };
-        const triggerFactory = {
-            getDestFromSrc: sinon.stub().resolves([]),
-            getSrcFromDest: sinon.stub().resolves([])
         };
 
         it('returns an error if not enough steps', () =>
@@ -805,7 +834,7 @@ describe('config parser', () => {
         });
 
         it('warning it is not pipeline-level annotation', () =>
-            parser({ yaml: loadData('warn-pipeline-level-annotation.yaml') }).then(data => {
+            parser({ yaml: loadData('warn-pipeline-level-annotation.yaml'), triggerFactory }).then(data => {
                 /* eslint-disable max-len */
                 assert.match(
                     data.warnMessages[0],
@@ -814,7 +843,7 @@ describe('config parser', () => {
                 /* eslint-enable max-len */
             }));
         it('warning it is not job-level annotation', () =>
-            parser({ yaml: loadData('warn-job-level-annotation.yaml') }).then(data => {
+            parser({ yaml: loadData('warn-job-level-annotation.yaml'), triggerFactory }).then(data => {
                 /* eslint-disable max-len */
                 assert.match(
                     data.warnMessages[0],
@@ -829,7 +858,8 @@ describe('config parser', () => {
         it('warning template version is not specify in shared settings', () =>
             parser({
                 yaml: loadData('warn-shared-template-version.yaml'),
-                templateFactory: templateFactoryMock
+                templateFactory: templateFactoryMock,
+                triggerFactory
             }).then(data => {
                 /* eslint-disable max-len */
                 assert.match(
@@ -841,7 +871,8 @@ describe('config parser', () => {
         it('warning template version is not specify in job settings', () =>
             parser({
                 yaml: loadData('warn-job-template-version.yaml'),
-                templateFactory: templateFactoryMock
+                templateFactory: templateFactoryMock,
+                triggerFactory
             }).then(data => {
                 /* eslint-disable max-len */
                 assert.match(data.warnMessages[0], /foo\/bar template in main job should be explicitly versioned/);
@@ -852,17 +883,17 @@ describe('config parser', () => {
 
     describe('permutation', () => {
         it('generates complex permutations and expands image', () =>
-            parser({ yaml: loadData('node-module.yaml') }).then(data => {
+            parser({ yaml: loadData('node-module.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('node-module.json')));
             }));
 
         it('generates correct jobs', () =>
-            parser({ yaml: loadData('pipeline-with-requires.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-requires.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-requires.json')));
             }));
 
         it('generates correct nodes with external pipeline', () =>
-            parser({ yaml: loadData('pipeline-with-requires-external.yaml') }).then(data => {
+            parser({ yaml: loadData('pipeline-with-requires-external.yaml'), triggerFactory }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('pipeline-with-requires-external.json')));
             }));
 
@@ -873,7 +904,7 @@ describe('config parser', () => {
                 }));
 
             it('returns an error if replace bad image name', () =>
-                parser({ yaml: loadData('bad-replace-image.yaml') }).then(data => {
+                parser({ yaml: loadData('bad-replace-image.yaml'), triggerFactory }).then(data => {
                     assert.match(
                         data.errors[0],
                         /ValidationError: "jobs.main.image" with value "node:\(12\)" fails to match the required pattern:/
