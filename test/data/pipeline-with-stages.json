@@ -149,11 +149,46 @@
             "description": "For canary deployment",
             "jobs": ["main", "publish"],
             "requires": "announce",
-            "startFrom": "main"
+            "startFrom": "main",
+            "workflowGraph": {
+                "edges": [
+                    {
+                        "dest": "publish",
+                        "src": "main"
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "stage@other:teardown"
+                    },
+                    {
+                        "name": "main"
+                    },
+                    {
+                        "name": "publish"
+                    }
+                ]
+              }
         },
         "deploy": {
             "jobs": ["C", "D"],
-            "startFrom": "C"
+            "startFrom": "C",
+            "workflowGraph": {
+                "edges": [
+                    {
+                        "dest": "D",
+                        "src": "C"
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "C"
+                    },
+                    {
+                        "name": "D"
+                    }
+                ]
+              }
         }
     },
     "workflowGraph": {

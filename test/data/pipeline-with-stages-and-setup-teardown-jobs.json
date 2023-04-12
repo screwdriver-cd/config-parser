@@ -108,7 +108,29 @@
             "description": "For canary deployment",
             "jobs": ["main", "publish"],
             "requires": "baz",
-            "startFrom": "main"
+            "startFrom": "main",
+            "workflowGraph": {
+                "edges": [
+                    {
+                        "dest": "publish",
+                        "src": "main"
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "main"
+                    },
+                    {
+                        "name": "publish"
+                    },
+                    {
+                        "name": "~stage@canary:setup"
+                    },
+                    {
+                        "name": "~stage@canary:teardown"
+                    }
+                ]
+              }
         }
     },
     "workflowGraph": {
