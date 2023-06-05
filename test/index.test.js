@@ -564,7 +564,7 @@ describe('config parser', () => {
                 triggerFactory,
                 pipelineId
             }).then(data => {
-                assert.notMatch(data.jobs.main[0].commands[0].command, /"environment" can only have 100 environment/);
+                assert.notMatch(data.jobs.main[0].commands[0].command, /"environment" can only have 150 environment/);
             }));
 
         it('returns an error if too many environment + matrix variables', () =>
