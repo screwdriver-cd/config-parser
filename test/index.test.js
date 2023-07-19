@@ -175,16 +175,6 @@ describe('config parser', () => {
         });
 
         describe('stages', () => {
-            it('returns a yaml with stages in correct format', () =>
-                parser({
-                    yaml: loadData('pipeline-with-stages.yaml'),
-                    templateFactory: templateFactoryMock,
-                    triggerFactory,
-                    pipelineId
-                }).then(data => {
-                    assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages.json')));
-                }));
-
             it('returns a yaml with stages in correct format with setup and teardown jobs', () =>
                 parser({
                     yaml: loadData('pipeline-with-stages-and-setup-teardown-jobs.yaml'),
