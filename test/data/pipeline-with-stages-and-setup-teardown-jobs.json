@@ -24,8 +24,7 @@
                     }
                 ],
                 "stage": {
-                    "name": "canary",
-                    "startFrom": true
+                    "name": "canary"
                 }
             }
         ],
