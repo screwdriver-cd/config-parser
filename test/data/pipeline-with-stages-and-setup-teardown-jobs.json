@@ -68,6 +68,9 @@
         "stage@canary:setup": [
             {
                 "annotations": {},
+                "requires": [
+                    "baz"
+                ],
                 "secrets": [],
                 "settings": {},
                 "environment": {},
