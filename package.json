@@ -56,9 +56,9 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "keymbinatorial": "^2.0.0",
-    "screwdriver-data-schema": "^22.0.1",
-    "screwdriver-notifications-email": "^3.0.0",
-    "screwdriver-notifications-slack": "^4.0.0",
+    "screwdriver-data-schema": "^22.7.0",
+    "screwdriver-notifications-email": "^3.0.1",
+    "screwdriver-notifications-slack": "^5.0.0",
     "screwdriver-workflow-parser": "file:../workflow-parser",
     "shell-escape": "^0.2.0",
     "tinytim": "^0.1.1"

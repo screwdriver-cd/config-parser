@@ -9,6 +9,9 @@
                 "settings": {},
                 "environment": {},
                 "image": "node:4",
+                "requires": [
+                    "~stage@canary:setup"
+                ],
                 "commands": [
                     {
                         "name": "install",
@@ -110,7 +113,6 @@
             "description": "For canary deployment",
             "jobs": ["main", "publish"],
             "requires": "baz",
-            "startFrom": "main",
             "workflowGraph": {
                 "edges": [
                     {
@@ -123,10 +125,10 @@
                         "name": "main"
                     },
                     {
-                        "name": "publish"
+                        "name": "stage@canary:setup"
                     },
                     {
-                        "name": "stage@canary:setup"
+                        "name": "publish"
                     },
                     {
                         "name": "stage@canary:teardown"
