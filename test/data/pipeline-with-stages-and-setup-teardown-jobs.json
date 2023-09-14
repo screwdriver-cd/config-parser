@@ -95,6 +95,9 @@
                 "secrets": [],
                 "settings": {},
                 "environment": {},
+                "requires": [
+                    "publish"
+                ],
                 "image": "node:18",
                 "commands": [
                     {
