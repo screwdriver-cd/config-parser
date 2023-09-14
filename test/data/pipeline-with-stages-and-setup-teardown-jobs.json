@@ -80,8 +80,8 @@
                 "image": "node:18",
                 "commands": [
                     {
-                        "name": "announce",
-                        "command": "post banner"
+                        "name": "noop",
+                        "command": "echo noop"
                     }
                 ],
                 "stage": {

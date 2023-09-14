@@ -1,10 +1,6 @@
 stages:
     canary:
         requires: baz
-        setup:
-            image: node:18
-            steps:
-                - announce: post banner
         description: For canary deployment
         jobs: [main, publish]
         teardown:
