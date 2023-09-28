@@ -115,41 +115,25 @@
         "canary": {
             "description": "For canary deployment",
             "jobs": ["main", "publish"],
-            "requires": "baz",
-            "workflowGraph": {
-                "edges": [
-                    {
-                        "dest": "publish",
-                        "src": "main"
-                    }
-                ],
-                "nodes": [
-                    {
-                        "name": "main"
-                    },
-                    {
-                        "name": "stage@canary:setup"
-                    },
-                    {
-                        "name": "publish"
-                    },
-                    {
-                        "name": "stage@canary:teardown"
-                    }
-                ]
-              }
+            "requires": "baz"
         }
     },
     "workflowGraph": {
         "nodes": [
             { "name": "~pr" },
             { "name": "~commit" },
+            { "name": "main", "stageName": "canary" },
+            { "name": "stage@canary:setup", "stageName": "canary" },
+            { "name": "publish", "stageName": "canary" },
             { "name": "baz" },
-            { "name": "~stage@canary" }
+            { "name": "stage@canary:teardown", "stageName": "canary" }
         ],
         "edges": [
+            { "src": "stage@canary:setup", "dest": "main" },
+            { "src": "main", "dest": "publish" },
             { "src": "~commit", "dest": "baz" },
-            { "src": "baz", "dest": "stage@canary" }
+            { "src": "baz", "dest": "stage@canary:setup" },
+            { "src": "publish", "dest": "stage@canary:teardown" }
         ]
     },
     "subscribe": {}
