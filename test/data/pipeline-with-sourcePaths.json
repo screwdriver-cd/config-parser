@@ -13,7 +13,7 @@
                   "test",
                   "src/mysubdir/"
                 ],
-                "image": "node:6",
+                "image": "node:18",
                 "requires": ["~commit", "~pr"],
                 "commands": [
                     {

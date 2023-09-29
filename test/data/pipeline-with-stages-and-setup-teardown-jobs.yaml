@@ -1,7 +1,12 @@
 stages:
     canary:
+        requires: baz
         description: For canary deployment
         jobs: [main, publish]
+        teardown:
+            image: node:18
+            steps:
+                - publish: post blog
 
 shared:
     image: node:4
@@ -11,11 +16,12 @@ jobs:
             - install: npm install
             - test: npm test
             - publish: npm publish
-        requires: ~commit
+        requires: ~stage@canary:setup
     publish:
         steps:
             - echo-hello: echo hello
         requires: main
     baz:
+        requires: ~commit
         steps:
             - echo-world: echo world

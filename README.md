@@ -22,7 +22,7 @@ shared:
 
 jobs:
     main:
-        image: node:6
+        image: node:18
         steps:
             - init: npm install
             - test: npm test

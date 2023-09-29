@@ -152,12 +152,7 @@ function verifyStages(stages, jobs) {
     });
 
     // If job name is repeated in stages, throw error
-    const duplicateJobsInStage = stageJobNames.filter(
-        (
-            s => v =>
-                s.has(v) || !s.add(v)
-        )(new Set())
-    );
+    const duplicateJobsInStage = stageJobNames.filter((item, index) => stageJobNames.indexOf(item) !== index);
 
     if (duplicateJobsInStage.length > 0) {
         throw new YamlParser.YAMLException(`Cannot have duplicate job in multiple stages: ${duplicateJobsInStage}`);

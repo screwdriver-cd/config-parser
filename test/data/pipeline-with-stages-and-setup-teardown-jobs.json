@@ -1,0 +1,140 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "~stage@canary:setup"
+                ],
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "publish": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["main"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "baz": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-world",
+                        "command": "echo world"
+                    }
+                ],
+                "requires": [
+                    "~commit"
+                ]
+            }
+        ],
+        "stage@canary:setup": [
+            {
+                "annotations": {},
+                "requires": [
+                    "baz"
+                ],
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:18",
+                "commands": [
+                    {
+                        "name": "noop",
+                        "command": "echo noop"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "stage@canary:teardown": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": [
+                    "publish"
+                ],
+                "image": "node:18",
+                "commands": [
+                    {
+                        "name": "publish",
+                        "command": "post blog"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ]
+    },
+    "stages": {
+        "canary": {
+            "description": "For canary deployment",
+            "jobs": ["main", "publish"],
+            "requires": "baz"
+        }
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main", "stageName": "canary" },
+            { "name": "stage@canary:setup", "stageName": "canary" },
+            { "name": "publish", "stageName": "canary" },
+            { "name": "baz" },
+            { "name": "stage@canary:teardown", "stageName": "canary" }
+        ],
+        "edges": [
+            { "src": "stage@canary:setup", "dest": "main" },
+            { "src": "main", "dest": "publish" },
+            { "src": "~commit", "dest": "baz" },
+            { "src": "baz", "dest": "stage@canary:setup" },
+            { "src": "publish", "dest": "stage@canary:teardown" }
+        ]
+    },
+    "subscribe": {}
+}
