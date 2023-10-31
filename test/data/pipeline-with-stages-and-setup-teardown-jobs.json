@@ -50,6 +50,25 @@
                 }
             }
         ],
+        "docker-publish": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["publish"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-docker",
+                        "command": "echo docker"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
         "baz": [
             {
                 "annotations": {},
@@ -96,7 +115,7 @@
                 "settings": {},
                 "environment": {},
                 "requires": [
-                    "publish"
+                    "docker-publish"
                 ],
                 "image": "node:18",
                 "commands": [
@@ -114,7 +133,7 @@
     "stages": {
         "canary": {
             "description": "For canary deployment",
-            "jobs": ["main", "publish"],
+            "jobs": ["main", "publish", "docker-publish"],
             "requires": "baz"
         }
     },
@@ -125,15 +144,17 @@
             { "name": "main", "stageName": "canary" },
             { "name": "stage@canary:setup", "stageName": "canary" },
             { "name": "publish", "stageName": "canary" },
+            { "name": "docker-publish", "stageName": "canary" },
             { "name": "baz" },
             { "name": "stage@canary:teardown", "stageName": "canary" }
         ],
         "edges": [
             { "src": "stage@canary:setup", "dest": "main" },
             { "src": "main", "dest": "publish" },
+            { "src": "publish", "dest": "docker-publish" },
             { "src": "~commit", "dest": "baz" },
             { "src": "baz", "dest": "stage@canary:setup" },
-            { "src": "publish", "dest": "stage@canary:teardown" }
+            { "src": "docker-publish", "dest": "stage@canary:teardown" }
         ]
     },
     "subscribe": {}

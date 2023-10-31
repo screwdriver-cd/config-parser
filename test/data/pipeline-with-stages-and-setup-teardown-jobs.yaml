@@ -2,7 +2,7 @@ stages:
     canary:
         requires: baz
         description: For canary deployment
-        jobs: [main, publish]
+        jobs: [main, publish, docker-publish]
         teardown:
             image: node:18
             steps:
@@ -20,7 +20,11 @@ jobs:
     publish:
         steps:
             - echo-hello: echo hello
-        requires: main
+        requires: [ main ]
+    docker-publish:
+        steps:
+            - echo-docker: echo docker
+        requires: publish
     baz:
         requires: ~commit
         steps:
