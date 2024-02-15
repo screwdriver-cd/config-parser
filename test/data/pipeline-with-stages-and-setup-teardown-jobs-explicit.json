@@ -1,0 +1,180 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "~stage@canary:setup"
+                ],
+                "commands": [
+                    {
+                        "name": "install",
+                        "command": "npm install"
+                    },
+                    {
+                        "name": "test",
+                        "command": "npm test"
+                    },
+                    {
+                        "name": "publish",
+                        "command": "npm publish"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "publish": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["main"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-hello",
+                        "command": "echo hello"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "docker-publish": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": ["publish"],
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-docker",
+                        "command": "echo docker"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "baz": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:4",
+                "commands": [
+                    {
+                        "name": "echo-world",
+                        "command": "echo world"
+                    }
+                ],
+                "requires": [
+                    "~commit"
+                ]
+            }
+        ],
+        "stage@canary:setup": [
+            {
+                "annotations": {},
+                "requires": [
+                    "baz"
+                ],
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:18",
+                "commands": [
+                    {
+                        "name": "publish",
+                        "command": "pre blog"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "stage@canary:teardown": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": [
+                    "docker-publish"
+                ],
+                "image": "node:18",
+                "commands": [
+                    {
+                        "name": "publish",
+                        "command": "post blog"
+                    }
+                ],
+                "stage": {
+                    "name": "canary"
+                }
+            }
+        ],
+        "triggered-after-stage": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": [
+                    "~stage@canary:teardown"
+                ],
+                "image": "node:4",
+                "commands": [{
+                        "command": "echo stage downstream",
+                        "name": "echo-stage-downstream"
+                        }
+                    ]
+            }
+        ]
+    },
+    "stages": {
+        "canary": {
+            "description": "For canary deployment",
+            "jobs": ["main", "publish", "docker-publish"],
+            "requires": "baz"
+        }
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main", "stageName": "canary" },
+            { "name": "stage@canary:setup", "stageName": "canary" },
+            { "name": "publish", "stageName": "canary" },
+            { "name": "docker-publish", "stageName": "canary" },
+            { "name": "baz" },
+            { "name": "triggered-after-stage" },
+            { "name": "stage@canary:teardown", "stageName": "canary" }
+        ],
+        "edges": [
+            { "src": "stage@canary:setup", "dest": "main" },
+            { "src": "main", "dest": "publish", "join": true },
+            { "src": "publish", "dest": "docker-publish", "join": true },
+            { "src": "~commit", "dest": "baz" },
+            { "src": "stage@canary:teardown", "dest": "triggered-after-stage" },
+            { "src": "baz", "dest": "stage@canary:setup", "join": true },
+            { "src": "docker-publish", "dest": "stage@canary:teardown", "join": true }
+        ]
+    },
+    "subscribe": {}
+}
