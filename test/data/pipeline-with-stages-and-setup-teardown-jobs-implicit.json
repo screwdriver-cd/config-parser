@@ -120,13 +120,30 @@
                 "image": "node:18",
                 "commands": [
                     {
-                        "name": "publish",
-                        "command": "post blog"
+                        "name": "noop",
+                        "command": "echo noop"
                     }
                 ],
                 "stage": {
                     "name": "canary"
                 }
+            }
+        ],
+        "triggered-after-stage": [
+            {
+                "annotations": {},
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "requires": [
+                    "~stage@canary:teardown"
+                ],
+                "image": "node:4",
+                "commands": [{
+                        "command": "echo stage downstream",
+                        "name": "echo-stage-downstream"
+                        }
+                    ]
             }
         ]
     },
@@ -146,6 +163,7 @@
             { "name": "publish", "stageName": "canary" },
             { "name": "docker-publish", "stageName": "canary" },
             { "name": "baz" },
+            { "name": "triggered-after-stage" },
             { "name": "stage@canary:teardown", "stageName": "canary" }
         ],
         "edges": [
@@ -153,6 +171,7 @@
             { "src": "main", "dest": "publish", "join": true },
             { "src": "publish", "dest": "docker-publish", "join": true },
             { "src": "~commit", "dest": "baz" },
+            { "src": "stage@canary:teardown", "dest": "triggered-after-stage" },
             { "src": "baz", "dest": "stage@canary:setup", "join": true },
             { "src": "docker-publish", "dest": "stage@canary:teardown", "join": true }
         ]
