@@ -150,11 +150,11 @@
         ],
         "edges": [
             { "src": "stage@canary:setup", "dest": "main" },
-            { "src": "main", "dest": "publish" },
-            { "src": "publish", "dest": "docker-publish" },
+            { "src": "main", "dest": "publish", "join": true },
+            { "src": "publish", "dest": "docker-publish", "join": true },
             { "src": "~commit", "dest": "baz" },
-            { "src": "baz", "dest": "stage@canary:setup" },
-            { "src": "docker-publish", "dest": "stage@canary:teardown" }
+            { "src": "baz", "dest": "stage@canary:setup", "join": true },
+            { "src": "docker-publish", "dest": "stage@canary:teardown", "join": true }
         ]
     },
     "subscribe": {}

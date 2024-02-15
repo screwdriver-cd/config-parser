@@ -67,7 +67,7 @@
         ],
         "edges": [
             { "src": "~commit", "dest": "A" },
-            { "src": "A", "dest": "D" },
+            { "src": "A", "dest": "D", "join": true },
             { "src": "D", "dest": "E", "join": true },
             { "src": "sd@123:B", "dest": "E", "join": true },
             { "src": "sd@456:C", "dest": "E", "join": true }
