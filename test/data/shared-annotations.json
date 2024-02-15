@@ -207,7 +207,7 @@
         "edges": [
             { "src": "~pr", "dest": "main" },
             { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "foobar" }
+            { "src": "main", "dest": "foobar", "join": true }
         ]
     },
     "subscribe": {}

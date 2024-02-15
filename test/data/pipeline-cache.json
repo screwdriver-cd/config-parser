@@ -109,8 +109,8 @@
         "edges": [
             { "src": "~pr", "dest": "main" },
             { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "test" },
-            { "src": "test", "dest": "publish" }
+            { "src": "main", "dest": "test", "join": true },
+            { "src": "test", "dest": "publish", "join": true }
         ]
     },
     "subscribe": {}

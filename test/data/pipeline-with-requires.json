@@ -112,7 +112,7 @@
         ],
         "edges": [
             { "src": "~commit", "dest": "main" },
-            { "src": "main", "dest": "foobar" },
+            { "src": "main", "dest": "foobar", "join": true },
             { "src": "foobar", "dest": "test-or" },
             { "src": "main", "dest": "test-or" },
             { "src": "foobar", "dest": "test-and", "join": true },
