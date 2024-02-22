@@ -24,6 +24,12 @@ describe('config parser', () => {
         getTemplate: sinon.stub().resolves(JSON.parse(loadData('template.json'))),
         getFullNameAndVersion: sinon.stub().returns({ isVersion: false, isTag: false })
     };
+    const pipelineTemplateVersionFactoryMock = {
+        getWithMetadata: sinon.stub().resolves(JSON.parse(loadData('pipeline-template.json')))
+    };
+    const pipelineTemplateTagFactoryMock = {
+        get: sinon.stub().resolves(null)
+    };
     const triggerFactory = {
         getDestFromSrc: sinon.stub().resolves([]),
         getSrcFromDest: sinon.stub().resolves([])
@@ -95,8 +101,7 @@ describe('config parser', () => {
                 assert.deepEqual(data.jobs.main[0].secrets, []);
                 assert.deepEqual(data.jobs.main[0].environment, {});
                 assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
-                assert.match(data.jobs.main[0].commands[0].command, /ValidationError:.*"jobs" is required/);
-                assert.match(data.errors[0], /ValidationError:.*"jobs" is required/);
+                assert.match(data.errors[0], 'ValidationError: "jobs" is required');
             }));
     });
 
@@ -555,6 +560,60 @@ describe('config parser', () => {
                 }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('basic-job-with-provider.json')));
                 }));
+        });
+
+        describe('pipeline templates', () => {
+            const templateTagMock = {
+                version: '1.0.0'
+            };
+            let defaultPipelineTemplate;
+
+            beforeEach(() => {
+                defaultPipelineTemplate = JSON.parse(loadData('pipeline-template.json'));
+                pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(defaultPipelineTemplate);
+                pipelineTemplateTagFactoryMock.get.resolves(templateTagMock);
+            });
+
+            it('flattens basic pipeline template successfully', () =>
+                parser({
+                    yaml: loadData('pipeline-template-basic.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-template-basic-result.json')));
+                }));
+
+            it('flattens pipeline template with shared setting', () => {
+                const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-shared-setting.json'));
+
+                pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                return parser({
+                    yaml: loadData('pipeline-template-with-shared-setting.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-template-with-shared-setting-result.json')));
+                });
+            });
+
+            it('returns error if pipeline template does not exist', () => {
+                pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(null);
+
+                return parser({
+                    yaml: loadData('pipeline-template-basic.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.match(data.errors[0], 'Error: Pipeline template foo/bar@1.0.0 does not exist');
+                });
+            });
         });
     });
 
