@@ -89,7 +89,7 @@
         ],
         "stage@canary:setup": [
             {
-                "annotations": { "screwdriver.cd/virtualTrigger": true },
+                "annotations": { "screwdriver.cd/virtualJob": true },
                 "requires": [
                     "baz"
                 ],
@@ -110,7 +110,7 @@
         ],
         "stage@canary:teardown": [
             {
-                "annotations": { "screwdriver.cd/virtualTrigger": true },
+                "annotations": { "screwdriver.cd/virtualJob": true },
                 "secrets": [],
                 "settings": {},
                 "environment": {},
