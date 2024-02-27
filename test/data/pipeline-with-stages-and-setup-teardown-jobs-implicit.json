@@ -37,7 +37,9 @@
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "requires": ["main"],
+                "requires": [
+                    "main"
+                ],
                 "image": "node:4",
                 "commands": [
                     {
@@ -56,7 +58,9 @@
                 "secrets": [],
                 "settings": {},
                 "environment": {},
-                "requires": ["publish"],
+                "requires": [
+                    "publish"
+                ],
                 "image": "node:4",
                 "commands": [
                     {
@@ -89,7 +93,9 @@
         ],
         "stage@canary:setup": [
             {
-                "annotations": { "screwdriver.cd/virtualJob": true },
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
                 "requires": [
                     "baz"
                 ],
@@ -110,7 +116,9 @@
         ],
         "stage@canary:teardown": [
             {
-                "annotations": { "screwdriver.cd/virtualJob": true },
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
                 "secrets": [],
                 "settings": {},
                 "environment": {},
@@ -129,29 +137,130 @@
                 }
             }
         ],
-        "triggered-after-stage": [
+        "post-release": [
             {
                 "annotations": {},
+                "commands": [
+                    {
+                        "command": "stage downstream job",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "~stage@production:teardown"
+                ],
+                "secrets": [],
+                "settings": {}
+            }
+        ],
+        "prod-certify": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo production certify",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "prod-deploy"
+                ],
+                "secrets": [],
+                "settings": {},
+                "stage": {
+                    "name": "production"
+                }
+            }
+        ],
+        "prod-deploy": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo production deployment",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:4",
+                "requires": [
+                    "~stage@production:setup"
+                ],
+                "secrets": [],
+                "settings": {},
+                "stage": {
+                    "name": "production"
+                }
+            }
+        ],
+        "stage@production:setup": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
+                "requires": [
+                    "~stage@canary:teardown"
+                ],
+                "secrets": [],
+                "settings": {},
+                "environment": {},
+                "image": "node:18",
+                "commands": [
+                    {
+                        "name": "noop",
+                        "command": "echo noop"
+                    }
+                ],
+                "stage": {
+                    "name": "production"
+                }
+            }
+        ],
+        "stage@production:teardown": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
                 "secrets": [],
                 "settings": {},
                 "environment": {},
                 "requires": [
-                    "~stage@canary:teardown"
+                    "prod-certify"
                 ],
-                "image": "node:4",
-                "commands": [{
-                        "command": "echo stage downstream",
-                        "name": "echo-stage-downstream"
-                        }
-                    ]
+                "image": "node:18",
+                "commands": [
+                    {
+                        "name": "noop",
+                        "command": "echo noop"
+                    }
+                ],
+                "stage": {
+                    "name": "production"
+                }
             }
         ]
     },
     "stages": {
         "canary": {
             "description": "For canary deployment",
-            "jobs": ["main", "publish", "docker-publish"],
+            "jobs": [
+                "main",
+                "publish",
+                "docker-publish"
+            ],
             "requires": "baz"
+        },
+        "production": {
+            "description": "For production deployment",
+            "jobs": [
+                "prod-deploy",
+                "prod-certify"
+            ],
+            "requires": "~stage@canary:teardown"
         }
     },
     "workflowGraph": {
@@ -163,7 +272,11 @@
             { "name": "publish", "stageName": "canary" },
             { "name": "docker-publish", "stageName": "canary" },
             { "name": "baz" },
-            { "name": "triggered-after-stage" },
+            { "name": "prod-deploy", "stageName": "production" },
+            { "name": "stage@production:setup", "stageName": "production" },
+            { "name": "prod-certify", "stageName": "production" },
+            { "name": "post-release" },
+            { "name": "stage@production:teardown", "stageName": "production" },
             { "name": "stage@canary:teardown", "stageName": "canary" }
         ],
         "edges": [
@@ -171,9 +284,13 @@
             { "src": "main", "dest": "publish", "join": true },
             { "src": "publish", "dest": "docker-publish", "join": true },
             { "src": "~commit", "dest": "baz" },
-            { "src": "stage@canary:teardown", "dest": "triggered-after-stage" },
+            { "src": "stage@production:setup", "dest": "prod-deploy" },
+            { "src": "prod-deploy", "dest": "prod-certify", "join": true },
+            { "src": "stage@production:teardown", "dest": "post-release" },
             { "src": "baz", "dest": "stage@canary:setup", "join": true },
-            { "src": "docker-publish", "dest": "stage@canary:teardown", "join": true }
+            { "src": "docker-publish", "dest": "stage@canary:teardown", "join": true },
+            { "src": "stage@canary:teardown", "dest": "stage@production:setup" },
+            { "src": "prod-certify", "dest": "stage@production:teardown", "join": true }
         ]
     },
     "subscribe": {}
