@@ -199,6 +199,8 @@ module.exports = function configParser({
     // Convert from YAML to JSON
     return (
         parseYaml(yaml)
+            // Validate user config before mergin with pipeline template
+            .then(doc => phaseValidateStructure(doc, true))
             // Merge Pipeline template
             .then(parsedDoc =>
                 phaseMerge(
@@ -212,7 +214,7 @@ module.exports = function configParser({
                     return mergedDoc;
                 })
             )
-            // Basic validation
+            // Validate merged pipeline config
             .then(phaseValidateStructure)
             // Flatten structures
             .then(parsedDoc => {
