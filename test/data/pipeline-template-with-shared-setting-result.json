@@ -46,5 +46,6 @@
             { "src": "~commit", "dest": "main" }
         ]
     },
-    "subscribe": {}
+    "subscribe": {},
+    "templateVersionId": 111
 }

@@ -601,6 +601,17 @@ describe('config parser', () => {
                 });
             });
 
+            it('returns error for invalid screwdriver yaml', () =>
+                parser({
+                    yaml: loadData('pipeline-template-invalid.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data.errors[0], 'ValidationError: "jobs" is not allowed');
+                }));
+
             it('returns error if pipeline template does not exist', () => {
                 pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(null);
 

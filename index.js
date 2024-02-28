@@ -270,6 +270,12 @@ module.exports = function configParser({
                     res.stages = stages;
                 }
 
+                const templateVersionId = Hoek.reach(doc, 'templateVersionId');
+
+                if (templateVersionId) {
+                    res.templateVersionId = templateVersionId;
+                }
+
                 return res;
             })
             .catch(err => ({
