@@ -1,0 +1,10 @@
+template: foo/bar@1.0.0
+jobs:
+    main:
+        image: node:18
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit
+  

@@ -10,6 +10,7 @@ const RESERVED_PIPELINE_ANNOTATIONS = require('screwdriver-data-schema').config.
 /* eslint-enable max-len */
 
 const phaseValidateStructure = require('./lib/phase/structural');
+const phaseMerge = require('./lib/phase/merge');
 const phaseFlatten = require('./lib/phase/flatten');
 const phaseValidateFunctionality = require('./lib/phase/functional');
 const phaseGeneratePermutations = require('./lib/phase/permutation');
@@ -169,19 +170,25 @@ function verifyStages(stages, jobs) {
 /**
  * Parse the configuration from a screwdriver.yaml
  * @method configParser
- * @param   {Object}               config
- * @param   {String}               config.yaml                Contents of screwdriver.yaml
- * @param   {TemplateFactory}      config.templateFactory     Template Factory to get templates
- * @param   {BuildClusterFactory}  config.buildClusterFactory Build cluster Factory to get build clusters
- * @param   {TriggerFactory}       [config.triggerFactory]    Trigger Factory to find external triggers
- * @param   {Number}               [config.pipelineId]        ID of the current pipeline
- * @param   {Boolean}              [config.notificationsValidationErr]  Throw error when notifications validation fails (default true);
- *                                                                      otherwise return warning
+ * @param   {Object}                          config
+ * @param   {String}                          config.yaml                                 Contents of screwdriver.yaml
+ * @param   {TemplateFactory}                 config.templateFactory                      Template Factory to get templates
+ * @param   {PipelineTemplateVersionFactory}  config.pipelineTemplateVersionFactory       PiplineTemplateVersion Factory to get pipeline templates
+ * @param   {PipelineTemplateTagFactory}      config.pipelineTemplateTagFactory           PipelineTemplateTag Factory to get pipeline templates tag
+ * @param   {PipelineTemplateFactory}         config.pipelineTemplateFactory              PipelineTemplate Factory to get pipeline templates meta
+ * @param   {BuildClusterFactory}             config.buildClusterFactory                  Build cluster Factory to get build clusters
+ * @param   {TriggerFactory}                  [config.triggerFactory]                     Trigger Factory to find external triggers
+ * @param   {Number}                          [config.pipelineId]                         ID of the current pipeline
+ * @param   {Boolean}                         [config.notificationsValidationErr]         Throw error when notifications validation fails (default true);
+ *                                                                                        otherwise return warning
  * @returns {Promise}
  */
 module.exports = function configParser({
     yaml,
     templateFactory,
+    pipelineTemplateVersionFactory,
+    pipelineTemplateTagFactory,
+    pipelineTemplateFactory,
     buildClusterFactory,
     triggerFactory,
     pipelineId,
@@ -192,7 +199,22 @@ module.exports = function configParser({
     // Convert from YAML to JSON
     return (
         parseYaml(yaml)
-            // Basic validation
+            // Validate user config before mergin with pipeline template
+            .then(doc => phaseValidateStructure(doc, true))
+            // Merge Pipeline template
+            .then(parsedDoc =>
+                phaseMerge(
+                    parsedDoc,
+                    pipelineTemplateVersionFactory,
+                    pipelineTemplateTagFactory,
+                    pipelineTemplateFactory
+                ).then(({ warnings, mergedDoc }) => {
+                    warnMessages = warnMessages.concat(warnings);
+
+                    return mergedDoc;
+                })
+            )
+            // Validate merged pipeline config
             .then(phaseValidateStructure)
             // Flatten structures
             .then(parsedDoc => {
@@ -248,6 +270,12 @@ module.exports = function configParser({
                     verifyStages(stages, jobs);
 
                     res.stages = stages;
+                }
+
+                const templateVersionId = Hoek.reach(doc, 'templateVersionId');
+
+                if (templateVersionId) {
+                    res.templateVersionId = templateVersionId;
                 }
 
                 return res;
