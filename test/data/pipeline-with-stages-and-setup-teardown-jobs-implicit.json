@@ -268,16 +268,16 @@
             { "name": "~pr" },
             { "name": "~commit" },
             { "name": "main", "stageName": "canary" },
-            { "name": "stage@canary:setup", "stageName": "canary" },
+            { "name": "stage@canary:setup", "stageName": "canary", "virtual": true },
             { "name": "publish", "stageName": "canary" },
             { "name": "docker-publish", "stageName": "canary" },
             { "name": "baz" },
             { "name": "prod-deploy", "stageName": "production" },
-            { "name": "stage@production:setup", "stageName": "production" },
+            { "name": "stage@production:setup", "stageName": "production", "virtual": true },
             { "name": "prod-certify", "stageName": "production" },
             { "name": "post-release" },
-            { "name": "stage@production:teardown", "stageName": "production" },
-            { "name": "stage@canary:teardown", "stageName": "canary" }
+            { "name": "stage@production:teardown", "stageName": "production", "virtual": true },
+            { "name": "stage@canary:teardown", "stageName": "canary", "virtual": true }
         ],
         "edges": [
             { "src": "stage@canary:setup", "dest": "main" },
