@@ -601,6 +601,22 @@ describe('config parser', () => {
                 });
             });
 
+            it('flattens pipeline template with pipeline level setting', () => {
+                const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-pipeline-setting.json'));
+
+                pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                return parser({
+                    yaml: loadData('pipeline-template-with-pipeline-setting.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-template-with-pipeline-setting-result.json')));
+                });
+            });
+
             it('returns error for invalid screwdriver yaml', () =>
                 parser({
                     yaml: loadData('pipeline-template-invalid.yaml'),

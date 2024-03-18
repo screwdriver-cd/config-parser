@@ -1,0 +1,19 @@
+template: foo/bar@1.0.0
+cache:
+    pipeline: ["node_modules/", "~/.sbt"]
+    event: ["target/generated-intermediate-resouce/*"]
+    job:
+        main: ["target/some-artifact.zip"]
+subscribe: 
+    scmUrls:
+        - git@github.com:foo/bar.git#master: [~commit, ~tags, ~release]
+annotations:
+    foo: a
+    bar: b
+parameters:
+    color: [red, blue]
+childPipelines:
+    scmUrls:
+        - git@github.com:org/repo.git
+        - https://github.com:org/repo2.git
+    startAll: true
