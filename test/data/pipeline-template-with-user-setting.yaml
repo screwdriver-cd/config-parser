@@ -1,0 +1,22 @@
+template: foo/bar@1.0.0
+cache:
+    pipeline: ["~/userSetting/pipeline"]
+    job:
+        main: ["/temp/userSetting/job/main"]
+        job1: ["/temp/userSetting/job/job1"]
+subscribe: 
+    scmUrls:
+        - git@github.com:foo/userSetting.git#master: [~commit, ~tags, ~release]
+        - git@github.com:foo/commonSetting.git#master: [~pr]
+annotations:
+    screwdriver.cd/restrictPR: none
+    foo: user setting
+parameters:
+    bar: user setting
+    common: user setting
+    override: user setting
+childPipelines:
+    scmUrls:
+        - git@github.com:org/userSetting.git
+        - https://github.com:org/userSetting2.git
+    startAll: true

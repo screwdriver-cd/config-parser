@@ -1,0 +1,52 @@
+{
+  "id":111,
+  "version": "1.0.0",
+  "templateId": 1234,
+  "description": "Template for building a NodeJS module\nInstalls dependencies and runs tests\n",
+  "config": {
+    "shared": {
+      "image": "node:18",
+      "environment": {
+        "FOO": "foo",
+        "BAR": "bar"
+      },
+      "secrets": [
+        "NPM_TOKEN"
+      ]
+    },
+    "jobs": {
+      "main": {
+        "requires": ["~pr", "~commit"],
+        "steps": [
+          {
+            "init": "npm install"
+          },
+          {
+            "test": "npm test"
+          }
+        ]
+      },
+      "job1": {
+        "requires": [
+          "~main"
+        ],
+        "steps": [
+          {
+            "init": "npm install"
+          },
+          {
+            "test": "npm test"
+          }
+        ]
+      }
+    }
+  },
+  "createTime": "2024-02-08T10:38:51.109Z",
+  "pipelineId": 14,
+  "namespace": "foo",
+  "name": "bar",
+  "maintainer": "test@example.com",
+  "latestVersion": "1.0.6",
+  "updateTime": "2024-02-13T23:26:23.559Z",
+  "templateType": "PIPELINE"
+}
