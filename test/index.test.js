@@ -601,13 +601,45 @@ describe('config parser', () => {
                 });
             });
 
-            it('flattens pipeline template with pipeline level setting', () => {
-                const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-pipeline-setting.json'));
+            it('flattens pipeline template with user defined pipeline level setting', () => {
+                const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-user-setting.json'));
 
                 pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
 
                 return parser({
-                    yaml: loadData('pipeline-template-with-pipeline-setting.yaml'),
+                    yaml: loadData('pipeline-template-with-user-setting.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-template-with-user-setting-result.json')));
+                });
+            });
+
+            it('flattens pipeline template with template defined pipeline level setting', () => {
+                const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
+
+                pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                return parser({
+                    yaml: loadData('pipeline-template-with-template-setting.yaml'),
+                    templateFactory: templateFactoryMock,
+                    triggerFactory,
+                    pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                    pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                }).then(data => {
+                    assert.deepEqual(data, JSON.parse(loadData('pipeline-template-with-template-setting-result.json')));
+                });
+            });
+
+            it('flattens pipeline template with both user and template defined pipeline level setting', () => {
+                const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
+
+                pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                return parser({
+                    yaml: loadData('pipeline-template-with-user-setting.yaml'),
                     templateFactory: templateFactoryMock,
                     triggerFactory,
                     pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,

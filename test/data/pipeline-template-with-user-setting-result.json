@@ -1,7 +1,6 @@
 {
     "annotations": {
-        "foo": "userSetting",
-        "bar": "templateSetting"
+        "foo": "userSetting"
     },
     "childPipelines": {
         "scmUrls": [
@@ -11,7 +10,6 @@
         "startAll": true
     },
     "parameters": {
-        "foo": "templateSetting",
         "bar": "userSetting"
     },
     "jobs": {
