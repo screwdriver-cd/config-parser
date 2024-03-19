@@ -1,0 +1,95 @@
+{
+  "annotations": {
+    "bar": "templateSetting"
+  },
+  "childPipelines": {
+    "scmUrls": [
+      "git@github.com:org/templateSetting.git",
+      "https://github.com:org/templateSetting2.git"
+    ],
+    "startAll": true
+  },
+  "parameters": {
+    "foo": "templateSetting"
+  },
+  "jobs": {
+    "main": [
+      {
+        "annotations": {},
+        "cache": {
+          "pipeline": [
+            "~/templateSetting/pipeline"
+          ],
+          "event": [
+            "$SD_SOURCE_DIR/templateSetting/event"
+          ],
+          "job": [
+            "/temp/templateSetting/job/main"
+          ]
+        },
+        "image": "node:18",
+        "commands": [
+          {
+            "name": "init",
+            "command": "npm install"
+          },
+          {
+            "name": "test",
+            "command": "npm test"
+          }
+        ],
+        "environment": {
+          "BAR": "bar",
+          "FOO": "foo",
+          "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
+          "SD_PIPELINE_TEMPLATE_NAME": "bar",
+          "SD_PIPELINE_TEMPLATE_NAMESPACE": "foo",
+          "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0"
+        },
+        "secrets": [
+          "NPM_TOKEN"
+        ],
+        "settings": {},
+        "requires": [
+          "~pr",
+          "~commit"
+        ]
+      }
+    ]
+  },
+  "workflowGraph": {
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "main"
+      }
+    ],
+    "edges": [
+      {
+        "src": "~pr",
+        "dest": "main"
+      },
+      {
+        "src": "~commit",
+        "dest": "main"
+      }
+    ]
+  },
+  "subscribe": {
+    "scmUrls": [
+      {
+        "git@github.com:foo/templateSetting.git#master": [
+          "~commit",
+          "~tags",
+          "~release"
+        ]
+      }
+    ]
+  },
+  "templateVersionId": 111
+}

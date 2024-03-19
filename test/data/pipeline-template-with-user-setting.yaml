@@ -1,0 +1,18 @@
+template: foo/bar@1.0.0
+cache:
+    pipeline: ["~/userSetting/pipeline"]
+    event: ["$SD_SOURCE_DIR/userSetting/event"]
+    job:
+        main: ["/temp/userSetting/job/main"]
+subscribe: 
+    scmUrls:
+        - git@github.com:foo/userSetting.git#master: [~commit, ~tags, ~release]
+annotations:
+    foo: userSetting
+parameters:
+    bar: userSetting
+childPipelines:
+    scmUrls:
+        - git@github.com:org/userSetting.git
+        - https://github.com:org/userSetting2.git
+    startAll: true
