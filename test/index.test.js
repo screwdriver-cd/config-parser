@@ -4,7 +4,7 @@ const { assert } = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
-const parser = require('..');
+const parser = require('..').parsePipelineYaml;
 const pipelineId = 111;
 
 sinon.assert.expose(assert, { prefix: '' });
