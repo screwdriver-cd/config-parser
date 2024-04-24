@@ -319,7 +319,7 @@ function parsePipelineYaml({
  * @param   {String}          config.yaml           Pipeline Template
  * @return  {Object}                                Pipeline Template
  */
-async function parsePipelineTemplate(yaml) {
+async function parsePipelineTemplate({ yaml }) {
     const configToValidate = await parseYaml(yaml);
     const pipelineTemplate = await SCHEMA_PIPELINE_TEMPLATE.validateAsync(configToValidate, {
         abortEarly: false
@@ -327,7 +327,7 @@ async function parsePipelineTemplate(yaml) {
     const pipelineTemplateConfig = pipelineTemplate.config;
 
     // flatten pipeline template shared setting into jobs
-    pipelineTemplateConfig.job = flattenSharedIntoJobs(pipelineTemplateConfig.shared, pipelineTemplateConfig.job);
+    pipelineTemplateConfig.jobs = flattenSharedIntoJobs(pipelineTemplateConfig.shared, pipelineTemplateConfig.jobs);
     delete pipelineTemplateConfig.shared;
 
     return pipelineTemplate;

@@ -1,0 +1,162 @@
+{
+  "namespace": "template_namespace",
+  "name": "template_name",
+  "version": "1.2.3",
+  "description": "template description",
+  "maintainer": "name@domain.org",
+  "config": {
+    "jobs": {
+      "main": {
+        "image": "node:20",
+        "environment": {
+          "FOO": "foo"
+        },
+        "settings": {
+          "email": "foo@example.com"
+        },
+        "blockedBy": [
+          "~main"
+        ],
+        "cache": true,
+        "description": "This is a description!",
+        "annotations": {
+          "foo": "a",
+          "bar": "b"
+        },
+        "freezeWindows": [
+          "* * ? * 1",
+          "0-59 0-23 * 1 ?"
+        ],
+        "matrix": {
+          "NODE_VERSION": [
+            18,
+            20
+          ]
+        },
+        "parameters": {
+          "color": [
+            "red",
+            "blue"
+          ]
+        },
+        "provider": {
+          "accountId": 111111111111,
+          "buildRegion": "",
+          "clusterName": "sd-build-eks",
+          "computeType": "BUILD_GENERAL1_SMALL",
+          "debugSession": false,
+          "environmentType": "LINUX_CONTAINER",
+          "executor": "eks",
+          "executorLogs": false,
+          "name": "aws",
+          "privilegedMode": false,
+          "region": "us-west-2",
+          "role": "arn:aws:iam::111111111111:role/role"
+        },
+        "requires": "~commit",
+        "secrets": [
+          "NPM_TOKEN"
+        ],
+        "sourcePaths": [
+          "src/A",
+          "src/AConfig"
+        ],
+        "template": "foo/bar@1.0.0",
+        "order": [
+          "install",
+          "test",
+          "other",
+          "echo"
+        ],
+        "steps": [
+          {
+            "init": "npm install"
+          },
+          {
+            "test": "npm test"
+          }
+        ]
+      },
+      "test": {
+        "image": "node:18",
+        "environment": {
+          "FOO": "foo"
+        },
+        "settings": {
+          "email": "foo@example.com"
+        },
+        "blockedBy": [
+          "~main"
+        ],
+        "cache": true,
+        "description": "This is a description!",
+        "annotations": {
+          "foo": "a",
+          "bar": "b"
+        },
+        "freezeWindows": [
+          "* * ? * 1",
+          "0-59 0-23 * 1 ?"
+        ],
+        "matrix": {
+          "NODE_VERSION": [
+            18,
+            20
+          ]
+        },
+        "parameters": {
+          "color": [
+            "red",
+            "blue"
+          ]
+        },
+        "provider": {
+          "accountId": 111111111111,
+          "buildRegion": "",
+          "clusterName": "sd-build-eks",
+          "computeType": "BUILD_GENERAL1_SMALL",
+          "debugSession": false,
+          "environmentType": "LINUX_CONTAINER",
+          "executor": "eks",
+          "executorLogs": false,
+          "name": "aws",
+          "privilegedMode": false,
+          "region": "us-west-2",
+          "role": "arn:aws:iam::111111111111:role/role"
+        },
+        "requires": "~commit",
+        "secrets": [
+          "NPM_TOKEN"
+        ],
+        "sourcePaths": [
+          "src/A",
+          "src/AConfig"
+        ],
+        "template": "foo/bar@1.0.0",
+        "order": [
+          "install",
+          "test",
+          "other",
+          "echo"
+        ],
+        "steps": [
+          {
+            "install": "npm install"
+          },
+          {
+            "test": "npm test"
+          },
+          {
+            "echo": "echo $FOO"
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "user": {
+        "value": "sd-bot",
+        "description": "User running build"
+      }
+    }
+  }
+}

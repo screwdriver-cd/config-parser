@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
 const parser = require('..').parsePipelineYaml;
+const parsePipelineTemplate = require('..').parsePipelineTemplate;
 const pipelineId = 111;
 
 sinon.assert.expose(assert, { prefix: '' });
@@ -1066,5 +1067,14 @@ describe('config parser', () => {
                     }));
             });
         });
+    });
+
+    describe('parse pipeline template', () => {
+        it('flattens shared setting into jobs', () =>
+            parsePipelineTemplate({
+                yaml: loadData('parse-pipeline-template-with-shared-setting.yaml')
+            }).then(data => {
+                assert.deepEqual(data, JSON.parse(loadData('parse-pipeline-template-with-shared-setting.json')));
+            }));
     });
 });
