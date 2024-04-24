@@ -16,16 +16,13 @@
                 }
             ],
             "environment": {
-                "BAR": "bar",
                 "FOO": "user overwrite",
                 "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
                 "SD_PIPELINE_TEMPLATE_NAME": "bar",
                 "SD_PIPELINE_TEMPLATE_NAMESPACE": "foo",
                 "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0"
             },
-            "secrets": [
-                "NPM_TOKEN"
-            ],
+            "secrets": [],
             "settings": {
                 "email": "foo@example.com"
             },
