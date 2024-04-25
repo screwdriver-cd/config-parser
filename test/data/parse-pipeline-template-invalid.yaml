@@ -1,0 +1,14 @@
+namespace: template_namespace
+name: template_name
+version: 1.2.3
+description: template description
+maintainer: name@domain.org
+config:
+  shared:
+    image: node:20
+    environment:
+      FOO: foo
+  parameters:
+    user:
+      value: sd-bot
+      description: User running build

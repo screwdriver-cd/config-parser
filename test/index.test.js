@@ -1076,5 +1076,11 @@ describe('config parser', () => {
             }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('parse-pipeline-template-with-shared-setting.json')));
             }));
+        it('throws error if pipeline template is invalid', () =>
+            parsePipelineTemplate({
+                yaml: loadData('parse-pipeline-template-invalid.yaml')
+            }).then(assert.fail, err => {
+                assert.match(err.toString(), /[ValidationError]: "config.jobs" is required/);
+            }));
     });
 });
