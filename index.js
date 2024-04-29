@@ -7,11 +7,13 @@ const shellescape = require('shell-escape');
 /* eslint-disable max-len */
 const RESERVED_JOB_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedJobAnnotations;
 const RESERVED_PIPELINE_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedPipelineAnnotations;
+const SCHEMA_PIPELINE_TEMPLATE = require('screwdriver-data-schema').config.pipelineTemplate.template;
 /* eslint-enable max-len */
 
 const phaseValidateStructure = require('./lib/phase/structural');
 const phaseMerge = require('./lib/phase/merge');
-const phaseFlatten = require('./lib/phase/flatten');
+const phaseFlatten = require('./lib/phase/flatten').flattenPhase;
+const flattenSharedIntoJobs = require('./lib/phase/flatten').flattenSharedIntoJobs;
 const phaseValidateFunctionality = require('./lib/phase/functional');
 const phaseGeneratePermutations = require('./lib/phase/permutation');
 
@@ -169,7 +171,7 @@ function verifyStages(stages, jobs) {
 
 /**
  * Parse the configuration from a screwdriver.yaml
- * @method configParser
+ * @method parsePipelineYaml
  * @param   {Object}                          config
  * @param   {String}                          config.yaml                                 Contents of screwdriver.yaml
  * @param   {TemplateFactory}                 config.templateFactory                      Template Factory to get templates
@@ -183,7 +185,7 @@ function verifyStages(stages, jobs) {
  *                                                                                        otherwise return warning
  * @returns {Promise}
  */
-module.exports = function configParser({
+function parsePipelineYaml({
     yaml,
     templateFactory,
     pipelineTemplateVersionFactory,
@@ -308,4 +310,30 @@ module.exports = function configParser({
                 errors: [err.toString()]
             }))
     );
+}
+
+/**
+ * Parses pipeline template configuration
+ * @method parsePipelineTemplate
+ * @param   {Object}          config
+ * @param   {String}          config.yaml           Pipeline Template
+ * @return  {Object}                                Pipeline Template
+ */
+async function parsePipelineTemplate({ yaml }) {
+    const configToValidate = await parseYaml(yaml);
+    const pipelineTemplate = await SCHEMA_PIPELINE_TEMPLATE.validateAsync(configToValidate, {
+        abortEarly: false
+    });
+    const pipelineTemplateConfig = pipelineTemplate.config;
+
+    // flatten pipeline template shared setting into jobs
+    pipelineTemplateConfig.jobs = flattenSharedIntoJobs(pipelineTemplateConfig.shared, pipelineTemplateConfig.jobs);
+    delete pipelineTemplateConfig.shared;
+
+    return pipelineTemplate;
+}
+
+module.exports = {
+    parsePipelineYaml,
+    parsePipelineTemplate
 };
