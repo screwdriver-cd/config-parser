@@ -17,7 +17,6 @@
         "blockedBy": [
           "~main"
         ],
-        "cache": true,
         "description": "This is a description!",
         "annotations": {
           "foo": "a",
@@ -88,7 +87,6 @@
         "blockedBy": [
           "~main"
         ],
-        "cache": true,
         "description": "This is a description!",
         "annotations": {
           "foo": "a",

@@ -1,0 +1,60 @@
+{
+    "annotations": {},
+    "jobs": {
+        "main": [{
+            "annotations": {},
+            "image": "node:20",
+            "commands": [
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "test",
+                    "command": "echo skip"
+                },
+                {
+                    "name": "posttest",
+                    "command": "echo test done"
+                }
+            ],
+            "environment": {
+                "BAR": "foo",
+                "FOO": "user overwrite",
+                "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
+                "SD_PIPELINE_TEMPLATE_NAME": "bar",
+                "SD_PIPELINE_TEMPLATE_NAMESPACE": "foo",
+                "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0",
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "secrets": [
+              "GIT_KEY"
+            ],
+            "settings": {
+              "email": "foo@example.com"
+            },
+            "templateId": 7754,
+            "requires": [
+                "~pr",
+                "~commit"
+            ]
+        }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" }
+        ]
+    },
+    "parameters": {},
+    "subscribe": {},
+    "templateVersionId": 111
+}

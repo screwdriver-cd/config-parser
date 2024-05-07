@@ -20,3 +20,16 @@ childPipelines:
         - git@github.com:org/userSetting.git
         - https://github.com:org/userSetting2.git
     startAll: true
+stages:
+    canary:
+        requires: baz
+        description: For canary deployment
+        jobs: [main, publish, docker-publish]
+        setup:
+            image: node:18
+            steps:
+                - publish: pre blog
+        teardown:
+            image: node:18
+            steps:
+                - publish: post blog
