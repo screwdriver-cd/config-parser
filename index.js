@@ -220,7 +220,6 @@ function parsePipelineYaml({
                 const res = {
                     annotations: Hoek.reach(doc, 'annotations', { default: {} }),
                     jobs,
-                    stages: Hoek.reach(doc, 'stages', { default: {} }),
                     childPipelines: Hoek.reach(doc, 'childPipelines', { default: {} }),
                     workflowGraph: Hoek.reach(doc, 'workflowGraph'),
                     parameters: Hoek.reach(doc, 'parameters'),
@@ -233,6 +232,12 @@ function parsePipelineYaml({
 
                 if (Hoek.deepEqual(res.childPipelines, {})) {
                     delete res.childPipelines;
+                }
+
+                const stages = Hoek.reach(doc, 'stages', { default: {} });
+
+                if (!Hoek.deepEqual(stages, {})) {
+                    res.stages = stages;
                 }
 
                 const templateVersionId = Hoek.reach(doc, 'templateVersionId');

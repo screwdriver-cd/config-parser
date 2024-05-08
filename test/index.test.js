@@ -254,6 +254,19 @@ describe('config parser', () => {
                             /YAMLException: Cannot have nonexistent job in stages: publish,deploy/
                         );
                     }));
+
+                it('returns an error if a job within a stage is triggered by jobs that are not within the same stage', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-invalid-triggers.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /YAMLException: main job has invalid requires: baz, triggers must be in the same stage/
+                        );
+                    }));
             });
 
             describe('subscribe', () => {
