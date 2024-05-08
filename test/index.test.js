@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
 const parser = require('..').parsePipelineYaml;
-const parsePipelineTemplate = require('..').parsePipelineTemplate;
+const { parsePipelineTemplate } = require('..');
 const pipelineId = 111;
 
 sinon.assert.expose(assert, { prefix: '' });
