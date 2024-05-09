@@ -1,0 +1,43 @@
+stages:
+    canary:
+        requires: baz
+        description: For canary deployment
+        jobs: [ main, publish, docker-publish ]
+    production:
+        requires: ~stage@canary
+        description: For production deployment
+        jobs: [ prod-deploy, prod-certify ]
+
+shared:
+    image: node:4
+jobs:
+    main:
+        steps:
+            -   install: npm install
+            -   test: npm test
+            -   publish: npm publish
+        requires: [ baz ]
+    publish:
+        steps:
+            -   echo-hello: echo hello
+        requires: [ main ]
+    docker-publish:
+        steps:
+            -   echo-docker: echo docker
+        requires: publish
+    baz:
+        requires: ~commit
+        steps:
+            -   echo-world: echo world
+    prod-deploy:
+        requires: [ ]
+        steps:
+            -   echo: echo production deployment
+    prod-certify:
+        requires: [ prod-deploy ]
+        steps:
+            -   echo: echo production certify
+    post-release:
+        requires: [ ~stage@production ]
+        steps:
+            -   echo: stage downstream job
