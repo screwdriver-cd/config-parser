@@ -2,7 +2,7 @@ stages:
     canary:
         requires: baz
         description: For canary deployment
-        jobs: [ main, publish, docker-publish ]
+        jobs: [ main, publish, docker-publish, boom ]
     production:
         requires: ~stage@canary
         description: For production deployment
@@ -29,6 +29,8 @@ jobs:
         requires: ~commit
         steps:
             -   echo-world: echo world
+    boom:
+        template: "JobTestNamespace/jobrequirestemplate@2"
     prod-deploy:
         requires: [ ]
         steps:
