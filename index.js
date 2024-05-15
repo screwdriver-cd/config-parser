@@ -12,11 +12,7 @@ const SCHEMA_PIPELINE_TEMPLATE = require('screwdriver-data-schema').config.pipel
 
 const phaseValidateStructure = require('./lib/phase/structural');
 const phaseMerge = require('./lib/phase/merge');
-const {
-    flattenSharedIntoJobs,
-    handleMergeSharedStepsAnnotation,
-    flattenPhase: phaseFlatten
-} = require('./lib/phase/flatten');
+const { flattenSharedIntoJobs, flattenPhase: phaseFlatten } = require('./lib/phase/flatten');
 const phaseValidateFunctionality = require('./lib/phase/functional');
 const phaseGeneratePermutations = require('./lib/phase/permutation');
 
@@ -319,10 +315,11 @@ function parsePipelineYaml({
  * Parses pipeline template configuration
  * @method parsePipelineTemplate
  * @param   {Object}          config
- * @param   {String}          config.yaml           Pipeline Template
- * @return  {Object}                                Pipeline Template
+ * @param   {String}          config.yaml             Pipeline Template
+ * @param   {TemplateFactory} config.templateFactory  Template Factory to get templates
+ * @return  {Object}                                  Pipeline Template
  */
-async function parsePipelineTemplate({ yaml }) {
+async function parsePipelineTemplate({ yaml, templateFactory }) {
     const configToValidate = await parseYaml(yaml);
     const pipelineTemplate = await SCHEMA_PIPELINE_TEMPLATE.validateAsync(configToValidate, {
         abortEarly: false
@@ -332,17 +329,9 @@ async function parsePipelineTemplate({ yaml }) {
     // flatten pipeline template shared setting into jobs
     pipelineTemplateConfig.jobs = flattenSharedIntoJobs(pipelineTemplateConfig.shared, pipelineTemplateConfig.jobs);
 
-    const mergedJobs = {};
+    const { flattenedDoc } = await phaseFlatten(pipelineTemplateConfig, templateFactory);
 
-    // Handle mergeSharedSteps annotation
-    Object.keys(pipelineTemplateConfig.jobs).forEach(j => {
-        mergedJobs[j] = handleMergeSharedStepsAnnotation({
-            sharedConfig: pipelineTemplateConfig.shared,
-            jobConfig: pipelineTemplateConfig.jobs[j]
-        });
-    });
-    delete pipelineTemplateConfig.shared;
-    pipelineTemplateConfig.jobs = mergedJobs;
+    pipelineTemplateConfig.jobs = flattenedDoc.jobs;
 
     return pipelineTemplate;
 }
