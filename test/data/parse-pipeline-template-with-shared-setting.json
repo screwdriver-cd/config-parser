@@ -7,34 +7,15 @@
   "config": {
     "jobs": {
       "main": {
-        "image": "node:18",
+        "image": "node:20",
         "environment": {
-          "BAR": "foo",
-          "FOO": "foo",
-          "SD_TEMPLATE_FULLNAME": "mytemplate",
-          "SD_TEMPLATE_NAME": "mytemplate",
-          "SD_TEMPLATE_NAMESPACE": "",
-          "SD_TEMPLATE_VERSION": "1.2.3"
+          "FOO": "foo"
         },
         "settings": {
           "email": "foo@example.com"
         },
         "blockedBy": [
           "~main"
-        ],
-        "commands": [
-          {
-            "command": "npm install",
-            "name": "install"
-          },
-          {
-            "command": "npm test",
-            "name": "test"
-          },
-          {
-            "command": "echo $FOO",
-            "name": "echo"
-          }
         ],
         "description": "This is a description!",
         "annotations": {
@@ -45,6 +26,12 @@
           "* * ? * 1",
           "0-59 0-23 * 1 ?"
         ],
+        "matrix": {
+          "NODE_VERSION": [
+            18,
+            20
+          ]
+        },
         "parameters": {
           "color": [
             "red",
@@ -65,18 +52,15 @@
           "region": "us-west-2",
           "role": "arn:aws:iam::111111111111:role/role"
         },
-        "requires": [
-          "~commit"
-        ],
+        "requires": "~commit",
         "secrets": [
-          "GIT_KEY",
           "NPM_TOKEN"
         ],
         "sourcePaths": [
           "src/A",
           "src/AConfig"
         ],
-        "templateId": 7754,
+        "template": "foo/bar@1.0.0",
         "order": [
           "install",
           "test",
@@ -85,45 +69,23 @@
         ],
         "steps": [
           {
-            "install": "npm install"
+            "init": "npm install"
           },
           {
             "test": "npm test"
-          },
-          {
-            "echo": "echo $FOO"
           }
         ]
       },
       "test": {
         "image": "node:18",
         "environment": {
-          "BAR": "foo",
-          "FOO": "foo",
-          "SD_TEMPLATE_FULLNAME": "mytemplate",
-          "SD_TEMPLATE_NAME": "mytemplate",
-          "SD_TEMPLATE_NAMESPACE": "",
-          "SD_TEMPLATE_VERSION": "1.2.3"
+          "FOO": "foo"
         },
         "settings": {
           "email": "foo@example.com"
         },
         "blockedBy": [
           "~main"
-        ],
-        "commands": [
-          {
-            "command": "npm install",
-            "name": "install"
-          },
-          {
-            "command": "npm test",
-            "name": "test"
-          },
-          {
-            "command": "echo $FOO",
-            "name": "echo"
-          }
         ],
         "description": "This is a description!",
         "annotations": {
@@ -134,6 +96,12 @@
           "* * ? * 1",
           "0-59 0-23 * 1 ?"
         ],
+        "matrix": {
+          "NODE_VERSION": [
+            18,
+            20
+          ]
+        },
         "parameters": {
           "color": [
             "red",
@@ -154,18 +122,15 @@
           "region": "us-west-2",
           "role": "arn:aws:iam::111111111111:role/role"
         },
-        "requires": [
-          "~commit"
-        ],
+        "requires": "~commit",
         "secrets": [
-          "GIT_KEY",
           "NPM_TOKEN"
         ],
         "sourcePaths": [
           "src/A",
           "src/AConfig"
         ],
-        "templateId": 7754,
+        "template": "foo/bar@1.0.0",
         "order": [
           "install",
           "test",
