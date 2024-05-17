@@ -195,6 +195,19 @@ describe('config parser', () => {
                         );
                     }));
 
+                it('returns a yaml with stages in correct format when setup and teardown jobs are explicitly defined', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-teardown-job-explicit.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('pipeline-with-stages-and-teardown-job-explicit.json'))
+                        );
+                    }));
+
                 it('returns a yaml with stages in correct format when setup and teardown jobs are implicitly created', () =>
                     parser({
                         yaml: loadData('pipeline-with-stages-and-setup-teardown-jobs-implicit.yaml'),
