@@ -260,7 +260,7 @@ describe('config parser', () => {
                         console.log(data.errors);
                         assert.match(
                             data.errors[0],
-                            /Error: main job has invalid requires: baz. Triggers have to be jobs in canary stage./
+                            /Error: main job has invalid requires: baz. Triggers must be jobs from canary stage./
                         );
                     }));
             });
