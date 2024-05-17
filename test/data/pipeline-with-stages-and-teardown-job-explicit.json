@@ -1,0 +1,345 @@
+{
+  "annotations": {},
+  "jobs": {
+    "acceptance-tests": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~promotion-230899"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "requires": [
+          "~commit",
+          "~tag:/.*-alpha$/"
+        ],
+        "secrets": [],
+        "settings": {}
+      }
+    ],
+    "backend": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~test"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "requires": [
+          "~stage@testing:setup"
+        ],
+        "secrets": [],
+        "settings": {},
+        "stage": {
+          "name": "testing"
+        }
+      }
+    ],
+    "frontend": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~test"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "requires": [
+          "~stage@testing:setup"
+        ],
+        "secrets": [],
+        "settings": {},
+        "stage": {
+          "name": "testing"
+        }
+      }
+    ],
+    "mtls-app": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~test"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "requires": [
+          "~stage@testing:setup"
+        ],
+        "secrets": [],
+        "settings": {},
+        "stage": {
+          "name": "testing"
+        }
+      }
+    ],
+    "promotion-1010409": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~acceptance-tests"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "secrets": [],
+        "settings": {}
+      }
+    ],
+    "promotion-230899": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~acceptance-tests"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "secrets": [],
+        "settings": {}
+      }
+    ],
+    "stage@testing:setup": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false,
+          "screwdriver.cd/virtualJob": true
+        },
+        "commands": [
+          {
+            "command": "echo noop",
+            "name": "noop"
+          }
+        ],
+        "environment": {},
+        "image": "node:18",
+        "requires": [
+          "~acceptance-tests",
+          "~promotion-230899",
+          "~promotion-1010409"
+        ],
+        "secrets": [],
+        "settings": {},
+        "stage": {
+          "name": "testing"
+        }
+      }
+    ],
+    "stage@testing:teardown": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "commands": [
+          {
+            "command": "echo teardown",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "requires": [
+          "test"
+        ],
+        "secrets": [],
+        "settings": {},
+        "stage": {
+          "name": "testing"
+        }
+      }
+    ],
+    "test": [
+      {
+        "annotations": {
+          "screwdriver.cd/collapseBuilds": false
+        },
+        "blockedBy": [
+          "~frontend",
+          "~backend",
+          "~mtls-app"
+        ],
+        "commands": [
+          {
+            "command": "echo hi",
+            "name": "echo"
+          }
+        ],
+        "environment": {},
+        "image": "node:20",
+        "requires": [
+          "frontend",
+          "backend",
+          "mtls-app"
+        ],
+        "secrets": [],
+        "settings": {},
+        "stage": {
+          "name": "testing"
+        }
+      }
+    ]
+  },
+  "parameters": {},
+  "stages": {
+    "testing": {
+      "description": "Teardown test resources after completion.",
+      "jobs": [
+        "backend",
+        "frontend",
+        "mtls-app",
+        "test"
+      ],
+      "requires": [
+        "~acceptance-tests",
+        "~promotion-230899",
+        "~promotion-1010409"
+      ]
+    }
+  },
+  "subscribe": {},
+  "workflowGraph": {
+    "edges": [
+      {
+        "dest": "acceptance-tests",
+        "src": "~commit"
+      },
+      {
+        "dest": "acceptance-tests",
+        "src": "~tag:/.*-alpha$/"
+      },
+      {
+        "dest": "frontend",
+        "src": "stage@testing:setup"
+      },
+      {
+        "dest": "backend",
+        "src": "stage@testing:setup"
+      },
+      {
+        "dest": "mtls-app",
+        "src": "stage@testing:setup"
+      },
+      {
+        "dest": "test",
+        "join": true,
+        "src": "frontend"
+      },
+      {
+        "dest": "test",
+        "join": true,
+        "src": "backend"
+      },
+      {
+        "dest": "test",
+        "join": true,
+        "src": "mtls-app"
+      },
+      {
+        "dest": "stage@testing:setup",
+        "src": "acceptance-tests"
+      },
+      {
+        "dest": "stage@testing:setup",
+        "src": "promotion-230899"
+      },
+      {
+        "dest": "stage@testing:setup",
+        "src": "promotion-1010409"
+      },
+      {
+        "dest": "stage@testing:teardown",
+        "join": true,
+        "src": "test"
+      }
+    ],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "acceptance-tests"
+      },
+      {
+        "name": "~tag:/.*-alpha$/"
+      },
+      {
+        "name": "promotion-230899"
+      },
+      {
+        "name": "promotion-1010409"
+      },
+      {
+        "name": "frontend",
+        "stageName": "testing"
+      },
+      {
+        "name": "stage@testing:setup",
+        "stageName": "testing",
+        "virtual": true
+      },
+      {
+        "name": "backend",
+        "stageName": "testing"
+      },
+      {
+        "name": "mtls-app",
+        "stageName": "testing"
+      },
+      {
+        "name": "test",
+        "stageName": "testing"
+      },
+      {
+        "name": "stage@testing:teardown",
+        "stageName": "testing"
+      }
+    ]
+  }
+}

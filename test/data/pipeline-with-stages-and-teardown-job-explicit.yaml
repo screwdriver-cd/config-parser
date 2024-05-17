@@ -1,0 +1,46 @@
+shared:
+  image: node:20
+  steps:
+    - echo: echo hi
+  annotations:
+    screwdriver.cd/collapseBuilds: false
+
+jobs:
+  acceptance-tests:
+    requires: [ ~commit, ~tag:/.*-alpha$/ ]
+    blockedBy: [ ~promotion-230899 ]
+  promotion-230899:
+    blockedBy: [ ~acceptance-tests ]
+  promotion-1010409:
+    blockedBy: [ ~acceptance-tests ]
+  frontend:
+    requires: []
+    blockedBy:
+      - ~test
+  backend:
+    requires: []
+    blockedBy:
+      - ~test
+  mtls-app:
+    requires: []
+    blockedBy:
+      - ~test
+
+  test:
+    requires:
+      - frontend
+      - backend
+      - mtls-app
+    blockedBy:
+      - ~frontend
+      - ~backend
+      - ~mtls-app
+
+stages:
+  testing:
+    jobs: [ backend, frontend, mtls-app, test ]
+    requires: [ ~acceptance-tests, ~promotion-230899, ~promotion-1010409 ]
+    description: "Teardown test resources after completion."
+    teardown:
+      steps:
+        - echo: echo teardown

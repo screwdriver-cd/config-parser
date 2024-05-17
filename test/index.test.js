@@ -199,6 +199,19 @@ describe('config parser', () => {
                         );
                     }));
 
+                it('returns a yaml with stages in correct format when setup and teardown jobs are explicitly defined', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-teardown-job-explicit.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('pipeline-with-stages-and-teardown-job-explicit.json'))
+                        );
+                    }));
+
                 it('returns a yaml with stages in correct format when setup and teardown jobs are implicitly created', () =>
                     parser({
                         yaml: loadData('pipeline-with-stages-and-setup-teardown-jobs-implicit.yaml'),
@@ -227,10 +240,7 @@ describe('config parser', () => {
                         pipelineId,
                         templateFactory: templateFactoryMock
                     }).then(data => {
-                        assert.match(
-                            data.errors[0],
-                            /YAMLException: Cannot have duplicate job in multiple stages: main/
-                        );
+                        assert.match(data.errors[0], /Error: Cannot have duplicate job in multiple stages: main\n/);
                     }));
 
                 it('returns an error if nonexistent job in stages', () =>
@@ -240,9 +250,21 @@ describe('config parser', () => {
                         triggerFactory,
                         pipelineId
                     }).then(data => {
+                        assert.match(data.errors[0], /Error: Cannot have nonexistent job in stages: publish,deploy\n/);
+                    }));
+
+                it('returns an error if a job within a stage is triggered by jobs that are not within the same stage', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-invalid-triggers.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        console.log(data);
+                        console.log(data.errors);
                         assert.match(
                             data.errors[0],
-                            /YAMLException: Cannot have nonexistent job in stages: publish,deploy/
+                            /Error: main job has invalid requires: baz. Triggers must be jobs from canary stage./
                         );
                     }));
             });
@@ -334,6 +356,7 @@ describe('config parser', () => {
                 let lockedStepsTemplate;
                 let jobParametersTemplate;
                 let providerTemplate;
+                let jobWithRequiresTemplate;
 
                 beforeEach(() => {
                     firstTemplate = JSON.parse(loadData('template.json'));
@@ -345,6 +368,7 @@ describe('config parser', () => {
                     lockedStepsTemplate = JSON.parse(loadData('templateWithLockedSteps.json'));
                     jobParametersTemplate = JSON.parse(loadData('templateWithParameters.json'));
                     providerTemplate = JSON.parse(loadData('templateWithProvider.json'));
+                    jobWithRequiresTemplate = JSON.parse(loadData('templateWithRequires.json'));
                     templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                     templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(firstTemplate);
                     templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(secondTemplate);
@@ -362,6 +386,9 @@ describe('config parser', () => {
                     templateFactoryMock.getTemplate
                         .withArgs('JobProviderTestNamespace/jobprovidertemplate@2')
                         .resolves(providerTemplate);
+                    templateFactoryMock.getTemplate
+                        .withArgs('JobTestNamespace/jobrequirestemplate@2')
+                        .resolves(jobWithRequiresTemplate);
                 });
 
                 it('flattens templates successfully', () =>
