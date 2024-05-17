@@ -14,15 +14,15 @@ jobs:
   promotion-1010409:
     blockedBy: [ ~acceptance-tests ]
   frontend:
-    requires: [ ~acceptance-tests, ~promotion-230899, ~promotion-1010409 ]
+    requires: []
     blockedBy:
       - ~test
   backend:
-    requires: [ ~acceptance-tests, ~promotion-230899, ~promotion-1010409 ]
+    requires: []
     blockedBy:
       - ~test
   mtls-app:
-    requires: [ ~acceptance-tests, ~promotion-230899, ~promotion-1010409 ]
+    requires: []
     blockedBy:
       - ~test
 

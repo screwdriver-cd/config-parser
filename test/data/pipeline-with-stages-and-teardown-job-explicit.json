@@ -42,9 +42,7 @@
         "environment": {},
         "image": "node:20",
         "requires": [
-          "~acceptance-tests",
-          "~promotion-230899",
-          "~promotion-1010409"
+          "~stage@testing:setup"
         ],
         "secrets": [],
         "settings": {},
@@ -70,9 +68,7 @@
         "environment": {},
         "image": "node:20",
         "requires": [
-          "~acceptance-tests",
-          "~promotion-230899",
-          "~promotion-1010409"
+          "~stage@testing:setup"
         ],
         "secrets": [],
         "settings": {},
@@ -98,9 +94,7 @@
         "environment": {},
         "image": "node:20",
         "requires": [
-          "~acceptance-tests",
-          "~promotion-230899",
-          "~promotion-1010409"
+          "~stage@testing:setup"
         ],
         "secrets": [],
         "settings": {},
@@ -259,39 +253,15 @@
       },
       {
         "dest": "frontend",
-        "src": "acceptance-tests"
-      },
-      {
-        "dest": "frontend",
-        "src": "promotion-230899"
-      },
-      {
-        "dest": "frontend",
-        "src": "promotion-1010409"
+        "src": "stage@testing:setup"
       },
       {
         "dest": "backend",
-        "src": "acceptance-tests"
-      },
-      {
-        "dest": "backend",
-        "src": "promotion-230899"
-      },
-      {
-        "dest": "backend",
-        "src": "promotion-1010409"
+        "src": "stage@testing:setup"
       },
       {
         "dest": "mtls-app",
-        "src": "acceptance-tests"
-      },
-      {
-        "dest": "mtls-app",
-        "src": "promotion-230899"
-      },
-      {
-        "dest": "mtls-app",
-        "src": "promotion-1010409"
+        "src": "stage@testing:setup"
       },
       {
         "dest": "test",
@@ -350,6 +320,11 @@
         "stageName": "testing"
       },
       {
+        "name": "stage@testing:setup",
+        "stageName": "testing",
+        "virtual": true
+      },
+      {
         "name": "backend",
         "stageName": "testing"
       },
@@ -360,11 +335,6 @@
       {
         "name": "test",
         "stageName": "testing"
-      },
-      {
-        "name": "stage@testing:setup",
-        "stageName": "testing",
-        "virtual": true
       },
       {
         "name": "stage@testing:teardown",
