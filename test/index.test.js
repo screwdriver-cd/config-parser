@@ -1130,6 +1130,15 @@ describe('config parser', () => {
             }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('parse-pipeline-template-with-shared-setting.json')));
             }));
+        it('flattens shared setting and handles mergeSharedSteps annotation properly', () =>
+            parsePipelineTemplate({
+                yaml: loadData('parse-pipeline-template-with-mergeSharedSteps-annotation.yaml')
+            }).then(data => {
+                assert.deepEqual(
+                    data,
+                    JSON.parse(loadData('parse-pipeline-template-with-mergeSharedSteps-annotation.json'))
+                );
+            }));
         it('throws error if pipeline template is invalid', () =>
             parsePipelineTemplate({
                 yaml: loadData('parse-pipeline-template-invalid.yaml')

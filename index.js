@@ -304,7 +304,8 @@ async function parsePipelineTemplate({ yaml }) {
     Object.keys(pipelineTemplateConfig.jobs).forEach(j => {
         mergedJobs[j] = handleMergeSharedStepsAnnotation({
             sharedConfig: pipelineTemplateConfig.shared,
-            jobConfig: pipelineTemplateConfig.jobs[j]
+            jobConfig: pipelineTemplateConfig.jobs[j],
+            isPipelineTemplate: true
         });
     });
     delete pipelineTemplateConfig.shared;
