@@ -48,7 +48,11 @@
         "secrets": [],
         "settings": {},
         "sourcePaths": [],
-        "steps": [],
+        "steps": [
+          {
+            "name": "echo \"bang\""
+          }
+        ],
         "template": "sd/noop@1.0.0"
       }
     },
