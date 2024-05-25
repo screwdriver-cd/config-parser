@@ -12,8 +12,11 @@ const SCHEMA_PIPELINE_TEMPLATE = require('screwdriver-data-schema').config.pipel
 
 const phaseValidateStructure = require('./lib/phase/structural');
 const phaseMerge = require('./lib/phase/merge');
-const phaseFlatten = require('./lib/phase/flatten').flattenPhase;
-const { flattenSharedIntoJobs } = require('./lib/phase/flatten');
+const {
+    flattenSharedIntoJobs,
+    handleMergeSharedStepsAnnotation,
+    flattenPhase: phaseFlatten
+} = require('./lib/phase/flatten');
 const phaseValidateFunctionality = require('./lib/phase/functional');
 const phaseGeneratePermutations = require('./lib/phase/permutation');
 
@@ -294,7 +297,18 @@ async function parsePipelineTemplate({ yaml }) {
 
     // flatten pipeline template shared setting into jobs
     pipelineTemplateConfig.jobs = flattenSharedIntoJobs(pipelineTemplateConfig.shared, pipelineTemplateConfig.jobs);
+
+    const mergedJobs = {};
+
+    // Handle mergeSharedSteps annotation
+    Object.keys(pipelineTemplateConfig.jobs).forEach(j => {
+        mergedJobs[j] = handleMergeSharedStepsAnnotation({
+            sharedConfig: pipelineTemplateConfig.shared,
+            jobConfig: pipelineTemplateConfig.jobs[j]
+        });
+    });
     delete pipelineTemplateConfig.shared;
+    pipelineTemplateConfig.jobs = mergedJobs;
 
     return pipelineTemplate;
 }

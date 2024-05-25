@@ -1,6 +1,7 @@
 shared:
+  annotations:
+    screwdriver.cd/mergeSharedSteps: true
   steps:
-    - pretest: echo pre-test
     - predummy: echo 'this step is not merged'
 jobs:
   main:
@@ -12,3 +13,5 @@ jobs:
     requires:
       - ~pr
       - ~commit
+  second:
+    template: mytemplate@1.2.3

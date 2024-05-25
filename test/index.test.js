@@ -4,8 +4,7 @@ const { assert } = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
-const parser = require('..').parsePipelineYaml;
-const { parsePipelineTemplate } = require('..');
+const { parsePipelineTemplate, parsePipelineYaml: parser } = require('..');
 const pipelineId = 111;
 
 sinon.assert.expose(assert, { prefix: '' });
@@ -21,11 +20,16 @@ function loadData(name) {
 }
 
 describe('config parser', () => {
-    describe('parse pipeline yaml', () => {
-        const templateFactoryMock = {
+    let templateFactoryMock;
+
+    beforeEach(() => {
+        templateFactoryMock = {
             getTemplate: sinon.stub().resolves(JSON.parse(loadData('template.json'))),
             getFullNameAndVersion: sinon.stub().returns({ isVersion: false, isTag: false })
         };
+    });
+
+    describe('parse pipeline yaml', () => {
         const pipelineTemplateVersionFactoryMock = {
             getWithMetadata: sinon.stub().resolves(JSON.parse(loadData('pipeline-template.json')))
         };
@@ -647,6 +651,29 @@ describe('config parser', () => {
                     });
                 });
 
+                it('flattens pipeline template with job template and mergeSharedSteps annotation', () => {
+                    const pipelineTemplateMock = JSON.parse(
+                        loadData('pipeline-template-with-mergeSharedSteps-annotation.json')
+                    );
+
+                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    templateFactoryMock.getTemplate.resolves(JSON.parse(loadData('template.json')));
+                    templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
+
+                    return parser({
+                        yaml: loadData('pipeline-template-with-mergeSharedSteps-annotation.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('pipeline-template-with-mergeSharedSteps-annotation-result.json'))
+                        );
+                    });
+                });
+
                 it('flattens pipeline template with user defined pipeline level setting', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-user-setting.json'));
 
@@ -1102,6 +1129,15 @@ describe('config parser', () => {
                 yaml: loadData('parse-pipeline-template-with-shared-setting.yaml')
             }).then(data => {
                 assert.deepEqual(data, JSON.parse(loadData('parse-pipeline-template-with-shared-setting.json')));
+            }));
+        it('flattens shared setting and handles mergeSharedSteps annotation properly', () =>
+            parsePipelineTemplate({
+                yaml: loadData('parse-pipeline-template-with-mergeSharedSteps-annotation.yaml')
+            }).then(data => {
+                assert.deepEqual(
+                    data,
+                    JSON.parse(loadData('parse-pipeline-template-with-mergeSharedSteps-annotation.json'))
+                );
             }));
         it('throws error if pipeline template is invalid', () =>
             parsePipelineTemplate({
