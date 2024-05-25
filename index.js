@@ -306,6 +306,7 @@ async function parsePipelineTemplate({ yaml }) {
             sharedConfig: pipelineTemplateConfig.shared,
             jobConfig: pipelineTemplateConfig.jobs[j]
         });
+        delete mergedJobs[j].annotations['screwdriver.cd/mergeSharedSteps'];
     });
     delete pipelineTemplateConfig.shared;
     pipelineTemplateConfig.jobs = mergedJobs;
