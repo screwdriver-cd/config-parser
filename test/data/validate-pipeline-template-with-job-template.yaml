@@ -1,0 +1,31 @@
+namespace: sd-test
+name: example-template
+version: '1.0.0'
+description: An example pipeline template for testing golang files
+maintainer: foo@bar.com
+config:
+  parameters:
+    nameA: "value1"
+  annotations:
+    screwdriver.cd/restrictPR: none
+    screwdriver.cd/chainPR: false
+  subscribe:
+    scmUrls:
+    - https://github.com/VonnyJap/python-zero-to-hero.git: ['~pr']
+    - https://github.com/VonnyJap/sshca.git: ['~pr']
+  shared:
+    image: golang
+    environment:
+      FOO: "BAR"
+    requires: [main]
+    steps:
+      - name: echo "bang"
+  jobs:
+    main:
+      template: sd/noop@1.0.0
+    extra:
+      image: node:20
+      steps:
+        - name: echo "pipeline template test"
+    other:
+      template: sd/noop@1.0.0

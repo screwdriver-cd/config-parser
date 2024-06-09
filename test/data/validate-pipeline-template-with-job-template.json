@@ -1,0 +1,112 @@
+{
+  "config": {
+    "annotations": {
+      "screwdriver.cd/chainPR": false,
+      "screwdriver.cd/restrictPR": "none"
+    },
+    "jobs": {
+      "extra": {
+        "annotations": {},
+        "environment": {
+          "FOO": "BAR"
+        },
+        "image": "node:20",
+        "requires": [
+          "main"
+        ],
+        "secrets": [],
+        "settings": {},
+        "sourcePaths": [],
+        "steps": [
+          {
+            "name": "echo \"pipeline template test\""
+          }
+        ]
+      },
+      "main": {
+        "annotations": {},
+        "environment": {
+          "BAR": "foo",
+          "FOO": "BAR",
+          "SD_TEMPLATE_FULLNAME": "mytemplate",
+          "SD_TEMPLATE_NAME": "mytemplate",
+          "SD_TEMPLATE_NAMESPACE": "",
+          "SD_TEMPLATE_VERSION": "1.2.3"
+        },
+        "image": "golang",
+        "requires": [
+          "main"
+        ],
+        "secrets": [
+          "GIT_KEY"
+        ],
+        "settings": {
+          "email": "foo@example.com"
+        },
+        "sourcePaths": [],
+        "steps": [
+          {
+            "install": "npm install"
+          },
+          {
+            "test": "npm test"
+          }
+        ],
+        "templateId": 7754
+      },
+      "other": {
+        "annotations": {},
+        "environment": {
+          "BAR": "foo",
+          "FOO": "BAR",
+          "SD_TEMPLATE_FULLNAME": "mytemplate",
+          "SD_TEMPLATE_NAME": "mytemplate",
+          "SD_TEMPLATE_NAMESPACE": "",
+          "SD_TEMPLATE_VERSION": "1.2.3"
+        },
+        "image": "golang",
+        "requires": [
+          "main"
+        ],
+        "secrets": [
+          "GIT_KEY"
+        ],
+        "settings": {
+          "email": "foo@example.com"
+        },
+        "sourcePaths": [],
+        "steps": [
+          {
+            "install": "npm install"
+          },
+          {
+            "test": "npm test"
+          }
+        ],
+        "templateId": 7754
+      }
+    },
+    "parameters": {
+      "nameA": "value1"
+    },
+    "subscribe": {
+      "scmUrls": [
+        {
+          "https://github.com/VonnyJap/python-zero-to-hero.git": [
+            "~pr"
+          ]
+        },
+        {
+          "https://github.com/VonnyJap/sshca.git": [
+            "~pr"
+          ]
+        }
+      ]
+    }
+  },
+  "description": "An example pipeline template for testing golang files",
+  "maintainer": "foo@bar.com",
+  "name": "example-template",
+  "namespace": "sd-test",
+  "version": "1.0.0"
+}

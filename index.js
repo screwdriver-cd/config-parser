@@ -15,7 +15,8 @@ const phaseMerge = require('./lib/phase/merge');
 const {
     flattenSharedIntoJobs,
     handleMergeSharedStepsAnnotation,
-    flattenPhase: phaseFlatten
+    flattenPhase: phaseFlatten,
+    flattenTemplates
 } = require('./lib/phase/flatten');
 const phaseValidateFunctionality = require('./lib/phase/functional');
 const phaseGeneratePermutations = require('./lib/phase/permutation');
@@ -314,7 +315,26 @@ async function parsePipelineTemplate({ yaml }) {
     return pipelineTemplate;
 }
 
+/**
+ * Generates pipeline template configuration for the validator
+ * @method validatePipelineTemplate
+ * @param   {Object}          config
+ * @param   {String}          config.yaml             Pipeline Template
+ * @param   {TemplateFactory} config.templateFactory  Template Factory to get templates
+ * @return  {Object}                                  Pipeline Template
+ */
+async function validatePipelineTemplate({ yaml, templateFactory }) {
+    const pipelineTemplate = await parsePipelineTemplate({ yaml });
+    // Merge template steps for validator
+    const { newJobs } = await flattenTemplates(pipelineTemplate.config, templateFactory, true);
+
+    pipelineTemplate.config.jobs = newJobs;
+
+    return pipelineTemplate;
+}
+
 module.exports = {
     parsePipelineYaml,
-    parsePipelineTemplate
+    parsePipelineTemplate,
+    validatePipelineTemplate
 };
