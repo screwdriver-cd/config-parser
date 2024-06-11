@@ -4,7 +4,7 @@ const { assert } = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
-const { parsePipelineTemplate, parsePipelineYaml: parser } = require('..');
+const { parsePipelineTemplate, parsePipelineYaml: parser, validatePipelineTemplate } = require('..');
 const pipelineId = 111;
 
 sinon.assert.expose(assert, { prefix: '' });
@@ -260,8 +260,6 @@ describe('config parser', () => {
                         triggerFactory,
                         pipelineId
                     }).then(data => {
-                        console.log(data);
-                        console.log(data.errors);
                         assert.match(
                             data.errors[0],
                             /Error: main job has invalid requires: baz. Triggers must be jobs from canary stage./
@@ -736,7 +734,7 @@ describe('config parser', () => {
                         pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
                         pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
                     }).then(data => {
-                        assert.deepEqual(data.errors[0], 'ValidationError: "jobs" is not allowed');
+                        assert.deepEqual(data.errors[0], 'ValidationError: "jobs.main.steps" is not allowed');
                     }));
 
                 it('returns error if pipeline template does not exist', () => {
@@ -1142,6 +1140,23 @@ describe('config parser', () => {
         it('throws error if pipeline template is invalid', () =>
             parsePipelineTemplate({
                 yaml: loadData('parse-pipeline-template-invalid.yaml')
+            }).then(assert.fail, err => {
+                assert.match(err.toString(), /[ValidationError]: "config.jobs" is required/);
+            }));
+    });
+
+    describe('validate pipeline template', () => {
+        it('flattens pipeline template for the validator and pulls in job template steps', () =>
+            validatePipelineTemplate({
+                yaml: loadData('validate-pipeline-template-with-job-template.yaml'),
+                templateFactory: templateFactoryMock
+            }).then(data => {
+                assert.deepEqual(data, JSON.parse(loadData('validate-pipeline-template-with-job-template.json')));
+            }));
+        it('throws error if pipeline template is invalid', () =>
+            validatePipelineTemplate({
+                yaml: loadData('validate-pipeline-template-invalid.yaml'),
+                templateFactory: templateFactoryMock
             }).then(assert.fail, err => {
                 assert.match(err.toString(), /[ValidationError]: "config.jobs" is required/);
             }));
