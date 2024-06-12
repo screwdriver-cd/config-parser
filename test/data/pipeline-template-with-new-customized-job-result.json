@@ -1,0 +1,142 @@
+{
+    "annotations": {
+        "bar": "template setting",
+        "screwdriver.cd/restrictPR": "fork"
+    },
+    "childPipelines": {
+        "scmUrls": [
+            "git@github.com:org/templateSetting.git",
+            "https://github.com:org/templateSetting2.git"
+        ],
+        "startAll": true
+    },
+    "parameters": {
+        "arr": [
+            "a",
+            "b"
+        ],
+        "common": {
+            "description": "template description",
+            "value": "template setting"
+        },
+        "foo": "template setting",
+        "override": "template setting"
+    },
+    "jobs": {
+        "main": [{
+            "annotations": {},
+            "cache": {
+                "pipeline": [
+                    "~/templateSetting/pipeline"
+                ],
+                "event": [
+                    "$SD_SOURCE_DIR/templateSetting/event"
+                ],
+                "job": [
+                    "/temp/templateSetting/job/main"
+                ]
+            },
+            "image": "node:25",
+            "commands": [
+                {
+                    "name": "init",
+                    "command": "npm install"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                }
+            ],
+            "environment": {
+                "BAR": "baz",
+                "FOO": "foo",
+                "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
+                "SD_PIPELINE_TEMPLATE_NAME": "bar",
+                "SD_PIPELINE_TEMPLATE_NAMESPACE": "foo",
+                "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0"
+            },
+            "secrets": [
+                "NPM_TOKEN"
+            ],
+            "settings": {
+                "slack": [
+                    "room_a"
+                ]
+            },
+            "requires": []
+        }],
+        "job1": [{
+            "annotations": {},
+            "cache": {
+                "pipeline": [
+                    "~/templateSetting/pipeline"
+                ],
+                "event": [
+                    "$SD_SOURCE_DIR/templateSetting/event"
+                ],
+                "job": []
+            },
+            "image": "node:10",
+            "commands": [
+                {
+                    "name": "init",
+                    "command": "npm install"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                }
+            ],
+            "environment": {
+                "OTHER": "foo",
+                "BAR": "bar",
+                "FOO": "foo",
+                "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
+                "SD_PIPELINE_TEMPLATE_NAME": "bar",
+                "SD_PIPELINE_TEMPLATE_NAMESPACE": "foo",
+                "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0"
+            },
+            "secrets": [
+                "NPM_TOKEN"
+            ],
+            "settings": {
+                "slack": [
+                    "room_b"
+                ]
+            },
+            "requires": [
+                "main"
+            ]
+        }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" },
+            { "name": "job1" }
+        ],
+        "edges": [
+            { "src": "main", "dest": "job1", "join": true }
+        ]
+    },
+    "subscribe": {
+        "scmUrls": [
+            {
+                "git@github.com:foo/templateSetting.git#master": [
+                    "~commit",
+                    "~tags",
+                    "~release"
+                ]
+            },
+            {
+                "git@github.com:foo/commonSetting.git#master": [
+                  "~commit",
+                  "~tags",
+                  "~release"
+                ]
+            }
+        ]
+    },
+    "templateVersionId": 111
+}
