@@ -1,0 +1,17 @@
+template: foo/bar@1.0.0
+jobs:
+    main:
+        image: node:25
+        settings:
+            slack: [room_a]
+        environment:
+            BAR: baz
+        requires: []
+    job1:
+        image: node:10
+        settings:
+            slack: [room_b]
+        environment:
+            OTHER: foo
+        requires: [main]
+  
