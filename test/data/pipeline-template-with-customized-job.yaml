@@ -7,11 +7,11 @@ jobs:
         environment:
             BAR: baz
         requires: []
-    job2:
+    job1:
         image: node:10
+        settings:
+            slack: [room_b]
         environment:
             OTHER: foo
         requires: [main]
-        steps:
-            - echo: echo new step
   

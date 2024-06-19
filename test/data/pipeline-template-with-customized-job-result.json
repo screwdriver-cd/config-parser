@@ -76,7 +76,7 @@
                 ],
                 "job": []
             },
-            "image": "node:18",
+            "image": "node:10",
             "commands": [
                 {
                     "name": "init",
@@ -88,6 +88,7 @@
                 }
             ],
             "environment": {
+                "OTHER": "foo",
                 "BAR": "bar",
                 "FOO": "foo",
                 "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
@@ -98,41 +99,14 @@
             "secrets": [
                 "NPM_TOKEN"
             ],
-            "settings": {},
-            "requires": [
-                "~main"
-            ]
-        }],
-        "job2": [{
-            "annotations": {},
-            "cache": {
-                "pipeline": [
-                    "~/templateSetting/pipeline"
-                ],
-                "event": [
-                    "$SD_SOURCE_DIR/templateSetting/event"
-                ],
-                "job": []
+            "settings": {
+                "slack": [
+                    "room_b"
+                ]
             },
-            "image": "node:10",
-            "commands": [
-                {
-                    "name": "echo",
-                    "command": "echo new step"
-                }
-            ],
-            "environment": {
-                "OTHER": "foo",
-                "SD_PIPELINE_TEMPLATE_FULLNAME": "foo/bar",
-                "SD_PIPELINE_TEMPLATE_NAME": "bar",
-                "SD_PIPELINE_TEMPLATE_NAMESPACE": "foo",
-                "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0"
-            },
-            "settings": {},
             "requires": [
                 "main"
-            ],
-            "secrets": []
+            ]
         }]
     },
     "workflowGraph": {
@@ -140,12 +114,10 @@
             { "name": "~pr" },
             { "name": "~commit" },
             { "name": "main" },
-            { "name": "job1" },
-            { "name": "job2" }
+            { "name": "job1" }
         ],
         "edges": [
-            { "src": "main", "dest": "job1" },
-            { "src": "main", "dest": "job2", "join": true }
+            { "src": "main", "dest": "job1", "join": true }
         ]
     },
     "subscribe": {

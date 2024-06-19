@@ -732,6 +732,25 @@ describe('config parser', () => {
                     pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
 
                     return parser({
+                        yaml: loadData('pipeline-template-with-customized-job.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('pipeline-template-with-customized-job-result.json'))
+                        );
+                    });
+                });
+
+                it('flattens pipeline template with custom user defined job', () => {
+                    const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
+
+                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                    return parser({
                         yaml: loadData('pipeline-template-with-new-customized-job.yaml'),
                         templateFactory: templateFactoryMock,
                         triggerFactory,
@@ -745,20 +764,6 @@ describe('config parser', () => {
                     });
                 });
 
-                it('returns error for invalid user job names in screwdriver yaml', () =>
-                    parser({
-                        yaml: loadData('pipeline-template-invalid-job-names.yaml'),
-                        templateFactory: templateFactoryMock,
-                        triggerFactory,
-                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
-                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
-                    }).then(data => {
-                        assert.deepEqual(
-                            data.errors[0],
-                            'Error: User template has job name(s) that do not exist in pipeline template foo/bar@1.0.0: extra,other'
-                        );
-                    }));
-
                 it('returns error for invalid screwdriver yaml', () =>
                     parser({
                         yaml: loadData('pipeline-template-invalid.yaml'),
@@ -767,7 +772,10 @@ describe('config parser', () => {
                         pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
                         pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
                     }).then(data => {
-                        assert.deepEqual(data.errors[0], 'ValidationError: "jobs.main.steps" is not allowed');
+                        assert.deepEqual(
+                            data.errors[0],
+                            'Error: Job "main" has unsupported fields in user yaml. Can only set settings,requires,image,environment.'
+                        );
                     }));
 
                 it('returns error if pipeline template does not exist', () => {
