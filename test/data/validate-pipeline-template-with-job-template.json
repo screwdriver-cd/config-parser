@@ -102,6 +102,42 @@
           ]
         }
       ]
+    },
+    "workflowGraph": {
+      "edges": [
+        {
+          "dest": "extra",
+          "join": true,
+          "src": "main"
+        },
+        {
+          "dest": "main",
+          "join": true,
+          "src": "main"
+        },
+        {
+          "dest": "other",
+          "join": true,
+          "src": "main"
+        }
+      ],
+      "nodes": [
+        {
+          "name": "~pr"
+        },
+        {
+          "name": "~commit"
+        },
+        {
+          "name": "extra"
+        },
+        {
+          "name": "main"
+        },
+        {
+          "name": "other"
+        }
+      ]
     }
   },
   "description": "An example pipeline template for testing golang files",
