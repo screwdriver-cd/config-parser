@@ -4,7 +4,7 @@
     "jobs": {
         "main": [{
             "annotations": {},
-            "image": "node:20",
+            "image": "userImage",
             "commands": [
                 {
                     "name": "init",

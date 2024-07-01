@@ -14,7 +14,10 @@
           {
             "test": "npm test"
           }
-        ]
+        ],
+        "environment": {
+          "FOO": "bar"
+        }
       }
     }
   },

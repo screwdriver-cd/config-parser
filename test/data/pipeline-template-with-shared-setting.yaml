@@ -1,6 +1,6 @@
 template: foo/bar@1.0.0
 shared:
-    image: node:20
+    image: userImage
     environment:
         FOO: user overwrite
     settings:
