@@ -330,6 +330,14 @@ async function validatePipelineTemplate({ yaml, templateFactory }) {
 
     pipelineTemplate.config.jobs = newJobs;
 
+    // Add workflowGraph
+    const { doc } = await phaseValidateFunctionality({
+        flattenedDoc: pipelineTemplate.config,
+        isPipelineTemplate: true
+    });
+
+    pipelineTemplate.config = doc;
+
     return pipelineTemplate;
 }
 
