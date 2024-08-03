@@ -312,6 +312,14 @@ async function parsePipelineTemplate({ yaml }) {
     delete pipelineTemplateConfig.shared;
     pipelineTemplateConfig.jobs = mergedJobs;
 
+    // Add workflowGraph
+    const { doc } = await phaseValidateFunctionality({
+        flattenedDoc: pipelineTemplateConfig,
+        isPipelineTemplate: true
+    });
+
+    pipelineTemplate.config = doc;
+
     return pipelineTemplate;
 }
 
