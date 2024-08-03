@@ -106,12 +106,12 @@
     "workflowGraph": {
       "edges": [
         {
-          "dest": "extra",
+          "dest": "main",
           "join": true,
           "src": "main"
         },
         {
-          "dest": "main",
+          "dest": "extra",
           "join": true,
           "src": "main"
         },
@@ -129,10 +129,10 @@
           "name": "~commit"
         },
         {
-          "name": "extra"
+          "name": "main"
         },
         {
-          "name": "main"
+          "name": "extra"
         },
         {
           "name": "other"
