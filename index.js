@@ -334,23 +334,10 @@ async function parsePipelineTemplate({ yaml }) {
 async function validatePipelineTemplate({ yaml, templateFactory }) {
     const pipelineTemplate = await parsePipelineTemplate({ yaml });
 
-    console.log('pipelineTemplate.config: ', pipelineTemplate.config);
-    console.log('templateFactory: ', templateFactory);
-
     // Merge template steps for validator
     const { newJobs } = await flattenTemplates(pipelineTemplate.config, templateFactory, true);
 
-    console.log('newJobs: ', newJobs);
-
     pipelineTemplate.config.jobs = newJobs;
-
-    // // Add workflowGraph
-    // const { doc } = await phaseValidateFunctionality({
-    //     flattenedDoc: pipelineTemplate.config,
-    //     isPipelineTemplate: true
-    // });
-
-    // pipelineTemplate.config = doc;
 
     return pipelineTemplate;
 }
