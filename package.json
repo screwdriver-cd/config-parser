@@ -56,10 +56,10 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "keymbinatorial": "^2.0.0",
-    "screwdriver-data-schema": "^23.5.1",
+    "screwdriver-data-schema": "^24.0.0",
     "screwdriver-notifications-email": "^3.0.1",
     "screwdriver-notifications-slack": "^5.0.0",
-    "screwdriver-workflow-parser": "^4.3.0",
+    "screwdriver-workflow-parser": "^5.0.0",
     "shell-escape": "^0.2.0",
     "tinytim": "^0.1.1"
   }
