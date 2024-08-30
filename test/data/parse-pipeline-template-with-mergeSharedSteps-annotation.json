@@ -68,38 +68,38 @@
           ]
         }
       ]
-    },
-    "workflowGraph": {
-      "edges": [
-        {
-          "dest": "main",
-          "src": "~pr"
-        },
-        {
-          "dest": "main",
-          "src": "~commit"
-        },
-        {
-          "dest": "extra",
-          "join": true,
-          "src": "main"
-        }
-      ],
-      "nodes": [
-        {
-          "name": "~pr"
-        },
-        {
-          "name": "~commit"
-        },
-        {
-          "name": "main"
-        },
-        {
-          "name": "extra"
-        }
-      ]
-    }   
+    }
+  },
+  "workflowGraph": {
+    "edges": [
+      {
+        "dest": "main",
+        "src": "~pr"
+      },
+      {
+        "dest": "main",
+        "src": "~commit"
+      },
+      {
+        "dest": "extra",
+        "join": true,
+        "src": "main"
+      }
+    ],
+    "nodes": [
+      {
+        "name": "~pr"
+      },
+      {
+        "name": "~commit"
+      },
+      {
+        "name": "main"
+      },
+      {
+        "name": "extra"
+      }
+    ]
   },
   "description": "An example pipeline template for testing golang files",
   "maintainer": "foo@bar.com",

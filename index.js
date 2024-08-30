@@ -318,6 +318,8 @@ async function parsePipelineTemplate({ yaml }) {
         isPipelineTemplate: true
     });
 
+    pipelineTemplate.workflowGraph = doc.workflowGraph;
+    delete doc.workflowGraph;
     pipelineTemplate.config = doc;
 
     return pipelineTemplate;
