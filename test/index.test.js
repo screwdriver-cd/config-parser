@@ -774,7 +774,7 @@ describe('config parser', () => {
                     }).then(data => {
                         assert.deepEqual(
                             data.errors[0],
-                            'Error: Job "main" has unsupported fields in user yaml. Can only set settings,requires,image,environment.'
+                            'Error: Job "main" has unsupported fields in user yaml. Can only set settings,requires,image,environment,annotations.'
                         );
                     }));
 

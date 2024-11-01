@@ -26,7 +26,9 @@
     },
     "jobs": {
         "main": [{
-            "annotations": {},
+            "annotations": {
+                "screwdriver.cd/cpu": "MICRO"
+            },
             "cache": {
                 "pipeline": [
                     "~/userSetting/pipeline"
@@ -67,7 +69,12 @@
             ]
         }],
         "job1": [{
-            "annotations": {},
+            "annotations": {
+                "screwdriver.cd/buildCluster": "initial-cluster",
+                "testAnnotation": {
+                    "testKey": "This is a test field"
+                }
+            },
             "cache": {
                 "pipeline": [
                     "~/userSetting/pipeline"
