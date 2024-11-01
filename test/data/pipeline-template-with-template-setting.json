@@ -23,6 +23,9 @@
           "FOO": "foo",
           "BAR": "bar"
         },
+        "annotations": {
+          "screwdriver.cd/cpu": "MICRO"
+        },
         "secrets": [
           "NPM_TOKEN"
         ]
@@ -43,6 +46,12 @@
         "environment": {
           "FOO": "foo",
           "BAR": "bar"
+        },
+        "annotations": {
+          "screwdriver.cd/buildCluster": "initial-cluster",
+          "testAnnotation": {
+            "testKey": "This is a test field"
+          }
         },
         "secrets": [
           "NPM_TOKEN"

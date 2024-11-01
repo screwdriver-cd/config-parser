@@ -24,7 +24,9 @@
     },
     "jobs": {
         "main": [{
-            "annotations": {},
+            "annotations": {
+                "screwdriver.cd/cpu": "MICRO"
+            },
             "cache": {
                 "pipeline": [
                     "~/templateSetting/pipeline"
@@ -66,7 +68,16 @@
             "requires": []
         }],
         "job1": [{
-            "annotations": {},
+            "annotations": {
+                "screwdriver.cd/buildCluster": "test-cluster",
+                "testAnnotation": {
+                    "array": ["bar", "baz"],
+                    "obj": {
+                        "text": "this is a test field",
+                        "boolean": false
+                    }
+                }
+            },
             "cache": {
                 "pipeline": [
                     "~/templateSetting/pipeline"

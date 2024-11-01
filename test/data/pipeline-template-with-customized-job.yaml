@@ -13,5 +13,11 @@ jobs:
             slack: [room_b]
         environment:
             OTHER: foo
+        annotations:
+            testAnnotation:
+                array: [ bar, baz ]
+                obj:
+                    text: this is a test field
+                    boolean: false
+            screwdriver.cd/buildCluster: test-cluster
         requires: [main]
-  

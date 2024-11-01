@@ -24,7 +24,10 @@
     },
     "jobs": {
         "main": [{
-            "annotations": {},
+            "annotations": {
+                "screwdriver.cd/cpu": "TURBO",
+                "screwdriver.cd/buildCluster": "test-cluster"
+            },
             "cache": {
                 "pipeline": [
                     "~/templateSetting/pipeline"
@@ -66,7 +69,12 @@
             "requires": []
         }],
         "job1": [{
-            "annotations": {},
+            "annotations": {
+                "screwdriver.cd/buildCluster": "initial-cluster",
+                "testAnnotation": {
+                    "testKey": "This is a test field"
+                }
+            },
             "cache": {
                 "pipeline": [
                     "~/templateSetting/pipeline"
@@ -104,7 +112,9 @@
             ]
         }],
         "job2": [{
-            "annotations": {},
+            "annotations": {
+                "other": "bar"
+            },
             "cache": {
                 "pipeline": [
                     "~/templateSetting/pipeline"

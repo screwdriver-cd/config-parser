@@ -6,12 +6,16 @@ jobs:
             slack: [room_a]
         environment:
             BAR: baz
+        annotations:
+            screwdriver.cd/buildCluster: test-cluster
+            screwdriver.cd/cpu: TURBO
         requires: []
     job2:
         image: node:10
         environment:
             OTHER: foo
+        annotations:
+            other: bar
         requires: [main]
         steps:
             - echo: echo new step
-  
