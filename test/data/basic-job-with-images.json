@@ -59,10 +59,10 @@
         "name": "~commit"
       },
       {
-        "name": "publish"
+        "name": "main"
       },
       {
-        "name": "main"
+        "name": "publish"
       }
     ]
   },
