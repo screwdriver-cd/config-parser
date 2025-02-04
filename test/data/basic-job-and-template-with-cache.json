@@ -1,0 +1,80 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "enabled": [{
+            "annotations": {},
+            "image": "node:4",
+            "commands": [
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                }
+            ],
+            "environment": {
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ],
+            "cache": {
+                "pipeline": [ "pipeline-cache" ],
+                "event": [],
+                "job": []
+            },
+            "secrets": [],
+            "settings": {},
+            "templateId": 7754
+        }],
+        "disabled": [{
+            "annotations": {},
+            "image": "node:4",
+            "commands": [
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                }
+            ],
+            "environment": {
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ],
+            "secrets": [],
+            "settings": {},
+            "templateId": 7754
+        }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "enabled" },
+            { "name": "disabled" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "enabled" },
+            { "src": "~commit", "dest": "enabled" },
+            { "src": "~pr", "dest": "disabled" },
+            { "src": "~commit", "dest": "disabled" }
+        ]
+    },
+    "subscribe": {}
+}
