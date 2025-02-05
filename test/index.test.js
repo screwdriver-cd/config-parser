@@ -355,6 +355,8 @@ describe('config parser', () => {
                 let jobParametersTemplate;
                 let providerTemplate;
                 let jobWithRequiresTemplate;
+                let jobWithCacheTemplate1;
+                let jobWithCacheTemplate2;
 
                 beforeEach(() => {
                     firstTemplate = JSON.parse(loadData('template.json'));
@@ -367,6 +369,8 @@ describe('config parser', () => {
                     jobParametersTemplate = JSON.parse(loadData('templateWithParameters.json'));
                     providerTemplate = JSON.parse(loadData('templateWithProvider.json'));
                     jobWithRequiresTemplate = JSON.parse(loadData('templateWithRequires.json'));
+                    jobWithCacheTemplate1 = JSON.parse(loadData('templateWithCache.json'));
+                    jobWithCacheTemplate2 = JSON.parse(loadData('templateWithCache.json'));
                     templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                     templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(firstTemplate);
                     templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(secondTemplate);
@@ -387,6 +391,14 @@ describe('config parser', () => {
                     templateFactoryMock.getTemplate
                         .withArgs('JobTestNamespace/jobrequirestemplate@2')
                         .resolves(jobWithRequiresTemplate);
+                    // Since the resolved values are the same object, their properties can be overwritten during other parsing.
+                    // We need to separate that resolved values in tests.
+                    templateFactoryMock.getTemplate
+                        .withArgs('TemplateCacheTestNamespace/cachetemplate@1')
+                        .resolves(jobWithCacheTemplate1);
+                    templateFactoryMock.getTemplate
+                        .withArgs('TemplateCacheTestNamespace/cachetemplate@2')
+                        .resolves(jobWithCacheTemplate2);
                 });
 
                 it('flattens templates successfully', () =>
@@ -595,6 +607,15 @@ describe('config parser', () => {
                             data,
                             JSON.parse(loadData('basic-job-with-parameters-and-template-with-parameters.json'))
                         );
+                    }));
+
+                it('flattens cache config with templates containing parsed cache setting', () =>
+                    parser({
+                        yaml: loadData('basic-job-and-template-with-cache.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory
+                    }).then(data => {
+                        assert.deepEqual(data, JSON.parse(loadData('basic-job-and-template-with-cache.json')));
                     }));
 
                 it('flattens templates with provider', () =>

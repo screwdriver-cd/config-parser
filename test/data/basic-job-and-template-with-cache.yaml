@@ -1,0 +1,11 @@
+cache:
+  pipeline: [ pipeline-cache ]
+
+jobs:
+  enabled:
+    requires: [ ~pr, ~commit ]
+    template: TemplateCacheTestNamespace/cachetemplate@1
+  disabled:
+    requires: [ ~pr, ~commit ]
+    template: TemplateCacheTestNamespace/cachetemplate@2
+    cache: false
