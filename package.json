@@ -1,6 +1,6 @@
 {
   "name": "screwdriver-config-parser",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "description": "Node module for parsing screwdriver.yaml configurations",
   "main": "index.js",
   "scripts": {
@@ -42,8 +42,8 @@
   "engine-strict": true,
   "devDependencies": {
     "chai": "^4.3.7",
-    "eslint": "^8.27.0",
-    "eslint-config-screwdriver": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-screwdriver": "^8.0.0",
     "mocha": "^10.1.0",
     "mocha-multi-reporters": "^1.5.1",
     "mocha-sonarqube-reporter": "^1.0.2",
@@ -51,15 +51,15 @@
     "sinon": "^14.0.2"
   },
   "dependencies": {
-    "@hapi/hoek": "^10.0.1",
+    "@hapi/hoek": "^11.0.7",
     "clone": "^2.1.2",
-    "joi": "^17.7.0",
+    "joi": "^17.13.3",
     "js-yaml": "^4.1.0",
     "keymbinatorial": "^2.0.0",
-    "screwdriver-data-schema": "^24.0.0",
-    "screwdriver-notifications-email": "^4.0.0",
-    "screwdriver-notifications-slack": "^6.0.0",
-    "screwdriver-workflow-parser": "^5.0.0",
+    "screwdriver-data-schema": "^25.0.0",
+    "screwdriver-notifications-email": "^5.0.0",
+    "screwdriver-notifications-slack": "^7.0.0",
+    "screwdriver-workflow-parser": "^6.0.0",
     "shell-escape": "^0.2.0",
     "tinytim": "^0.1.1"
   }
