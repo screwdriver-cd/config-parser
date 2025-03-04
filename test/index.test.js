@@ -306,6 +306,14 @@ describe('config parser', () => {
                     assert.deepEqual(data, JSON.parse(loadData('shared-job-annotations.json')));
                 }));
 
+            it('returns error if job has admin annotations', () =>
+                parser({ yaml: loadData('admin-job-annotations.yaml'), triggerFactory }).then(data => {
+                    assert.match(
+                        data.errors[0],
+                        /Error: Annotations starting with screwdriver.cd\/admin are reserved for system use only/
+                    );
+                }));
+
             it('job-level sourcePaths override shared-level sourcePaths', () =>
                 parser({ yaml: loadData('pipeline-with-sourcePaths.yaml'), triggerFactory }).then(data => {
                     assert.deepEqual(data, JSON.parse(loadData('pipeline-with-sourcePaths.json')));
