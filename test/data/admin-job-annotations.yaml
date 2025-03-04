@@ -1,0 +1,10 @@
+jobs:
+    main:
+        annotations:
+            screwdriver.cd/adminA: c
+        image: node:22
+        steps:
+            - install: npm install
+        requires:
+            - ~pr
+            - ~commit

@@ -89,6 +89,10 @@ function validateReservedAnnotation(doc) {
                 default: {}
             });
 
+            if (Object.keys(jobAnnotations).some(key => key.startsWith('screwdriver.cd/admin'))) {
+                throw new Error('Annotations starting with screwdriver.cd/admin are reserved for system use only');
+            }
+
             warnings = warnings.concat(
                 Object.keys(jobAnnotations)
                     .filter(key => {
