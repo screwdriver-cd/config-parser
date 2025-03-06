@@ -1,0 +1,249 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "subscribe": {},
+    "jobs": {
+        "foo": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo foo",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~stage@foobar:setup"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ],
+        "bar": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo foo",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "foo"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ],
+        "baz": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo foo",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~stage@bazqux:setup"
+                ],
+                "stage": {
+                    "name": "bazqux"
+                }
+            }
+        ],
+        "qux": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo foo",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "baz"
+                ],
+                "stage": {
+                    "name": "bazqux"
+                }
+            }
+        ],
+        "stage@foobar:setup": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
+                "commands": [
+                    {
+                        "command": "echo noop",
+                        "name": "noop"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~commit"
+                ],
+                "stage": {
+                    "name": "foobar"
+                },
+                "sourcePaths": [
+                    "src/"
+                ]
+            }
+        ],
+        "stage@foobar:teardown": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
+                "commands": [
+                    {
+                        "command": "echo noop",
+                        "name": "noop"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "bar"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ],
+        "stage@bazqux:setup": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo bazqux",
+                        "name": "echo"  
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~commit"
+                ],
+                "stage": {
+                    "name": "bazqux"
+                },
+                "sourcePaths": [
+                    "config/"
+                ]
+            }
+        ],
+        "stage@bazqux:teardown": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
+                "commands": [
+                    {
+                        "command": "echo noop",
+                        "name": "noop"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "qux"
+                ],
+                "stage": {
+                    "name": "bazqux"
+                }
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "foo", "stageName": "foobar" },
+            {
+                "name": "stage@foobar:setup",
+                "virtual": true,
+                "stageName": "foobar"
+            },
+            { "name": "bar", "stageName": "foobar" },
+            { "name": "baz", "stageName": "bazqux" },
+            { "name": "stage@bazqux:setup", "stageName": "bazqux" },
+            { "name": "qux", "stageName": "bazqux" },
+            {
+                "name": "stage@foobar:teardown",
+                "virtual": true,
+                "stageName": "foobar"
+            },
+            {
+                "name": "stage@bazqux:teardown",
+                "virtual": true,
+                "stageName": "bazqux"
+            }
+        ],
+        "edges": [
+            { "src": "stage@foobar:setup", "dest": "foo" },
+            { "src": "foo", "dest": "bar", "join": true },
+            { "src": "stage@bazqux:setup", "dest": "baz" },
+            { "src": "baz", "dest": "qux", "join": true },
+            { "src": "~commit", "dest": "stage@foobar:setup" },
+            { "src": "bar", "dest": "stage@foobar:teardown", "join": true },
+            { "src": "~commit", "dest": "stage@bazqux:setup" },
+            { "src": "qux", "dest": "stage@bazqux:teardown", "join": true }
+        ]
+    },
+    "stages": {
+        "bazqux": {
+            "jobs": [
+                "baz",
+                "qux"
+            ],
+            "requires": [
+                "~commit"
+            ],
+            "sourcePaths": [
+                "bin/"
+            ]
+        },
+        "foobar": {
+            "jobs": [
+                "foo",
+                "bar"
+            ],
+            "requires": [
+                "~commit"
+            ],
+            "sourcePaths": [
+                "src/"
+            ]
+        }
+    }
+}
