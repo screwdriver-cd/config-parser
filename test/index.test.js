@@ -330,7 +330,7 @@ describe('config parser', () => {
                 parser({ yaml: loadData('admin-job-annotations.yaml'), triggerFactory }).then(data => {
                     assert.match(
                         data.errors[0],
-                        /Error: Annotations starting with screwdriver.cd\/admin are reserved for system use only/
+                        /Error: Annotations starting with screwdriver.cd\/sdAdmin are reserved for system use only/
                     );
                 }));
 
