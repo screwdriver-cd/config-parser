@@ -1,7 +1,7 @@
 jobs:
     main:
         annotations:
-            screwdriver.cd/adminA: c
+            screwdriver.cd/sdAdminA: c
         image: node:22
         steps:
             - install: npm install
