@@ -225,6 +225,16 @@ describe('config parser', () => {
                         );
                     }));
 
+                it('returns a yaml with sourcePaths set in stages', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-sourcePaths.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-sourcePaths.json')));
+                    }));
+
                 it('returns an error if bad stages', () =>
                     parser({ yaml: loadData('bad-stages.yaml'), triggerFactory, pipelineId }).then(data => {
                         assert.match(
@@ -264,6 +274,16 @@ describe('config parser', () => {
                             data.errors[0],
                             /Error: main job has invalid requires: baz. Triggers must be jobs from canary stage./
                         );
+                    }));
+
+                it('returns an error if sourcePaths is set for a job defined in stage.', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-invalid-sourcePaths.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(data.errors[0], /Error: Job foo in stage cannot have sourcePaths defined./);
                     }));
             });
 

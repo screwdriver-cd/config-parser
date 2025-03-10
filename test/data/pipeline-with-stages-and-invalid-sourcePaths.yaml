@@ -1,0 +1,16 @@
+stages:
+    foobar:
+        requires: [ ~commit ]
+        jobs: [ foo, bar ]
+
+shared:
+    image: node:18
+    steps:
+        -   echo: echo foo
+
+jobs:
+    foo:
+        requires: []
+        sourcePaths: [ "src/" ] # Error if the stage job defines sourcePaths
+    bar:
+        requires: [ foo ]

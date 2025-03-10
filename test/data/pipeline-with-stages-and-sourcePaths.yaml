@@ -1,0 +1,29 @@
+stages:
+    foobar:
+        requires: [ ~commit ]
+        jobs: [ foo, bar ]
+        sourcePaths: [ "src/" ]
+    bazqux:
+        requires: [ ~commit ]
+        jobs: [ baz, qux ]
+        sourcePaths: [ "bin/" ]
+        setup:
+            image: node:18
+            steps:
+                -   echo: echo bazqux
+            sourcePaths: [ "config/" ] # If sourcePaths is set in both stage and setup job, use the value of setup job.
+
+shared:
+    image: node:18
+    steps:
+        -   echo: echo foo
+
+jobs:
+    foo:
+        requires: []
+    bar:
+        requires: [ foo ]
+    baz:
+        requires: []
+    qux:
+        requires: [ baz ]
