@@ -61,7 +61,25 @@
         "secrets": [
           "NPM_TOKEN"
         ],
-        "settings": {},
+        "settings": {
+          "email": {
+            "addresses": [
+              "bar@foo.com"
+            ],
+            "statuses": [
+              "SUCCESS"
+            ]
+          },
+          "slack": {
+            "channels": [
+              "test"
+            ],
+            "statuses": [
+              "SUCCESS"
+            ],
+            "minimized": true
+          }
+        },
         "requires": [
           "~pr",
           "~commit"

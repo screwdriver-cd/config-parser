@@ -5,3 +5,6 @@ shared:
         FOO: user overwrite
     settings:
         email: foo@example.com
+        slack:
+          channels:
+            - test

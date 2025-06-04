@@ -1,0 +1,6 @@
+template: foo/bar@1.0.0
+shared:
+    image: userImage
+    environment:
+        FOO: user overwrite
+    settings: {}

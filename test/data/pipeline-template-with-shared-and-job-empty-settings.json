@@ -17,25 +17,6 @@
         ],
         "environment": {
           "FOO": "bar"
-        },
-        "settings": {
-          "email": {
-            "addresses": [
-              "bar@foo.com"
-            ],
-            "statuses": [
-              "SUCCESS"
-            ]
-          },
-          "slack": {
-            "channels": [
-              "test"
-            ],
-            "statuses": [
-              "SUCCESS"
-            ],
-            "minimized": true
-          }
         }
       }
     }

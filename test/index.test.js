@@ -698,6 +698,48 @@ describe('config parser', () => {
                     });
                 });
 
+                it('flattens pipeline template with shared empty settings', () => {
+                    const pipelineTemplateMock = JSON.parse(
+                        loadData('pipeline-template-with-shared-empty-settings.json')
+                    );
+
+                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                    return parser({
+                        yaml: loadData('pipeline-template-with-shared-empty-settings.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('pipeline-template-with-shared-empty-settings-result.json'))
+                        );
+                    });
+                });
+
+                it('flattens pipeline template with shared settings and job empty settings', () => {
+                    const pipelineTemplateMock = JSON.parse(
+                        loadData('pipeline-template-with-shared-and-job-empty-settings.json')
+                    );
+
+                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+
+                    return parser({
+                        yaml: loadData('pipeline-template-with-shared-and-job-empty-settings.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('pipeline-template-with-shared-and-job-empty-settings-result.json'))
+                        );
+                    });
+                });
+
                 it('flattens pipeline template with job template and mergeSharedSteps annotation', () => {
                     const pipelineTemplateMock = JSON.parse(
                         loadData('pipeline-template-with-mergeSharedSteps-annotation.json')
