@@ -1,0 +1,19 @@
+template: foo/bar@1.0.0
+shared:
+    image: userImage
+    environment:
+        FOO: user overwrite
+    settings:
+        slack:
+            channels:
+                - test
+            statuses:
+                - SUCCESS
+        email:
+            addresses:
+                - bar@foo.com
+            statuses:
+                - SUCCESS
+jobs:
+    main:
+        settings: {}

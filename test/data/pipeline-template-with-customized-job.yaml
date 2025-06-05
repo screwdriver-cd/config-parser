@@ -10,7 +10,8 @@ jobs:
     job1:
         image: node:10
         settings:
-            slack: [room_b]
+            slack:
+                channels: [room_b]
         environment:
             OTHER: foo
         annotations:

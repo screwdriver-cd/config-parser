@@ -61,6 +61,14 @@
                 "NPM_TOKEN"
             ],
             "settings": {
+                "email": {
+                    "addresses": [
+                        "bar@foo.com"
+                    ],
+                    "statuses": [
+                        "SUCCESS"
+                    ]
+                },
                 "slack": [
                     "room_a"
                 ]
@@ -111,9 +119,11 @@
                 "NPM_TOKEN"
             ],
             "settings": {
-                "slack": [
-                    "room_b"
-                ]
+                "slack": {
+                    "channels": [
+                        "room_b"
+                    ]
+                }
             },
             "requires": [
                 "main"

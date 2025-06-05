@@ -23,12 +23,7 @@
                 "SD_PIPELINE_TEMPLATE_VERSION": "1.0.0"
             },
             "secrets": [],
-            "settings": {
-                "email": "foo@example.com",
-                "slack": {
-                    "channels": [ "test" ]
-                }
-            },
+            "settings": {},
             "requires": [
                 "~pr",
                 "~commit"
