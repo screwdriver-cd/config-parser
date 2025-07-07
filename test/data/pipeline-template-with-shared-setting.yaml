@@ -8,3 +8,4 @@ shared:
         slack:
           channels:
             - test
+    sourcePaths: [ "shared" ]

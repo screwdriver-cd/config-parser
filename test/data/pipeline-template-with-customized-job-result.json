@@ -73,7 +73,8 @@
                     "room_a"
                 ]
             },
-            "requires": []
+            "requires": [],
+            "sourcePaths": ["pipeline-template", "job"]
         }],
         "job1": [{
             "annotations": {

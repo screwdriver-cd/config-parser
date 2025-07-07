@@ -32,7 +32,8 @@
             "requires": [
                 "~pr",
                 "~commit"
-            ]
+            ],
+            "sourcePaths": ["shared", "pipeline-template"]
         }]
     },
     "workflowGraph": {
