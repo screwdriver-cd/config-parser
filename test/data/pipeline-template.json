@@ -8,6 +8,7 @@
       "main": {
         "image": "node:18",
         "requires": ["~pr", "~commit"],
+        "sourcePaths": ["pipeline-template"],
         "steps": [
           {
             "init": "npm install"

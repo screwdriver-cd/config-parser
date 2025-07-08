@@ -47,7 +47,8 @@
             ],
             "minimized": true
           }
-        }
+        },
+        "sourcePaths": ["pipeline-template"]
       },
       "job1": {
         "requires": [

@@ -83,7 +83,8 @@
         "requires": [
           "~pr",
           "~commit"
-        ]
+        ],
+        "sourcePaths": ["pipeline-template"]
       }
     ],
     "job1": [{

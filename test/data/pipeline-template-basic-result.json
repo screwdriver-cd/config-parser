@@ -26,7 +26,8 @@
             "requires": [
                 "~pr",
                 "~commit"
-            ]
+            ],
+            "sourcePaths": ["pipeline-template"]
         }]
     },
     "workflowGraph": {
