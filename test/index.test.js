@@ -56,7 +56,7 @@ describe('config parser', () => {
                     });
                     assert.strictEqual(data.jobs.main[0].image, 'node:18');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.deepEqual(data.jobs.main[0].environment, { SD_SKIP_REPOSITORY_CLONE: 'true' });
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command, YAMLMISSING);
                     assert.match(data.errors[0], YAMLMISSING);
@@ -67,7 +67,7 @@ describe('config parser', () => {
                 parser({ yaml: 'foo: :' }).then(data => {
                     assert.strictEqual(data.jobs.main[0].image, 'node:18');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.deepEqual(data.jobs.main[0].environment, { SD_SKIP_REPOSITORY_CLONE: 'true' });
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command, /YAMLException:/);
                     assert.match(data.errors[0], /YAMLException:/);
@@ -77,7 +77,7 @@ describe('config parser', () => {
                 parser({ yaml: loadData('basic-job-with-duplicate-steps.yaml') }).then(data => {
                     assert.strictEqual(data.jobs.main[0].image, 'node:18');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.deepEqual(data.jobs.main[0].environment, { SD_SKIP_REPOSITORY_CLONE: 'true' });
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command, /Error:.*main has duplicate step: publish/);
                     assert.match(data.errors[0], /Error:.*main has duplicate step: publish/);
@@ -95,7 +95,7 @@ describe('config parser', () => {
                 parser({ yaml: 'foo: bar\n---\nfoo: baz' }).then(data => {
                     assert.strictEqual(data.jobs.main[0].image, 'node:18');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.deepEqual(data.jobs.main[0].environment, { SD_SKIP_REPOSITORY_CLONE: 'true' });
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.jobs.main[0].commands[0].command, /YAMLException:.*ambigious/);
                     assert.match(data.errors[0], /YAMLException:.*ambigious/);
@@ -105,7 +105,7 @@ describe('config parser', () => {
                 parser({ yaml: 'jobs: {}\n---\nversion: 4' }).then(data => {
                     assert.strictEqual(data.jobs.main[0].image, 'node:18');
                     assert.deepEqual(data.jobs.main[0].secrets, []);
-                    assert.deepEqual(data.jobs.main[0].environment, {});
+                    assert.deepEqual(data.jobs.main[0].environment, { SD_SKIP_REPOSITORY_CLONE: 'true' });
                     assert.strictEqual(data.jobs.main[0].commands[0].name, 'config-parse-error');
                     assert.match(data.errors[0], 'ValidationError: "jobs" is required');
                 }));
