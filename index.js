@@ -269,7 +269,9 @@ function parsePipelineYaml({
                                 }
                             ],
                             secrets: [],
-                            environment: {}
+                            environment: {
+                                SD_SKIP_REPOSITORY_CLONE: 'true'
+                            }
                         }
                     ]
                 },
