@@ -436,6 +436,16 @@ describe('config parser', () => {
                         triggerFactory
                     }).then(data => assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template.json')))));
 
+                it('flattens templates successfully When there are multiple jobs that use the same template', () =>
+                    parser({
+                        yaml: loadData('basic-job-with-same-template.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory
+                    }).then(data => {
+                        assert.deepEqual(data, JSON.parse(loadData('basic-job-with-same-template.json')));
+                        assert.calledTwice(templateFactoryMock.getTemplate);
+                    }));
+
                 it('flattens templates successfully when template namespace exists', () => {
                     templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(defaultTemplate);
 
