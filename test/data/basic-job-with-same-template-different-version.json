@@ -1,0 +1,99 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "jobs": {
+        "main": [{
+            "annotations": {},
+            "image": "node:4",
+            "commands": [
+                {
+                    "name": "install",
+                    "command": "npm install"
+                },
+                {
+                    "name": "test",
+                    "command": "npm test"
+                }
+            ],
+            "environment": {
+                "FOO": "overwritten by job",
+                "BAR": "foo",
+                "SD_TEMPLATE_FULLNAME": "mytemplate",
+                "SD_TEMPLATE_NAME": "mytemplate",
+                "SD_TEMPLATE_NAMESPACE": "",
+                "SD_TEMPLATE_VERSION": "1.2.3"
+            },
+            "secrets": [
+                "GIT_KEY"
+            ],
+            "settings": {
+                "email": "foo@example.com"
+            },
+            "requires": [
+                "~pr",
+                "~commit"
+            ],
+            "templateId": 7754
+        }],
+      "publish1": [{
+          "annotations": {},
+          "image": "node:4",
+          "commands": [
+              {
+                  "name": "publish",
+                  "command": "npm publish"
+              }
+          ],
+          "environment": {
+              "SD_TEMPLATE_FULLNAME": "yourtemplate",
+              "SD_TEMPLATE_NAME": "yourtemplate",
+              "SD_TEMPLATE_NAMESPACE": "",
+              "SD_TEMPLATE_VERSION": "2"
+          },
+          "secrets": [],
+          "settings": {},
+          "requires": [
+              "main"
+          ],
+          "templateId": 1234
+      }],
+      "publish2": [{
+        "annotations": {},
+        "image": "node:4",
+        "commands": [
+          {
+            "name": "publish",
+            "command": "npm publish"
+          }
+        ],
+        "environment": {
+          "SD_TEMPLATE_FULLNAME": "yourtemplate",
+          "SD_TEMPLATE_NAME": "yourtemplate",
+          "SD_TEMPLATE_NAMESPACE": "",
+          "SD_TEMPLATE_VERSION": "3"
+        },
+        "secrets": [],
+        "settings": {},
+        "requires": [
+          "main"
+        ],
+        "templateId": 1234
+      }]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "main" },
+            { "name": "publish1" },
+            { "name": "publish2" }
+        ],
+        "edges": [
+            { "src": "~pr", "dest": "main" },
+            { "src": "~commit", "dest": "main" },
+            { "src": "main", "dest": "publish1", "join": true },
+            { "src": "main", "dest": "publish2", "join": true }
+        ]
+    },
+    "subscribe": {}
+}
