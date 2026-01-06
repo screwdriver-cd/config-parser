@@ -45,6 +45,9 @@
               }
           ],
           "environment": {
+              "FOO": "from yourtemplate",
+              "BAR": "bar1",
+              "BAZ": "baz1",
               "SD_TEMPLATE_FULLNAME": "yourtemplate",
               "SD_TEMPLATE_NAME": "yourtemplate",
               "SD_TEMPLATE_NAMESPACE": "",
@@ -67,6 +70,9 @@
           }
         ],
         "environment": {
+          "FOO": "from yourtemplate",
+          "BAR": "foo",
+          "BAZ": "baz2",
           "SD_TEMPLATE_FULLNAME": "yourtemplate",
           "SD_TEMPLATE_NAME": "yourtemplate",
           "SD_TEMPLATE_NAMESPACE": "",

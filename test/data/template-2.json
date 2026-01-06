@@ -9,6 +9,10 @@
         "image": "node:4",
         "steps": [
             { "publish": "npm publish" }
-        ]
+        ],
+        "environment": {
+            "FOO": "from yourtemplate",
+            "BAR": "foo"
+        }
     }
 }
