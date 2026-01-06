@@ -1,0 +1,22 @@
+jobs:
+    main:
+        template: mytemplate@1.2.3
+        environment:
+            FOO: 'overwritten by job'
+        requires:
+            - ~pr
+            - ~commit
+    publish1:
+        template: yourtemplate@2
+        environment:
+            BAR: "bar1"
+            BAZ: "baz1"
+        requires:
+            - main
+
+    publish2:
+        template: yourtemplate@2
+        environment:
+            BAZ: "baz2"
+        requires:
+            - main

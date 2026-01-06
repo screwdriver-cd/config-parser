@@ -375,6 +375,7 @@ describe('config parser', () => {
             describe('templates', () => {
                 let firstTemplate;
                 let secondTemplate;
+                let secondTemplateVersion3;
                 let namespaceTemplate;
                 let defaultTemplate;
                 let imagesTemplate;
@@ -389,6 +390,7 @@ describe('config parser', () => {
                 beforeEach(() => {
                     firstTemplate = JSON.parse(loadData('template.json'));
                     secondTemplate = JSON.parse(loadData('template-2.json'));
+                    secondTemplateVersion3 = JSON.parse(loadData('template-2-3.json'));
                     namespaceTemplate = JSON.parse(loadData('templateWithNamespace.json'));
                     defaultTemplate = JSON.parse(loadData('templateWithDefaultNamespace.json'));
                     imagesTemplate = JSON.parse(loadData('templateWithImages.json'));
@@ -402,6 +404,7 @@ describe('config parser', () => {
                     templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
                     templateFactoryMock.getTemplate.withArgs('mytemplate@1.2.3').resolves(firstTemplate);
                     templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(secondTemplate);
+                    templateFactoryMock.getTemplate.withArgs('yourtemplate@3').resolves(secondTemplateVersion3);
                     templateFactoryMock.getTemplate
                         .withArgs('mynamespace/mytemplate@1.2.3')
                         .resolves(namespaceTemplate);
@@ -435,6 +438,29 @@ describe('config parser', () => {
                         templateFactory: templateFactoryMock,
                         triggerFactory
                     }).then(data => assert.deepEqual(data, JSON.parse(loadData('basic-job-with-template.json')))));
+
+                it('flattens templates successfully When there are multiple jobs that use the same template', () =>
+                    parser({
+                        yaml: loadData('basic-job-with-same-template.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory
+                    }).then(data => {
+                        assert.deepEqual(data, JSON.parse(loadData('basic-job-with-same-template.json')));
+                        assert.calledTwice(templateFactoryMock.getTemplate);
+                    }));
+
+                it('flattens templates successfully When there are multiple jobs that use the same template different version', () =>
+                    parser({
+                        yaml: loadData('basic-job-with-same-template-different-version.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory
+                    }).then(data => {
+                        assert.deepEqual(
+                            data,
+                            JSON.parse(loadData('basic-job-with-same-template-different-version.json'))
+                        );
+                        assert.callCount(templateFactoryMock.getTemplate, 3);
+                    }));
 
                 it('flattens templates successfully when template namespace exists', () => {
                     templateFactoryMock.getTemplate.withArgs('yourtemplate@2').resolves(defaultTemplate);

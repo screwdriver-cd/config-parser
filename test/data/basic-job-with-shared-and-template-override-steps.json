@@ -49,7 +49,7 @@
                 },
                 {
                     "name": "test",
-                    "command": "echo 'my job is overriding this step'"
+                    "command": "npm test"
                 }
             ],
             "environment": {
@@ -66,10 +66,6 @@
             "settings": {
                 "email": "foo@example.com"
             },
-            "requires": [
-                "~pr",
-                "~commit"
-            ],
             "templateId": 7754
         }]
     },
@@ -82,9 +78,7 @@
         ],
         "edges": [
             { "src": "~pr", "dest": "main" },
-            { "src": "~commit", "dest": "main" },
-            { "src": "~pr", "dest": "second" },
-            { "src": "~commit", "dest": "second" }
+            { "src": "~commit", "dest": "main" }
         ]
     },
     "subscribe": {}

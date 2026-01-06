@@ -1,7 +1,7 @@
 {
     "id": 1234,
     "name": "yourtemplate",
-    "version": "2",
+    "version": "3",
     "description": "test template",
     "maintainer": "foo@bar.com",
     "labels": [],
@@ -9,10 +9,6 @@
         "image": "node:4",
         "steps": [
             { "publish": "npm publish" }
-        ],
-        "environment": {
-            "FOO": "from yourtemplate",
-            "BAR": "foo"
-        }
+        ]
     }
 }
