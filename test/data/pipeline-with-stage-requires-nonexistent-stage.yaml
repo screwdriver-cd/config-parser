@@ -1,0 +1,10 @@
+jobs:
+  main:
+    image: node:18
+    requires: []
+    steps:
+      - echo: echo main
+stages:
+  stg2:
+    jobs: [main]
+    requires: [stage@stg3:teardown]

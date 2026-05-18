@@ -285,6 +285,48 @@ describe('config parser', () => {
                     }).then(data => {
                         assert.match(data.errors[0], /Error: Job foo in stage cannot have sourcePaths defined./);
                     }));
+
+                it('returns an error if a job requires a nonexistent stage', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-requires-nonexistent-stage.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /Error: job3 job has invalid requires: stage@stg1\. Cannot find stage stg1 in stages\./
+                        );
+                    }));
+
+                it('does not return an error if a job requires an existing stage', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-requires-existing-stage.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.notOk(data.errors);
+                    }));
+
+                it('returns an error if a stage requires a nonexistent stage', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stage-requires-nonexistent-stage.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /Error: stg2 stage has invalid requires: stage@stg3:teardown\. Cannot find stage stg3 in stages\./
+                        );
+                    }));
+
+                it('does not return an error if a stage requires an existing stage', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stage-requires-existing-stage.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.notOk(data.errors);
+                    }));
             });
 
             describe('subscribe', () => {
