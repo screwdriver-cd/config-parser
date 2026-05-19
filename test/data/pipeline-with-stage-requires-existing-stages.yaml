@@ -9,6 +9,11 @@ jobs:
     requires: []
     steps:
       - echo: echo job2
+  job3:
+    image: node:18
+    requires: []
+    steps:
+      - echo: echo job3
 stages:
   stg1:
     jobs: [job1]
@@ -16,3 +21,6 @@ stages:
   stg2:
     jobs: [job2]
     requires: [stage@stg1]
+  stg3:
+    jobs: [job3]
+    requires: [~stage@stg1]
