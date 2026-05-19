@@ -286,7 +286,7 @@ describe('config parser', () => {
                         assert.match(data.errors[0], /Error: Job foo in stage cannot have sourcePaths defined./);
                     }));
 
-                it('returns an error if a job requires a nonexistent stage', () =>
+                it('returns an error if a job requires a nonexistent stage and no stages are defined', () =>
                     parser({
                         yaml: loadData('pipeline-with-requires-nonexistent-stage.yaml'),
                         triggerFactory,
@@ -295,6 +295,18 @@ describe('config parser', () => {
                         assert.match(
                             data.errors[0],
                             /Error: job3 job has invalid requires: stage@stg1\. Cannot find stage stg1 in stages\./
+                        );
+                    }));
+
+                it('returns an error if a job requires a nonexistent stage when other stages are defined', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-requires-missing-stage-among-defined-stages.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /Error: job3 job has invalid requires: stage@stg2:teardown\. Cannot find stage stg2 in stages\./
                         );
                     }));
 
@@ -315,7 +327,7 @@ describe('config parser', () => {
                     }).then(data => {
                         assert.match(
                             data.errors[0],
-                            /Error: stg2 stage has invalid requires: stage@stg3:teardown\. Cannot find stage stg3 in stages\./
+                            /Error: stg1 stage has invalid requires: stage@stg2:teardown\. Cannot find stage stg2 in stages\./
                         );
                     }));
 

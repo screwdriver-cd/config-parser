@@ -5,6 +5,6 @@ jobs:
     steps:
       - echo: echo main
 stages:
-  stg2:
+  stg1:
     jobs: [main]
-    requires: [stage@stg3:teardown]
+    requires: [stage@stg2]
