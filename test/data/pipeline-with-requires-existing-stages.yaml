@@ -1,0 +1,25 @@
+jobs:
+  job1:
+    image: node:18
+    requires: []
+    steps:
+      - echo: echo job1
+  job2:
+    image: node:18
+    requires: [~job1]
+    steps:
+      - echo: echo job2
+  job3:
+    image: node:18
+    requires: [stage@stg1]
+    steps:
+      - echo: echo job3
+  job4:
+    image: node:18
+    requires: [~stage@stg1]
+    steps:
+      - echo: echo job4
+stages:
+  stg1:
+    jobs: [job1, job2]
+    requires: [~commit]

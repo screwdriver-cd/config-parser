@@ -285,6 +285,68 @@ describe('config parser', () => {
                     }).then(data => {
                         assert.match(data.errors[0], /Error: Job foo in stage cannot have sourcePaths defined./);
                     }));
+
+                it('returns an error if a job requires a nonexistent stage and no stages are defined', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-requires-nonexistent-stage.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /Error: job3 job has invalid requires: stage@stg1\. Cannot find stage stg1 in stages\./
+                        );
+                    }));
+
+                it('returns errors if jobs require nonexistent stages when stages are defined', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-requires-invalid-stages.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /Error: job3 job has invalid requires: ~stage@stg2:teardown\. Cannot find stage stg2 in stages\./
+                        );
+                        assert.match(
+                            data.errors[0],
+                            /job4 job has invalid requires: stage@stg2:teardown\. Cannot find stage stg2 in stages\./
+                        );
+                    }));
+
+                it('does not return an error if jobs require existing stages', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-requires-existing-stages.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.notOk(data.errors);
+                    }));
+
+                it('returns errors if stages require nonexistent stages', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stage-requires-invalid-stages.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.match(
+                            data.errors[0],
+                            /Error: stg3 stage has invalid requires: stage@missing1:teardown\. Cannot find stage missing1 in stages\./
+                        );
+                        assert.match(
+                            data.errors[0],
+                            /stg4 stage has invalid requires: ~stage@missing2:teardown\. Cannot find stage missing2 in stages\./
+                        );
+                    }));
+
+                it('does not return an error if stages require existing stages', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stage-requires-existing-stages.yaml'),
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.notOk(data.errors);
+                    }));
             });
 
             describe('subscribe', () => {
