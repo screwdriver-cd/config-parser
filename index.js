@@ -36,7 +36,9 @@ function parseYaml(yaml) {
     }
 
     return new Promise(resolve => {
-        const documents = YamlParser.loadAll(yaml);
+        const documents = YamlParser.loadAll(yaml, {
+            maxTotalMergeKeys: -1
+        });
 
         // If only one document, return it
         if (documents.length === 1) {
