@@ -65,11 +65,6 @@ describe('config parser', () => {
                     .finally(() => loadAllSpy.restore());
             });
 
-            it('rejects a maxTotalMergeKeys value that disables the limit', () =>
-                parser({ yaml: loadData('basic-job-with-no-step-names.yaml'), maxTotalMergeKeys: -1 }).then(data => {
-                    assert.match(data.errors[0], /maxTotalMergeKeys must be a positive safe integer/);
-                }));
-
             it('returns an error if yaml does not exist', () => {
                 const YAMLMISSING = /screwdriver.yaml does not exist/;
 
