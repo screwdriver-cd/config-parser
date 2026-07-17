@@ -4,6 +4,7 @@ const { assert } = require('chai');
 const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
+const YamlParser = require('js-yaml');
 const { parsePipelineTemplate, parsePipelineYaml: parser, validatePipelineTemplate } = require('..');
 const pipelineId = 111;
 
@@ -42,6 +43,33 @@ describe('config parser', () => {
         };
 
         describe('yaml parser', () => {
+            it('passes maxTotalMergeKeys to the yaml parser', () => {
+                const yaml = loadData('basic-job-with-no-step-names.yaml');
+                const loadAllSpy = sinon.spy(YamlParser, 'loadAll');
+
+                return parser({ yaml, triggerFactory, maxTotalMergeKeys: 11000 })
+                    .then(() => {
+                        assert.calledWith(loadAllSpy, yaml, { maxTotalMergeKeys: 11000 });
+                    })
+                    .finally(() => loadAllSpy.restore());
+            });
+
+            it('uses the yaml parser default when maxTotalMergeKeys is not specified', () => {
+                const yaml = loadData('basic-job-with-no-step-names.yaml');
+                const loadAllSpy = sinon.spy(YamlParser, 'loadAll');
+
+                return parser({ yaml, triggerFactory })
+                    .then(() => {
+                        assert.calledWith(loadAllSpy, yaml, {});
+                    })
+                    .finally(() => loadAllSpy.restore());
+            });
+
+            it('rejects a maxTotalMergeKeys value that disables the limit', () =>
+                parser({ yaml: loadData('basic-job-with-no-step-names.yaml'), maxTotalMergeKeys: -1 }).then(data => {
+                    assert.match(data.errors[0], /maxTotalMergeKeys must be a positive safe integer/);
+                }));
+
             it('returns an error if yaml does not exist', () => {
                 const YAMLMISSING = /screwdriver.yaml does not exist/;
 
