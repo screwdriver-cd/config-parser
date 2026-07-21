@@ -37,7 +37,7 @@ function parseYaml(yaml, maxTotalMergeKeys) {
     }
 
     if (maxTotalMergeKeys !== undefined && !Number.isSafeInteger(maxTotalMergeKeys)) {
-        return Promise.reject(new TypeError('maxTotalMergeKeys must be a positive safe integer.'));
+        return Promise.reject(new TypeError('maxTotalMergeKeys must be a safe integer.'));
     }
 
     return new Promise(resolve => {
