@@ -47,9 +47,9 @@ describe('config parser', () => {
                 const yaml = loadData('basic-job-with-no-step-names.yaml');
                 const loadAllSpy = sinon.spy(YamlParser, 'loadAll');
 
-                return parser({ yaml, triggerFactory, maxTotalMergeKeys: 11000 })
+                return parser({ yaml, triggerFactory, maxTotalMergeKeys: 10000 })
                     .then(() => {
-                        assert.calledWith(loadAllSpy, yaml, { maxTotalMergeKeys: 11000 });
+                        assert.calledWith(loadAllSpy, yaml, { maxTotalMergeKeys: 10000 });
                     })
                     .finally(() => loadAllSpy.restore());
             });
