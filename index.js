@@ -24,10 +24,11 @@ const phaseGeneratePermutations = require('./lib/phase/permutation');
 /**
  * Parses a yaml file
  * @method parseYaml
- * @param  {String}  yaml Raw yaml
- * @return {Promise}      Resolves POJO containing yaml data
+ * @param  {String}  yaml                  Raw yaml
+ * @param  {Number}  [maxTotalMergeKeys]   Maximum total number of YAML merge keys
+ * @return {Promise}                       Resolves POJO containing yaml data
  */
-function parseYaml(yaml) {
+function parseYaml(yaml, maxTotalMergeKeys) {
     // If no yaml exists, throw error
     if (!yaml) {
         return Promise.reject(
@@ -35,8 +36,18 @@ function parseYaml(yaml) {
         );
     }
 
+    if (maxTotalMergeKeys !== undefined && !Number.isSafeInteger(maxTotalMergeKeys)) {
+        return Promise.reject(new TypeError('maxTotalMergeKeys must be a safe integer.'));
+    }
+
     return new Promise(resolve => {
-        const documents = YamlParser.loadAll(yaml);
+        const yamlParserOptions = {};
+
+        if (maxTotalMergeKeys !== undefined) {
+            yamlParserOptions.maxTotalMergeKeys = maxTotalMergeKeys;
+        }
+
+        const documents = YamlParser.loadAll(yaml, yamlParserOptions);
 
         // If only one document, return it
         if (documents.length === 1) {
@@ -159,6 +170,7 @@ function validateTemplateVersion(doc, templateFactory) {
  * @param   {Number}                          [config.pipelineId]                         ID of the current pipeline
  * @param   {Boolean}                         [config.notificationsValidationErr]         Throw error when notifications validation fails (default true);
  *                                                                                        otherwise return warning
+ * @param   {Number}                          [config.maxTotalMergeKeys]                  Maximum total number of YAML merge keys
  * @returns {Promise}
  */
 function parsePipelineYaml({
@@ -170,13 +182,14 @@ function parsePipelineYaml({
     buildClusterFactory,
     triggerFactory,
     pipelineId,
-    notificationsValidationErr
+    notificationsValidationErr,
+    maxTotalMergeKeys
 }) {
     let warnMessages = [];
 
     // Convert from YAML to JSON
     return (
-        parseYaml(yaml)
+        parseYaml(yaml, maxTotalMergeKeys)
             // Validate user config before mergin with pipeline template
             .then(doc => phaseValidateStructure(doc, true))
             // Merge Pipeline template
