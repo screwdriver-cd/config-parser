@@ -3,6 +3,13 @@
 const YamlParser = require('js-yaml');
 const Hoek = require('@hapi/hoek');
 const shellescape = require('shell-escape');
+const YAML_SCHEMA = YamlParser.CORE_SCHEMA.withTags(
+    YamlParser.binaryTag,
+    YamlParser.mergeTag,
+    YamlParser.omapTag,
+    YamlParser.pairsTag,
+    YamlParser.timestampTag
+);
 
 /* eslint-disable max-len */
 const RESERVED_JOB_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedJobAnnotations;
@@ -41,7 +48,7 @@ function parseYaml(yaml, maxTotalMergeKeys) {
     }
 
     return new Promise(resolve => {
-        const yamlParserOptions = {};
+        const yamlParserOptions = { schema: YAML_SCHEMA };
 
         if (maxTotalMergeKeys !== undefined) {
             yamlParserOptions.maxTotalMergeKeys = maxTotalMergeKeys;
