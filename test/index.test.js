@@ -6,6 +6,13 @@ const path = require('path');
 const sinon = require('sinon');
 const YamlParser = require('js-yaml');
 const { parsePipelineTemplate, parsePipelineYaml: parser, validatePipelineTemplate } = require('..');
+const YAML_SCHEMA = YamlParser.CORE_SCHEMA.withTags(
+    YamlParser.binaryTag,
+    YamlParser.mergeTag,
+    YamlParser.omapTag,
+    YamlParser.pairsTag,
+    YamlParser.timestampTag
+);
 const pipelineId = 111;
 
 sinon.assert.expose(assert, { prefix: '' });
@@ -49,7 +56,10 @@ describe('config parser', () => {
 
                 return parser({ yaml, triggerFactory, maxTotalMergeKeys: 10000 })
                     .then(() => {
-                        assert.calledWith(loadAllSpy, yaml, { maxTotalMergeKeys: 10000 });
+                        assert.calledWith(loadAllSpy, yaml, {
+                            schema: YAML_SCHEMA,
+                            maxTotalMergeKeys: 10000
+                        });
                     })
                     .finally(() => loadAllSpy.restore());
             });
@@ -60,9 +70,73 @@ describe('config parser', () => {
 
                 return parser({ yaml, triggerFactory })
                     .then(() => {
-                        assert.calledWith(loadAllSpy, yaml, {});
+                        assert.calledWith(loadAllSpy, yaml, { schema: YAML_SCHEMA });
                     })
                     .finally(() => loadAllSpy.restore());
+            });
+
+            it('preserves supported js-yaml v4 tags', () => {
+                const yaml = `
+shared: &shared
+  image: node:22
+  steps:
+    - test: echo test
+jobs:
+  main:
+    <<: *shared
+    environment:
+      YAML_TIMESTAMP_UNQUOTED: 2026-08-01
+      YAML_TIMESTAMP_QUOTED: "2026-08-01"
+      YAML_BINARY: !!binary SGVsbG8=
+      YAML_OMAP: !!omap
+        - first: 1
+        - second: 2
+      YAML_PAIRS: !!pairs
+        - duplicate: 1
+        - duplicate: 2
+`;
+
+                return parser({ yaml, triggerFactory }).then(data => {
+                    assert.notOk(data.errors);
+                    assert.strictEqual(data.jobs.main[0].image, 'node:22');
+                    assert.deepEqual(data.jobs.main[0].environment, {
+                        YAML_TIMESTAMP_UNQUOTED: '"2026-08-01T00:00:00.000Z"',
+                        YAML_TIMESTAMP_QUOTED: '2026-08-01',
+                        YAML_BINARY: '{"0":72,"1":101,"2":108,"3":108,"4":111}',
+                        YAML_OMAP: '[{"first":1},{"second":2}]',
+                        YAML_PAIRS: '[["duplicate",1],["duplicate",2]]'
+                    });
+                });
+            });
+
+            it('rejects unsupported js-yaml v4 types', () => {
+                const setYaml = `
+jobs:
+  main:
+    image: node:22
+    steps:
+      - test: echo test
+    environment:
+      YAML_SET: !!set
+        alpha:
+`;
+                const complexKeyYaml = `
+jobs:
+  main:
+    image: node:22
+    steps:
+      - test: echo test
+    environment:
+      ? [foo, bar]
+      : value
+`;
+
+                return Promise.all([parser({ yaml: setYaml }), parser({ yaml: complexKeyYaml })]).then(
+                    ([setResult, complexKeyResult]) => {
+                        assert.match(setResult.errors[0], /unknown mapping tag.*set/);
+                        assert.match(complexKeyResult.errors[0], /object-based map does not support complex keys/);
+                    }
+                );
             });
 
             it('returns an error if yaml does not exist', () => {
