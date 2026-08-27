@@ -39,10 +39,10 @@ describe('config parser', () => {
 
     describe('parse pipeline yaml', () => {
         const pipelineTemplateVersionFactoryMock = {
-            getWithMetadata: sinon.stub().resolves(JSON.parse(loadData('pipeline-template.json')))
+            getTemplate: sinon.stub().resolves(JSON.parse(loadData('pipeline-template.json')))
         };
         const pipelineTemplateTagFactoryMock = {
-            get: sinon.stub().resolves(null)
+            get: sinon.stub()
         };
         const triggerFactory = {
             getDestFromSrc: sinon.stub().resolves([]),
@@ -842,15 +842,13 @@ jobs:
             });
 
             describe('pipeline templates', () => {
-                const templateTagMock = {
-                    version: '1.0.0'
-                };
                 let defaultPipelineTemplate;
 
                 beforeEach(() => {
                     defaultPipelineTemplate = JSON.parse(loadData('pipeline-template.json'));
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(defaultPipelineTemplate);
-                    pipelineTemplateTagFactoryMock.get.resolves(templateTagMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resetHistory();
+                    pipelineTemplateTagFactoryMock.get.resetHistory();
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(defaultPipelineTemplate);
                 });
 
                 it('flattens basic pipeline template successfully', () =>
@@ -864,10 +862,31 @@ jobs:
                         assert.deepEqual(data, JSON.parse(loadData('pipeline-template-basic-result.json')));
                     }));
 
+                it('passes a major version to models without modification', async () => {
+                    const pipelineTemplateFactoryMock = {};
+
+                    await parser({
+                        yaml: 'template: foo/bar@1',
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock,
+                        pipelineTemplateFactory: pipelineTemplateFactoryMock
+                    });
+
+                    assert.calledOnceWithExactly(
+                        pipelineTemplateVersionFactoryMock.getTemplate,
+                        'foo/bar@1',
+                        pipelineTemplateFactoryMock,
+                        pipelineTemplateTagFactoryMock
+                    );
+                    assert.notCalled(pipelineTemplateTagFactoryMock.get);
+                });
+
                 it('flattens pipeline template with shared setting', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-shared-setting.json'));
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-shared-setting.yaml'),
@@ -888,7 +907,7 @@ jobs:
                         loadData('pipeline-template-with-shared-empty-settings.json')
                     );
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-shared-empty-settings.yaml'),
@@ -909,7 +928,7 @@ jobs:
                         loadData('pipeline-template-with-shared-and-job-empty-settings.json')
                     );
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-shared-and-job-empty-settings.yaml'),
@@ -930,7 +949,7 @@ jobs:
                         loadData('pipeline-template-with-mergeSharedSteps-annotation.json')
                     );
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
                     templateFactoryMock.getTemplate.resolves(JSON.parse(loadData('template.json')));
                     templateFactoryMock.getFullNameAndVersion.returns({ isVersion: true });
 
@@ -951,7 +970,7 @@ jobs:
                 it('flattens pipeline template with user defined pipeline level setting', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-user-setting.json'));
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-user-setting.yaml'),
@@ -967,7 +986,7 @@ jobs:
                 it('flattens pipeline template with template defined pipeline level setting', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-template-setting.yaml'),
@@ -986,7 +1005,7 @@ jobs:
                 it('flattens pipeline template with both user and template defined pipeline level setting', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-user-setting.yaml'),
@@ -1005,7 +1024,7 @@ jobs:
                 it('flattens pipeline template with both user and template defined job settings', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-customized-job.yaml'),
@@ -1024,7 +1043,7 @@ jobs:
                 it('flattens pipeline template with custom user defined job', () => {
                     const pipelineTemplateMock = JSON.parse(loadData('pipeline-template-with-template-setting.json'));
 
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(pipelineTemplateMock);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(pipelineTemplateMock);
 
                     return parser({
                         yaml: loadData('pipeline-template-with-new-customized-job.yaml'),
@@ -1055,7 +1074,7 @@ jobs:
                     }));
 
                 it('returns error if pipeline template does not exist', () => {
-                    pipelineTemplateVersionFactoryMock.getWithMetadata.resolves(null);
+                    pipelineTemplateVersionFactoryMock.getTemplate.resolves(null);
 
                     return parser({
                         yaml: loadData('pipeline-template-basic.yaml'),
