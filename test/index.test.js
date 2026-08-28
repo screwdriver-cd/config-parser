@@ -1366,6 +1366,17 @@ jobs:
                     );
                     /* eslint-enable max-len */
                 }));
+            it('warning it is not stage-level annotation', () =>
+                parser({ yaml: loadData('warn-stage-level-annotation.yaml'), triggerFactory }).then(data => {
+                    console.log(data);
+                    /* eslint-disable max-len */
+                    assert.match(
+                        data.warnMessages[0],
+                        /screwdriver.cd\/foo is not an annotation that is reserved for Stage-Level/
+                    );
+                    assert.equal(data.warnMessages.length, 1);
+                    /* eslint-enable max-len */
+                }));
             it('warning it is not job-level annotation', () =>
                 parser({ yaml: loadData('warn-job-level-annotation.yaml'), triggerFactory }).then(data => {
                     /* eslint-disable max-len */

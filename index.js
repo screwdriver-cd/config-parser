@@ -12,8 +12,11 @@ const YAML_SCHEMA = YamlParser.CORE_SCHEMA.withTags(
 );
 
 /* eslint-disable max-len */
-const RESERVED_JOB_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedJobAnnotations;
-const RESERVED_PIPELINE_ANNOTATIONS = require('screwdriver-data-schema').config.annotations.reservedPipelineAnnotations;
+const {
+    reservedJobAnnotations: RESERVED_JOB_ANNOTATIONS,
+    reservedPipelineAnnotations: RESERVED_PIPELINE_ANNOTATIONS,
+    reservedStageAnnotations: RESERVED_STAGE_ANNOTATIONS
+} = require('screwdriver-data-schema').config.annotations;
 const SCHEMA_PIPELINE_TEMPLATE = require('screwdriver-data-schema').config.pipelineTemplate.template;
 /* eslint-enable max-len */
 
@@ -99,6 +102,26 @@ function validateReservedAnnotation(doc) {
                 })
                 .map(value => `${value} is not an annotation that is reserved for Pipeline-Level`)
         );
+    }
+
+    if (RESERVED_STAGE_ANNOTATIONS) {
+        const stages = Hoek.reach(doc, 'stages', { default: {} });
+
+        Object.keys(stages).forEach(stageName => {
+            const stageAnnotations = Hoek.reach(stages[stageName], 'annotations', { default: {} });
+
+            warnings = warnings.concat(
+                Object.keys(stageAnnotations)
+                    .filter(key => {
+                        if (key.startsWith('screwdriver.cd/')) {
+                            return RESERVED_STAGE_ANNOTATIONS.indexOf(key) === -1;
+                        }
+
+                        return false;
+                    })
+                    .map(value => `${value} is not an annotation that is reserved for Stage-Level`)
+            );
+        });
     }
 
     if (RESERVED_JOB_ANNOTATIONS) {
