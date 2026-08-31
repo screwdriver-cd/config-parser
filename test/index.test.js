@@ -332,6 +332,16 @@ jobs:
                         assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-sourcePaths.json')));
                     }));
 
+                it('returns a yaml with annotations in stages', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-annotations.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-annotations.json')));
+                    }));
+
                 it('returns an error if bad stages', () =>
                     parser({ yaml: loadData('bad-stages.yaml'), triggerFactory, pipelineId }).then(data => {
                         assert.match(
