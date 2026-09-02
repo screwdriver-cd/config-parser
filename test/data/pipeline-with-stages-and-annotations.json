@@ -1,0 +1,133 @@
+{
+    "annotations": {},
+    "parameters": {},
+    "subscribe": {},
+    "jobs": {
+        "foo": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo foo",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~stage@foobar:setup"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ],
+        "bar": [
+            {
+                "annotations": {},
+                "commands": [
+                    {
+                        "command": "echo foo",
+                        "name": "echo"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "foo"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ],
+        "stage@foobar:setup": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
+                "commands": [
+                    {
+                        "command": "echo noop",
+                        "name": "noop"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "~commit"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ],
+        "stage@foobar:teardown": [
+            {
+                "annotations": {
+                    "screwdriver.cd/virtualJob": true
+                },
+                "commands": [
+                    {
+                        "command": "echo noop",
+                        "name": "noop"
+                    }
+                ],
+                "environment": {},
+                "image": "node:18",
+                "secrets": [],
+                "settings": {},
+                "requires": [
+                    "bar"
+                ],
+                "stage": {
+                    "name": "foobar"
+                }
+            }
+        ]
+    },
+    "workflowGraph": {
+        "nodes": [
+            { "name": "~pr" },
+            { "name": "~commit" },
+            { "name": "foo", "stageName": "foobar" },
+            {
+                "name": "stage@foobar:setup",
+                "virtual": true,
+                "stageName": "foobar"
+            },
+            { "name": "bar", "stageName": "foobar" },
+            {
+                "name": "stage@foobar:teardown",
+                "virtual": true,
+                "stageName": "foobar"
+            }
+        ],
+        "edges": [
+            { "src": "stage@foobar:setup", "dest": "foo" },
+            { "src": "foo", "dest": "bar", "join": true },
+            { "src": "~commit", "dest": "stage@foobar:setup" },
+            { "src": "bar", "dest": "stage@foobar:teardown", "join": true }
+        ]
+    },
+    "stages": {
+        "foobar": {
+            "jobs": [
+                "foo",
+                "bar"
+            ],
+            "requires": [
+                "~commit"
+            ],
+            "annotations": {
+                "screwdriver.cd/manualStartEnabled": true
+            }
+        }
+    }
+}

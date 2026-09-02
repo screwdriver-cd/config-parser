@@ -1,0 +1,12 @@
+jobs:
+    main:
+        image: test
+        steps:
+            - foo: bar
+stages:
+    test:
+        jobs: [main]
+        annotations:
+            screwdriver.cd/manualStartEnabled: false
+            screwdriver.cd/foo: bar
+            baz: qux

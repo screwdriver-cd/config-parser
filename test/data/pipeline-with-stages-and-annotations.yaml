@@ -1,0 +1,17 @@
+stages:
+    foobar:
+        requires: [ ~commit ]
+        jobs: [ foo, bar ]
+        annotations:
+            screwdriver.cd/manualStartEnabled: true
+
+shared:
+    image: node:18
+    steps:
+        -   echo: echo foo
+
+jobs:
+    foo:
+        requires: []
+    bar:
+        requires: [ foo ]

@@ -332,6 +332,16 @@ jobs:
                         assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-sourcePaths.json')));
                     }));
 
+                it('returns a yaml with annotations in stages', () =>
+                    parser({
+                        yaml: loadData('pipeline-with-stages-and-annotations.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineId
+                    }).then(data => {
+                        assert.deepEqual(data, JSON.parse(loadData('pipeline-with-stages-and-annotations.json')));
+                    }));
+
                 it('returns an error if bad stages', () =>
                     parser({ yaml: loadData('bad-stages.yaml'), triggerFactory, pipelineId }).then(data => {
                         assert.match(
@@ -1383,6 +1393,17 @@ jobs:
                         data.warnMessages[0],
                         /screwdriver.cd\/ram is not an annotation that is reserved for Pipeline-Level/
                     );
+                    /* eslint-enable max-len */
+                }));
+            it('warning it is not stage-level annotation', () =>
+                parser({ yaml: loadData('warn-stage-level-annotation.yaml'), triggerFactory }).then(data => {
+                    console.log(data);
+                    /* eslint-disable max-len */
+                    assert.match(
+                        data.warnMessages[0],
+                        /screwdriver.cd\/foo is not an annotation that is reserved for Stage-Level/
+                    );
+                    assert.equal(data.warnMessages.length, 1);
                     /* eslint-enable max-len */
                 }));
             it('warning it is not job-level annotation', () =>
