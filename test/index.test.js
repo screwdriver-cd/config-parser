@@ -1096,6 +1096,32 @@ jobs:
                         assert.match(data.errors[0], 'Error: Pipeline template foo/bar@1.0.0 does not exist');
                     });
                 });
+
+                it('propagates a datastore failure instead of returning a fallback config', () => {
+                    // Unlike "does not exist" above (the factory resolved, just to
+                    // nothing), this simulates the factory call itself failing - e.g.
+                    // a transient datastore timeout. That must abort the parse, not
+                    // get laundered into a fallback config as if it were bad user YAML.
+                    const datastoreError = new Error('connection timeout');
+
+                    pipelineTemplateVersionFactoryMock.getTemplate.rejects(datastoreError);
+
+                    return parser({
+                        yaml: loadData('pipeline-template-basic.yaml'),
+                        templateFactory: templateFactoryMock,
+                        triggerFactory,
+                        pipelineTemplateTagFactory: pipelineTemplateTagFactoryMock,
+                        pipelineTemplateVersionFactory: pipelineTemplateVersionFactoryMock
+                    }).then(
+                        () => assert.fail('parser should have rejected instead of resolving to a fallback config'),
+                        err => {
+                            assert.strictEqual(err, datastoreError);
+                            pipelineTemplateVersionFactoryMock.getTemplate.resolves(
+                                JSON.parse(loadData('pipeline-template.json'))
+                            );
+                        }
+                    );
+                });
             });
         });
 

@@ -20,6 +20,7 @@ const {
 const SCHEMA_PIPELINE_TEMPLATE = require('screwdriver-data-schema').config.pipelineTemplate.template;
 /* eslint-enable max-len */
 
+const UserConfigError = require('./lib/userConfigError');
 const phaseValidateStructure = require('./lib/phase/structural');
 const phaseMerge = require('./lib/phase/merge');
 const {
@@ -41,13 +42,16 @@ const phaseGeneratePermutations = require('./lib/phase/permutation');
 function parseYaml(yaml, maxTotalMergeKeys) {
     // If no yaml exists, throw error
     if (!yaml) {
-        return Promise.reject(
-            new Error('screwdriver.yaml does not exist. Please create a screwdriver.yaml and try to rerun your build.')
-        );
+        const message =
+            'screwdriver.yaml does not exist. Please create a screwdriver.yaml and try to rerun your build.';
+
+        return Promise.reject(new UserConfigError(message, new Error(message)));
     }
 
     if (maxTotalMergeKeys !== undefined && !Number.isSafeInteger(maxTotalMergeKeys)) {
-        return Promise.reject(new TypeError('maxTotalMergeKeys must be a safe integer.'));
+        const message = 'maxTotalMergeKeys must be a safe integer.';
+
+        return Promise.reject(new UserConfigError(message, new TypeError(message)));
     }
 
     return new Promise(resolve => {
@@ -57,7 +61,16 @@ function parseYaml(yaml, maxTotalMergeKeys) {
             yamlParserOptions.maxTotalMergeKeys = maxTotalMergeKeys;
         }
 
-        const documents = YamlParser.loadAll(yaml, yamlParserOptions);
+        let documents;
+
+        try {
+            // js-yaml itself throws a YAMLException synchronously for malformed
+            // YAML or unsupported constructs - that's a statement about the
+            // user's file, not an infrastructure failure, so classify it here.
+            documents = YamlParser.loadAll(yaml, yamlParserOptions);
+        } catch (err) {
+            throw new UserConfigError(err.toString(), err);
+        }
 
         // If only one document, return it
         if (documents.length === 1) {
@@ -70,9 +83,9 @@ function parseYaml(yaml, maxTotalMergeKeys) {
         const doc = documents.find(yamlDoc => yamlDoc && yamlDoc.version === 4);
 
         if (!doc) {
-            throw new YamlParser.YAMLException(
-                'Configuration is too ambigious - contains multiple documents without a version hint'
-            );
+            const message = 'Configuration is too ambigious - contains multiple documents without a version hint';
+
+            throw new UserConfigError(message, new YamlParser.YAMLException(message));
         }
 
         resolve(doc);
@@ -131,7 +144,9 @@ function validateReservedAnnotation(doc) {
             });
 
             if (Object.keys(jobAnnotations).some(key => key.startsWith('screwdriver.cd/sdAdmin'))) {
-                throw new Error('Annotations starting with screwdriver.cd/sdAdmin are reserved for system use only');
+                const message = 'Annotations starting with screwdriver.cd/sdAdmin are reserved for system use only';
+
+                throw new UserConfigError(message, new Error(message));
             }
 
             warnings = warnings.concat(
@@ -299,35 +314,45 @@ function parsePipelineYaml({
 
                 return res;
             })
-            .catch(err => ({
-                annotations: {},
-                jobs: {
-                    main: [
-                        {
-                            image: 'node:18',
-                            commands: [
-                                {
-                                    name: 'config-parse-error',
-                                    command: `echo ${shellescape([err.toString()])}; exit 1`
+            .catch(err => {
+                // Only errors we raised ourselves are statements about the user's YAML.
+                // Anything else (a datastore timeout looking up a template, a dropped
+                // connection, etc.) is transient - let it propagate so sync() aborts
+                // instead of persisting a fallback config over a working pipeline.
+                if (!(err instanceof UserConfigError)) {
+                    throw err;
+                }
+
+                return {
+                    annotations: {},
+                    jobs: {
+                        main: [
+                            {
+                                image: 'node:18',
+                                commands: [
+                                    {
+                                        name: 'config-parse-error',
+                                        command: `echo ${shellescape([err.toString()])}; exit 1`
+                                    }
+                                ],
+                                secrets: [],
+                                environment: {
+                                    SD_SKIP_REPOSITORY_CLONE: 'true'
                                 }
-                            ],
-                            secrets: [],
-                            environment: {
-                                SD_SKIP_REPOSITORY_CLONE: 'true'
                             }
-                        }
-                    ]
-                },
-                workflowGraph: {
-                    nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: '~pr:/.*/' }],
-                    edges: [
-                        { src: '~pr', dest: 'main' },
-                        { src: '~commit', dest: 'main' },
-                        { src: '~pr:/.*/', dest: 'main' }
-                    ]
-                },
-                errors: [err.toString()]
-            }))
+                        ]
+                    },
+                    workflowGraph: {
+                        nodes: [{ name: '~pr' }, { name: '~commit' }, { name: 'main' }, { name: '~pr:/.*/' }],
+                        edges: [
+                            { src: '~pr', dest: 'main' },
+                            { src: '~commit', dest: 'main' },
+                            { src: '~pr:/.*/', dest: 'main' }
+                        ]
+                    },
+                    errors: [err.toString()]
+                };
+            })
     );
 }
 
